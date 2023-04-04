@@ -4,8 +4,12 @@ const fs = require('fs');
  * @TODO (future)
  * - Support parameters (e.g.: source path, target path, etc)
  * - Add jsdoc
- * 
+ * - unit test
  * */
+
+/**
+ * @TODO ignore duplicate rings
+ */
 
 let objectsRaw = '';
 try {

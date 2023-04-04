@@ -1,0 +1,1 @@
+export const URL = `https://tibia.fandom.com/wiki/`;

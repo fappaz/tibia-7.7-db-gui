@@ -2,6 +2,7 @@ import Image from 'next/image';
 import CellItems from './CellItems';
 import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
 import { round } from '../../utils/Math';
+import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
 
@@ -38,14 +39,18 @@ export default function getObjectColumns(typeColumns = []) {
     {
       field: "buyFrom", headerName: "Buy from", flex: 1, valueGetter: (params) => params.row.buyFrom.sort((a, b) => a.price - b.price),
       renderCell: (params) => {
-        const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
+        /** @TODO (future) use this line instead once the NPCs page is implemented */
+        // const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
+        const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `${TibiaWikiUrl}${offer.npc.name.replace(' ', '_')}`, newTab: true }, value: offer.price }));
         return <CellItems items={offers} />;
       }
     },
     {
       field: "sellTo", headerName: "Sell to", flex: 1, valueGetter: (params) => params.row.sellTo.sort((a, b) => a.price - b.price),
       renderCell: (params) => {
-        const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
+        /** @TODO (future) use this line instead once the NPCs page is implemented */
+        // const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
+        const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `${TibiaWikiUrl}${offer.npc.name.replace(' ', '_')}`, newTab: true }, value: offer.price }));
         return <CellItems items={offers} />;
       }
     },
@@ -53,7 +58,9 @@ export default function getObjectColumns(typeColumns = []) {
       field: "quests", headerName: "Quests", flex: 1, valueGetter: (params) => params.row.questRewards,
       renderCell: (params) => {
         const quests = params.row.questRewards.map(questReward => {
-          if (questReward.npc) return { label: questReward.npc.name, path: `/npcs/${questReward.npc.id}` };
+          /** @TODO (future) use this line instead once the NPCs page is implemented */
+          // if (questReward.npc) return { label: questReward.npc.name, link: { path: `/npcs/${questReward.npc.id}` } };
+          if (questReward.npc) return { label: questReward.npc.name, link: { path: `${TibiaWikiUrl}${questReward.npc.name.replace(' ', '_')}`, newTab: true } };
           if (questReward.chest) return { label: `map`, link: { path: getTibiaMapsUrl(questReward.chest.coordinates), newTab: true } };
           return null;
         });
@@ -165,9 +172,19 @@ export const getShieldColumns = () => {
  */
 export const getAmuletColumns = () => {
   return [
-    /** @TODO figure out the values for ProtectionDamageTypes */
-    // { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
-    { field: "damageReduction", headerName: "Damage reduction", valueGetter: (params) => params.row.attributes.DamageReduction ? `${params.row.attributes.DamageReduction}%` : '' },
+    { 
+      field: "effects", headerName: "Effects", flex: 1, valueGetter: (params) => {
+        const { DamageReduction, ProtectionDamageTypes, ArmorValue } = params.row.attributes;
+        if (DamageReduction) {
+          const protectionType = ObjectAttributes.ProtectionDamageTypes.values[ProtectionDamageTypes] || ProtectionDamageTypes;
+          if (!protectionType) return '';
+          return `+${DamageReduction}% ${protectionType} protection`;
+        } else if (ArmorValue) {
+          return `+${ArmorValue} armor`;
+        }
+        return '';
+      } 
+    },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
   ];
 }
@@ -178,31 +195,21 @@ export const getAmuletColumns = () => {
  */
 export const getRingColumns = () => {
   return [
-    /** @TODO figure out the values for ProtectionDamageTypes */
-    // { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
-    /** @TODO move this to a column called "effect" or similar */
-    // { field: "damageReduction", headerName: "Damage reduction", valueGetter: (params) => params.row.attributes.DamageReduction ? `${params.row.attributes.DamageReduction}%` : '' },
+    { 
+      field: "effects", headerName: "Effects", flex: 1, valueGetter: (params) => {
+        const { DamageReduction, ProtectionDamageTypes, SkillModification, SkillNumber } = params.row.attributes;
+        if (DamageReduction) {
+          const protectionType = ObjectAttributes.ProtectionDamageTypes.values[ProtectionDamageTypes] || ProtectionDamageTypes;
+          if (!protectionType) return '';
+          return `+${DamageReduction}% ${protectionType} protection`;
+        } else if (SkillModification) {
+          /** @TODO (future) figure out why life ring is SkillModification = 3, and ring of healing is SkillModification: 1 */
+          return `${SkillModification > 1 ? `+${SkillModification} ` : ''}${ObjectAttributes.SkillNumber.values[SkillNumber]}`;
+        }
+        return '';
+      } 
+    },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
     { field: "expiration", headerName: "Expiration", valueGetter: (params) => params.row.attributes.TotalExpireTime ? `${params.row.attributes.TotalExpireTime} seconds` : '' },
-    /** @TODO figure out the values for SkillModification */
-    // { field: "skillBoost", headerName: "Skill boost", valueGetter: (params) => params.row.flags.includes(ObjectFlags.SkillBoost) ? `${params.row.attributes.SkillModification > 1 ? `${params.row.attributes.SkillModification} ` : ''}${ObjectAttributes.SkillModification.values[params.row.attributes.SkillModification]}` : '' },
   ];
 }
-
-// const objectTypes = [
-//   ObjectFlags.Weapon,
-//   ObjectFlags.Clothes, // means 2 handed weapons too
-//   ObjectFlags.Armor,
-//   ObjectFlags.SkillBoost,
-
-//   ObjectFlags.Throw,
-//   ObjectFlags.Expire,
-//   ObjectFlags.Key,
-//   ObjectFlags.WearOut,
-//   ObjectFlags.Protection,
-//   ObjectFlags.Wand,
-//   ObjectFlags.Rune,
-//   ObjectFlags.Ammo,
-//   ObjectFlags.Shield,
-//   ObjectFlags.Bow,
-// ];

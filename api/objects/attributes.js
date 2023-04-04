@@ -71,7 +71,18 @@ export default {
       '16': 'druid',
     }
   },
-  ProtectionDamageTypes: { id: 'ProtectionDamageTypes' },
+  ProtectionDamageTypes: {
+    id: 'ProtectionDamageTypes',
+    values: {
+      '2': 'Poison',
+      '4': 'Fire',
+      '8': 'Energy',
+      '17': 'Physical',
+      '256': 'Life drain',
+      '287': 'Fire, Energy, Earth, Ice, Holy, Death, Physical',
+      '512': 'Mana drain',
+    }
+  },
   QuestdoorTarget: { id: 'QuestdoorTarget' },
   RelTeleportDisplacement: { id: 'RelTeleportDisplacement' },
   RelTeleportEffect: { id: 'RelTeleportEffect' },
