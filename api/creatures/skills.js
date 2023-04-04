@@ -1,0 +1,17 @@
+export default {
+  HitPoints: "HitPoints",
+  GoStrength: "GoStrength",
+  CarryStrength: "CarryStrength",
+  FistFighting: "FistFighting",
+  Level: "Level",
+  MagicLevel: "MagicLevel",
+  Mana: "Mana",
+  Shielding: "Shielding",
+  DistanceFighting: "DistanceFighting",
+  SwordFighting: "SwordFighting",
+  ClubFighting: "ClubFighting",
+  AxeFighting: "AxeFighting",
+  Fishing: "Fishing",
+  Eating: "Eating",
+  SoulPoints: "SoulPoints",
+}
