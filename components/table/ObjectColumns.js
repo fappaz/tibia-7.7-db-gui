@@ -5,6 +5,8 @@ import { round } from '../../utils/Math';
 import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
+import { Link } from "@mui/material";
+import PageLink from "next/link";
 
 /**
  * 
@@ -19,8 +21,17 @@ export default function getObjectColumns(typeColumns = []) {
         <Image src={`/images/${params.row.id}.gif`} alt={params.row.id} width={32} height={32} />
       )
     },
-    { field: "name", headerName: "Name", width: 130 },
-
+    { 
+      field: "name", headerName: "Name", width: 130, 
+      renderCell: (params) => (
+        <Link
+          component={PageLink}
+          href={`/item/${params.row.id}`}
+        >
+          {params.row.name}
+        </Link>
+      )
+    },
     
     ...typeColumns,
     

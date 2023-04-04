@@ -20,18 +20,15 @@ export default function Creatures({
         rows={creatures}
 
         columns={[
-          { field: "id", headerName: "ID", width: 130 },
-          { field: "name", headerName: "Name", width: 130 },
+          // { field: "id", headerName: "ID", width: 130 },
+          /** @TODO (future) show images */
           
-          /** Uncomment this to see all flags of all creatures (test purposes) */
-          { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
-      
+          { field: "name", headerName: "Name", width: 130 },
           { field: "experience", headerName: "Exp", valueGetter: (params) => params.row.experience },
           { field: "hitpoints", headerName: "HP", valueGetter: (params) => params.row.attributes.hitpoints },
           { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.attack },
           { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.defense },
           { field: "armor", headerName: "armor", valueGetter: (params) => params.row.attributes.armor },
-
 
           {
             /** @TODO (future) replace with a horizontal  with the item image, name, rate and amount */
@@ -44,6 +41,10 @@ export default function Creatures({
               return <CellItems items={drops} />;
             }
           },
+
+          /** @TODO (future) show some relevant flags */
+          /** Uncomment this to see all flags of all creatures (test purposes) */
+          // { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
         ]}
         getRowHeight={() => 'auto'}
 
