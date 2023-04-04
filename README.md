@@ -1,6 +1,6 @@
 # Introduction
 
-This is my personal GUI for the Tibia 7.7 database.
+My personal GUI for the Tibia 7.7 database.
 
 Also, my first project with [Next.js](https://nextjs.org/) + [Material-UI 5](https://mui.com/).
 
