@@ -165,7 +165,8 @@ export const getShieldColumns = () => {
  */
 export const getAmuletColumns = () => {
   return [
-    { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
+    /** @TODO figure out the values for ProtectionDamageTypes */
+    // { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
     { field: "damageReduction", headerName: "Damage reduction", valueGetter: (params) => params.row.attributes.DamageReduction ? `${params.row.attributes.DamageReduction}%` : '' },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
   ];
@@ -177,11 +178,14 @@ export const getAmuletColumns = () => {
  */
 export const getRingColumns = () => {
   return [
-    { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
-    { field: "damageReduction", headerName: "Damage reduction", valueGetter: (params) => params.row.attributes.DamageReduction ? `${params.row.attributes.DamageReduction}%` : '' },
+    /** @TODO figure out the values for ProtectionDamageTypes */
+    // { field: "protection", headerName: "Protection", valueGetter: (params) => params.row.attributes.ProtectionDamageTypes ? ObjectAttributes.ProtectionDamageTypes.values[params.row.attributes.ProtectionDamageTypes] : '' },
+    /** @TODO move this to a column called "effect" or similar */
+    // { field: "damageReduction", headerName: "Damage reduction", valueGetter: (params) => params.row.attributes.DamageReduction ? `${params.row.attributes.DamageReduction}%` : '' },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
     { field: "expiration", headerName: "Expiration", valueGetter: (params) => params.row.attributes.TotalExpireTime ? `${params.row.attributes.TotalExpireTime} seconds` : '' },
-    { field: "skillBoos", headerName: "Skill boost", valueGetter: (params) => params.row.flags.includes(ObjectFlags.SkillBoost) ? `${params.row.attributes.SkillModification > 1 ? `${params.row.attributes.SkillModification} ` : ''}${ObjectAttributes.SkillModification.values[params.row.attributes.SkillModificationType]}` : '' },
+    /** @TODO figure out the values for SkillModification */
+    // { field: "skillBoost", headerName: "Skill boost", valueGetter: (params) => params.row.flags.includes(ObjectFlags.SkillBoost) ? `${params.row.attributes.SkillModification > 1 ? `${params.row.attributes.SkillModification} ` : ''}${ObjectAttributes.SkillModification.values[params.row.attributes.SkillModification]}` : '' },
   ];
 }
 
