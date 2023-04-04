@@ -69,6 +69,7 @@ export default function getObjectColumns(typeColumns = []) {
  * @returns {import('@mui/x-data-grid').GridColDef[]} Relevant columns for this type of object.
  */
 export const getWeaponColumns = () => {
+  const twoHandedBodyPositionId = 0;
   return [
     { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.WeaponAttackValue },
     { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.WeaponDefendValue },
@@ -77,7 +78,7 @@ export const getWeaponColumns = () => {
         const flags = params.row.flags;
         const attributes = params.row.attributes;
         const notes = [];
-        if (attributes.BodyPosition === ObjectAttributes.BodyPosition.values['0']) notes.push(`2 handed`);
+        if (attributes.BodyPosition === twoHandedBodyPositionId) notes.push(`2 handed`);
         if (flags.includes(ObjectFlags.WearOut) || flags.includes(ObjectFlags.Expire)) {
           if (attributes.TotalExpireTime) notes.push(`Expires in ${attributes.TotalExpireTime} seconds`);
           if (attributes.TotalUses) notes.push(`Breaks after ${attributes.TotalUses} use(s)`);
