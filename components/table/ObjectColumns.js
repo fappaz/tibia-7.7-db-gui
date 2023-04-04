@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import CellItems from './CellItems';
 import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
+import { round } from '../../utils/Math';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
 
@@ -30,7 +31,7 @@ export default function getObjectColumns(typeColumns = []) {
     {
       field: "dropFrom", headerName: "Drop from", flex: 1, valueGetter: (params) => params.row.dropFrom.sort((a, b) => a.rate - b.rate),
       renderCell: (params) => {
-        const drops = params.row.dropFrom.map(drop => ({ label: drop.creature.name, link: { path: `/creatures/${drop.creature.id}` }, value: drop.rate / 100 }));
+        const drops = params.row.dropFrom.map(drop => ({ label: drop.creature.name, link: { path: `/creatures/${drop.creature.id}` }, value: `${round((drop.rate + 1) / 100, 3)}%` }));
         return <CellItems items={drops} />;
       }
     },

@@ -23,6 +23,13 @@ const creatures = creaturesRaw.map(creatureRaw => {
       creature.Strategy = {
         id: Strategy.arg0,
         /** @TODO (future) set as props instead of array */
+        /** 
+         * Posts with info about the parameters:
+         * - https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-57#post-2685315
+         * - https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-57#post-2685321
+         * - https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-57#post-2685512
+         * 
+         */
         params: [Strategy.arg1,Strategy.arg2,Strategy.arg3]
       };
     }
@@ -38,6 +45,7 @@ const creatures = creaturesRaw.map(creatureRaw => {
     creature.Inventory = (Inventory || []).map(item => ({
       itemId: item.id.arg0,
       amount: item.id.arg1,
+      /** @TODO might be better to save the dropRate as percentage. See https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-57#post-2685520 and https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-52#post-2648558 */
       dropRate: item.id.arg2,
     }));
   } catch (error) {

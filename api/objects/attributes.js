@@ -62,9 +62,13 @@ export default {
   Nutrition: { id: 'Nutrition' },
   Professions: {
     id: 'Professions',
+    /** The values are bit flags */
     values: {
-      '8': 'Sorcerers',
-      '16': 'Druids',
+      '1': 'no vocation',
+      '2': 'knight',
+      '4': 'paladin',
+      '8': 'sorcerer',
+      '16': 'druid',
     }
   },
   ProtectionDamageTypes: { id: 'ProtectionDamageTypes' },
@@ -76,16 +80,28 @@ export default {
   SkillModification: { id: 'SkillModification' },
   SkillNumber: {
     id: 'SkillNumber',
+    /**
+     * Values 12, 15, 17, 18, 19, 23 and 24 are missing.
+     * Some of them are conditions, such as "Poisoning", "Burning", "Electrified" (and "light"?) - see https://otland.net/threads/7-7-realots-7-7-cipsoft-files-virgin.244562/page-59#post-2707667
+     */
     values: {
-      '4': 'Speed',
+      '0': 'Experience',
+      '1': 'Magic level',
+      '2': 'Health',
+      '3': 'Mana',
+      '4': 'Move speed',
+      '5': 'Capacity',
+      '6': 'Shielding',
+      '7': 'Distance fighting',
       '8': 'Sword fighting',
       '9': 'Club fighting',
       '10': 'Axe fighting',
       '11': 'Fist fighting',
-      '14': 'Healing',
-      '16': 'Visibility',
-      '20': 'Heal drunkness',
+      '14': 'Regeneration',
+      '16': 'Stealth', // maybe Illusion is the proper term
+      '20': 'Anti-drunk',
       '21': 'Mana shield',
+      '22': 'Soul',
     }
   },
   SourceLiquidType: { id: 'SourceLiquidType' },

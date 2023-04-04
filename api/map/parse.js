@@ -81,6 +81,9 @@ function flatten(rootObject, childrenPropertyName, startingUniqueId = 1) {
   }
 }
 
+/**
+ * @TODO (future) maybe /origmap is better?
+ */
 const mapQuests = fs.readdirSync('./map')
   .filter(file => file.endsWith('.sec'))
   .map(file => {
