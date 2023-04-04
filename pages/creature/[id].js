@@ -10,32 +10,32 @@ import PageLink from "next/link";
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export default function Item({
+export default function Creature({
 
 } = {}) {
 
   const router = useRouter();
   const { id } = router.query;
-  const [item, setItem] = useState(null);
+  const [creature, setCreature] = useState(null);
 
   useEffect(function onPageMount() {
     if (!id) return;
-    setItem(database.objects.find(item => item.id === parseInt(id)));  
+    setCreature(database.creatures.find(creature => creature.id === id));
   }, [id]);
-  
-  if (!item) return <>Loading item "{id}"...</>;
+
+  if (!creature) return <>Loading creature "{id}"...</>;
 
   return (
     <>
-    <Link
+      <Link
         component={PageLink}
-        href={`${TibiaWikiUrl}/${item.name.replace(' ', '_')}`}
+        href={`${TibiaWikiUrl}/${creature.name.replace(' ', '_')}`}
         target='_blank'
         rel='noopener noreferrer'
       >
-        Temporary link to "{item.name}" on TibiaWiki
+        Temporary link to "{creature.name}" on TibiaWiki
       </Link>
-      {JSON.stringify(item)}
+      {JSON.stringify(creature)}
     </>
   );
 

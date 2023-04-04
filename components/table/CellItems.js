@@ -3,7 +3,7 @@ import PageLink from "next/link";
 
 /**
  * @typedef ItemLink
- * @property {string} path The relative URL path to the item (e.g.: '/creatures/dragon').
+ * @property {string} path The relative URL path to the link (e.g.: '/creature/dragon').
  * @property {boolean} [newTab] (optional) If true, the link will open in a new tab.
  */
 
