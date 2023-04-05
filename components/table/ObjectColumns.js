@@ -94,12 +94,13 @@ export const getWeaponColumns = () => {
     {
       field: "notes", headerName: "Notes", valueGetter: (params) => {
         const flags = params.row.flags;
-        const attributes = params.row.attributes;
+        const { TotalExpireTime, TotalUses } = flags;
+        const { BodyPosition } = params.row.attributes;
         const notes = [];
-        if (attributes.BodyPosition === twoHandedBodyPositionId) notes.push(`2 handed`);
+        if (BodyPosition === twoHandedBodyPositionId) notes.push(`2 handed`);
         if (flags.includes(ObjectFlags.WearOut) || flags.includes(ObjectFlags.Expire)) {
-          if (attributes.TotalExpireTime) notes.push(`Expires in ${attributes.TotalExpireTime} seconds`);
-          if (attributes.TotalUses) notes.push(`Breaks after ${attributes.TotalUses} use(s)`);
+          if (TotalExpireTime) notes.push(`Expires in ${TotalExpireTime} seconds`);
+          if (TotalUses) notes.push(`Breaks after ${TotalUses} use(s)`);
         }
         return notes.join(', ');
       }
