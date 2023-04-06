@@ -50,7 +50,7 @@ yarn-error.log*
 /api/sprites/images
 /database/database.json
 
-public/images/*.gif
+public/images/sprites/*.gif
 
 # playground
 playground.js

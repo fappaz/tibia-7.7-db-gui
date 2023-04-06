@@ -17,38 +17,72 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PageLink from "next/link";
-import CreaturesIcon from './icons/CreaturesIcon';
-import AxeIcon from './icons/AxeIcon';
-import SwordIcon from './icons/SwordIcon';
-import ClubIcon from './icons/ClubIcon';
-import WeaponsIcon from './icons/WeaponsIcon';
+import Image from 'next/image';
 
 const sidebarItems = [
   {
-    label: `Creatures`,
-    icon: <CreaturesIcon />,
-    link: `/creatures`,
-  },
-  {
-    label: `All weapons`,
-    icon: <WeaponsIcon />,
+    label: `Weapons`,
+    icon: <><Image src={`/images/icons/warlord-sword.png`} alt={'Weapons'} width={24} height={24} /></>,
     link: `/items/weapons`,
   },
   {
-    label: `Axes`,
-    icon: <AxeIcon />,
-    link: `/items/axes`,
+    label: `Wands and Rods`,
+    icon: <><Image src={`/images/icons/wand-of-inferno.png`} alt={'Wands and Rods'} width={24} height={24} /></>,
+    link: `/items/wands`,
   },
   {
-    label: `Clubs`,
-    icon: <ClubIcon />,
-    link: `/items/clubs`,
+    label: `Distance weapons`,
+    icon: <><Image src={`/images/icons/bow.png`} alt={'Distance weapons'} width={24} height={24} /></>,
+    link: `/items/distance`,
+  },
+  {}, // divider
+  {
+    label: `Shields`,
+    icon: <><Image src={`/images/icons/blessed-shield.png`} alt={'Shields'} width={24} height={24} /></>,
+    link: `/items/shields`,
   },
   {
-    label: `Swords`,
-    icon: <SwordIcon />,
-    link: `/items/swords`,
+    label: `Helmets`,
+    icon: <><Image src={`/images/icons/golden-helmet.png`} alt={'Helmets'} width={24} height={24} /></>,
+    link: `/items/helmets`,
   },
+  {
+    label: `Armors`,
+    icon: <><Image src={`/images/icons/golden-armor.png`} alt={'Armors'} width={24} height={24} /></>,
+    link: `/items/armors`,
+  },
+  {
+    label: `Legs`,
+    icon: <><Image src={`/images/icons/golden-legs.png`} alt={'Legs'} width={24} height={24} /></>,
+    link: `/items/legs`,
+  },
+  {
+    label: `Boots`,
+    icon: <><Image src={`/images/icons/boots-of-haste.png`} alt={'Boots'} width={24} height={24} /></>,
+    link: `/items/boots`,
+  },
+  {
+    label: `Amulets`,
+    icon: <><Image src={`/images/icons/ruby-amulet.png`} alt={'Amulets'} width={24} height={24} /></>,
+    link: `/items/amulets`,
+  },
+  {
+    label: `Rings`,
+    icon: <><Image src={`/images/icons/ring-of-the-sky.png`} alt={'Rings'} width={24} height={24} /></>,
+    link: `/items/rings`,
+  },
+  {}, // divider
+  {
+    label: `Creatures`,
+    icon: <><Image src={`/images/icons/fire-devil.png`} alt={'Creatures'} width={24} height={24} /></>,
+    link: `/creatures`,
+  },
+  {
+    label: `NPCs`,
+    icon: <><Image src={`/images/icons/citizen.png`} alt={'NPCs'} width={24} height={24} /></>,
+    link: `/npcs`,
+  },
+  {}, // divider
 ];
 const drawerWidth = 240;
 
@@ -161,30 +195,37 @@ export default function Layout({ children }) {
         <List>
           {sidebarItems.map((sidebarItem, index) => (
             <ListItem key={`sidebar-item-${index}`} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-                {...(
-                  sidebarItem.link ? {
-                    component: PageLink,
-                    href: sidebarItem.link,
-                  } : {}
-                )}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {sidebarItem.icon}
-                </ListItemIcon>
-                <ListItemText primary={sidebarItem.label} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
+              {
+                sidebarItem.label ? (
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                    {...(
+                      sidebarItem.link ? {
+                        component: PageLink,
+                        href: sidebarItem.link,
+                      } : {}
+                    )}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {sidebarItem.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={sidebarItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                ) : (
+                  <Divider />
+                )
+              }
+
             </ListItem>
           ))}
         </List>

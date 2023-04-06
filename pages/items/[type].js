@@ -1,4 +1,4 @@
-import database from "../../database/database.json";
+import { objects } from "../../database/database.json";
 import { getArmorColumns, getAmuletColumns, getRingColumns, getWeaponColumns, getWandAndRodColumns, getBowsColumns, getAmmoColumns, getThrowableColumns, getShieldColumns } from "../../components/table/ObjectColumns";
 import ObjectsTable from "../../components/table/ObjectsTable";
 import ObjectFlags from "../../api/objects/flags";
@@ -38,29 +38,14 @@ const types = {
     filter: ({ attributes }) => (attributes||{}).BodyPosition === 9,
     typeColumns: getRingColumns(),
   },
-  axes: {
-    title: 'Axes',
-    filter: ({ attributes }) => (attributes||{}).WeaponType === 3,
-    typeColumns: getWeaponColumns(),
-  },
-  clubs: {
-    title: 'Clubs',
-    filter: ({ attributes }) => (attributes||{}).WeaponType === 2,
-    typeColumns: getWeaponColumns(),
-  },
-  swords: {
-    title: 'Swords',
-    filter: ({ attributes }) => (attributes||{}).WeaponType === 1,
+  weapons: {
+    title: 'Weapons',
+    filter: ({ attributes }) => [1,2,3].includes((attributes||{}).WeaponType),
     typeColumns: getWeaponColumns(),
   },
   wands: {
-    title: 'Wands',
-    filter: ({ attributes }) => (attributes||{}).Professions === 8,
-    typeColumns: getWandAndRodColumns(),
-  },
-  rods: {
-    title: 'Rods',
-    filter: ({ attributes }) => (attributes||{}).Professions === 16,
+    title: 'Wands & Rods',
+    filter: ({ attributes }) => [8, 16].includes((attributes||{}).Professions),
     typeColumns: getWandAndRodColumns(),
   },
   bows: {
@@ -83,7 +68,7 @@ const types = {
     filter: ({ flags }) => (flags||[]).includes(ObjectFlags.Shield),
     typeColumns: getShieldColumns(),
   },
-}
+};
 
 /**
  * @param {Object} props The props.
@@ -108,11 +93,14 @@ export default function Items({
   /** @TODO (future) show a loading wheel */
   if (!typeSettings) return <>Loading...</>;
   
-  const data = database.objects.filter(typeSettings.filter);
+  const data = objects.filter(typeSettings.filter);
 
   return (
     <StandardPage title={typeSettings.title}>
-      <ObjectsTable data={data} typeColumns={typeSettings.typeColumns} />
+      <ObjectsTable
+        data={data}
+        typeColumns={typeSettings.typeColumns}
+      />
     </StandardPage>
   );
 

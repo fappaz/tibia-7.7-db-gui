@@ -1,10 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import database from "../../database/database.json";
+import { creatures } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import { round } from '../../utils/Math';
-
-const creatures = database.creatures.filter(creature => creature.id && !['gamemaster'].includes(creature.id));
+import PageLink from "next/link";
 
 /**
  * @param {Object} props The props.
@@ -17,13 +16,24 @@ export default function Creatures({
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <DataGrid
-        rows={creatures}
+        rows={creatures.filter(creature => creature.id && !['gamemaster'].includes(creature.id))}
 
         columns={[
           // { field: "id", headerName: "ID", width: 130 },
           /** @TODO (future) show images */
           
-          { field: "name", headerName: "Name", width: 130 },
+          {
+            field: "name", headerName: "Name", width: 130,
+            renderCell: (params) => (
+              <Link
+                component={PageLink}
+                href={`/creature/${params.row.id}`}
+              >
+                {params.row.name}
+              </Link>
+            )
+          },
+
           { field: "experience", headerName: "Exp", valueGetter: (params) => params.row.experience },
           { field: "hitpoints", headerName: "HP", valueGetter: (params) => params.row.attributes.hitpoints },
           { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.attack },
@@ -42,13 +52,16 @@ export default function Creatures({
             }
           },
 
-          /** @TODO (future) show some relevant flags */
-          /** Uncomment this to see all flags of all creatures (test purposes) */
-          // { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
+          { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
         ]}
         getRowHeight={() => 'auto'}
 
         initialState={{
+          columns: {
+            columnVisibilityModel: {
+              flags: false,
+            },
+          },
           sorting: {
             sortModel: [{ field: 'experience', sort: 'asc' }],
           },

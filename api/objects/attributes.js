@@ -22,7 +22,7 @@ export default {
   BodyPosition: {
     id: 'BodyPosition',
     values: {
-      '0': 'Two handed',
+      '0': 'Two handed', /** @TODO confirm if this is correct */
       '1': 'Helmet',
       '2': 'Amulet',
       '3': 'Bag',

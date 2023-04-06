@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import CellItems from './CellItems';
-import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
 import { round } from '../../utils/Math';
+import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
 import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
@@ -18,11 +18,11 @@ export default function getObjectColumns(typeColumns = []) {
   return [
     {
       field: "id", headerName: "Image", renderCell: (params) => (
-        <Image src={`/images/${params.row.id}.gif`} alt={params.row.id} width={32} height={32} />
+        <Image src={`/images/sprites/${params.row.id}.gif`} alt={params.row.id} width={32} height={32} />
       )
     },
-    { 
-      field: "name", headerName: "Name", width: 130, 
+    {
+      field: "name", headerName: "Name", width: 130,
       renderCell: (params) => (
         <Link
           component={PageLink}
@@ -32,12 +32,11 @@ export default function getObjectColumns(typeColumns = []) {
         </Link>
       )
     },
-    
+
     ...typeColumns,
-    
-    /** Uncomment this to see all attributes and flags of all objects (test purposes) */
-    // { field: "attributes", headerName: "Attributes", flex: 1, valueGetter: (params) => Object.entries(params.row.attributes).map(([key, value]) => `${key}: ${value}`).join(', ') },
-    // { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
+
+    { field: "attributes", headerName: "Attributes", flex: 1, valueGetter: (params) => Object.entries(params.row.attributes).map(([key, value]) => `${key}: ${value}`).join(', ') },
+    { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
 
     { field: "weight", headerName: "Weight (oz)", valueGetter: (params) => params.row.attributes.Weight / 100 },
     {
@@ -91,6 +90,7 @@ export const getWeaponColumns = () => {
   return [
     { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.WeaponAttackValue },
     { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.WeaponDefendValue },
+    { field: "type", headerName: "Type", valueGetter: (params) => ObjectAttributes.WeaponType.values[params.row.attributes.WeaponType] },
     {
       field: "notes", headerName: "Notes", valueGetter: (params) => {
         const flags = params.row.flags;
@@ -150,8 +150,8 @@ export const getBowsColumns = () => {
  */
 export const getAmmoColumns = () => {
   return [
-    { field: "type", headerName: "AmmoType", valueGetter: (params) => ObjectAttributes.AmmoType.values[params.row.attributes.AmmoType] },
     { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.AmmoAttackValue },
+    { field: "type", headerName: "Type", valueGetter: (params) => ObjectAttributes.AmmoType.values[params.row.attributes.AmmoType] },
     { field: "specialEffect", headerName: "Effect", valueGetter: (params) => ObjectAttributes.AmmoSpecialEffect.values[params.row.attributes.AmmoSpecialEffect] },
   ];
 }
@@ -162,8 +162,8 @@ export const getAmmoColumns = () => {
  */
 export const getThrowableColumns = () => {
   return [
-    { field: "range", headerName: "Range", valueGetter: (params) => params.row.attributes.ThrowRange },
     { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.ThrowAttackValue },
+    { field: "range", headerName: "Range", valueGetter: (params) => params.row.attributes.ThrowRange },
     { field: "breakChance", headerName: "Break chance", valueGetter: (params) => `${params.row.attributes.ThrowFragility}%` },
   ];
 }
@@ -184,7 +184,7 @@ export const getShieldColumns = () => {
  */
 export const getAmuletColumns = () => {
   return [
-    { 
+    {
       field: "effects", headerName: "Effects", flex: 1, valueGetter: (params) => {
         const { DamageReduction, ProtectionDamageTypes, ArmorValue } = params.row.attributes;
         if (DamageReduction) {
@@ -195,7 +195,7 @@ export const getAmuletColumns = () => {
           return `+${ArmorValue} armor`;
         }
         return '';
-      } 
+      }
     },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
   ];
@@ -207,7 +207,7 @@ export const getAmuletColumns = () => {
  */
 export const getRingColumns = () => {
   return [
-    { 
+    {
       field: "effects", headerName: "Effects", flex: 1, valueGetter: (params) => {
         const { DamageReduction, ProtectionDamageTypes, SkillModification, SkillNumber } = params.row.attributes;
         if (DamageReduction) {
@@ -219,7 +219,7 @@ export const getRingColumns = () => {
           return `${SkillModification > 1 ? `+${SkillModification} ` : ''}${ObjectAttributes.SkillNumber.values[SkillNumber]}`;
         }
         return '';
-      } 
+      }
     },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
     { field: "expiration", headerName: "Expiration", valueGetter: (params) => params.row.attributes.TotalExpireTime ? `${params.row.attributes.TotalExpireTime} seconds` : '' },

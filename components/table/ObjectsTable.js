@@ -11,6 +11,7 @@ import getObjectColumns from "./ObjectColumns";
 export default function ObjectsTable({
   data = [],
   typeColumns = [],
+  tableProps = {},
 } = {}) {
 
   /** @TODO fix layout */
@@ -20,19 +21,27 @@ export default function ObjectsTable({
         rows={data}
 
         columns={getObjectColumns(typeColumns)}
-        getRowHeight={() => 'auto'}
 
-        initialState={{
-          sorting: {
-            sortModel: [{ field: typeColumns.length > 0 ? typeColumns[0].field : 'name', sort: 'asc' }],
-          },
-        }}
+        getRowHeight={() => 'auto'}
 
         slots={{
           toolbar: GridToolbar
         }}
 
         disableVirtualization
+
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              attributes: false,
+              flags: false,
+            },
+          },
+          sorting: {
+            sortModel: [{ field: typeColumns.length > 0 ? typeColumns[0].field : 'name', sort: 'asc' }],
+          },
+        }}
+        {...tableProps}
       />
     </Box>
   );
