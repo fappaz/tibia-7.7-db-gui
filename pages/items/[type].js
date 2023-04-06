@@ -1,5 +1,5 @@
 import { objects } from "../../database/database.json";
-import { getAmuletColumns, getRingColumns, getWeaponColumns, getWandAndRodColumns, getShieldColumns } from "../../components/table/ObjectColumns";
+import { getAmuletColumns, getRingColumns, getShieldColumns } from "../../components/table/ObjectColumns";
 import ObjectsTable from "../../components/table/ObjectsTable";
 import ObjectFlags from "../../api/objects/flags";
 import { useEffect, useState } from "react";
@@ -17,11 +17,6 @@ const types = {
     title: 'Rings',
     filter: ({ attributes }) => (attributes||{}).BodyPosition === 9,
     typeColumns: getRingColumns(),
-  },
-  wands: {
-    title: 'Wands & Rods',
-    filter: ({ attributes }) => [8, 16].includes((attributes||{}).Professions),
-    typeColumns: getWandAndRodColumns(),
   },
   shields: {
     title: 'Shields',

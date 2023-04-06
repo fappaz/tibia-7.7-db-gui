@@ -29,7 +29,7 @@ export default function Npcs({
             renderCell: (params) => (
               <Link
                 component={PageLink}
-                href={`${TibiaWikiUrl}${params.row.name.replace(' ', '_')}`}
+                href={`${TibiaWikiUrl}/${params.row.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
                 target='_blank'
                 rel='noopener noreferrer'
               >

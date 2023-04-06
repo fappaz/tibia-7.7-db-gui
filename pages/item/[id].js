@@ -29,7 +29,7 @@ export default function Item({
     <>
     <Link
         component={PageLink}
-        href={`${TibiaWikiUrl}/${item.name.replace(' ', '_')}`}
+        href={`${TibiaWikiUrl}/${item.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
         target='_blank'
         rel='noopener noreferrer'
       >

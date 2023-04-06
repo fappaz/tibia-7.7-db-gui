@@ -29,7 +29,7 @@ export default function Creature({
     <>
       <Link
         component={PageLink}
-        href={`${TibiaWikiUrl}/${creature.name.replace(' ', '_')}`}
+        href={`${TibiaWikiUrl}/${creature.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
         target='_blank'
         rel='noopener noreferrer'
       >

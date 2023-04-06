@@ -42,8 +42,8 @@ const sidebarItems = [
     link: `/items/shields`,
   },
   {
-    label: `Armors`,
-    icon: <><Image src={`/images/icons/golden-armor.png`} alt={'Armors'} width={24} height={24} /></>,
+    label: `Armor items`,
+    icon: <><Image src={`/images/icons/golden-armor.png`} alt={'Armor items'} width={24} height={24} /></>,
     link: `/items/armors`,
   },
   {
