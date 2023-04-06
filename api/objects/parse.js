@@ -9,6 +9,8 @@ const fs = require('fs');
 
 /**
  * @TODO ignore duplicate rings
+ * @TODO fix rune names
+ * @TODO fix vials
  */
 
 let objectsRaw = '';

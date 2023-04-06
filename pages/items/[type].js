@@ -39,7 +39,11 @@ export default function Items({
   const [typeSettings, setTypeSettings] = useState();
 
   useEffect(() => {
-    const typeSettings = types[type];
+    const typeSettings = types[type] || {
+      title: 'Invalid item type',
+      filter: () => false,
+      typeColumns: [],
+    };
     if (!typeSettings) return;
 
     setTypeSettings(typeSettings);

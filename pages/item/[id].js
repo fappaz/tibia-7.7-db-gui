@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
-import database from "../../database/database.json";
+import { objects } from "../../database/database.json";
 import { useState, useEffect } from "react";
 import { URL as TibiaWikiUrl } from "../../utils/TibiaWiki";
-import { Link } from "@mui/material";
+import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
+import Image from "next/image";
 
 /**
  * @TODO jsdoc
@@ -20,22 +21,37 @@ export default function Item({
 
   useEffect(function onPageMount() {
     if (!id) return;
-    setItem(database.objects.find(item => item.id === parseInt(id)));  
+    setItem(objects.find(item => item.id === parseInt(id)));
   }, [id]);
-  
+
   if (!item) return <>Loading item "{id}"...</>;
 
   return (
     <>
-    <Link
-        component={PageLink}
-        href={`${TibiaWikiUrl}/${item.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        Temporary link to "{item.name}" on TibiaWiki
-      </Link>
-      {JSON.stringify(item)}
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Image src={`/images/sprites/${item.id}.gif`} alt={item.id} width={32} height={32} />
+          <Link
+            component={PageLink}
+            href={`${TibiaWikiUrl}/${item.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Temporary link to "{item.name}" on TibiaWiki
+          </Link>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label='JSON'
+            multiline
+            rows={20}
+            value={JSON.stringify(item, null, 2)}
+            variant='outlined'
+            disabled
+            fullWidth
+          />
+        </Grid>
+      </Grid>
     </>
   );
 

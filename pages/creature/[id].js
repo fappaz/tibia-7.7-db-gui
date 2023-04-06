@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import database from "../../database/database.json";
+import { creatures } from "../../database/database.json";
 import { useState, useEffect } from "react";
 import { URL as TibiaWikiUrl } from "../../utils/TibiaWiki";
-import { Link } from "@mui/material";
+import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
 
 /**
@@ -20,23 +20,35 @@ export default function Creature({
 
   useEffect(function onPageMount() {
     if (!id) return;
-    setCreature(database.creatures.find(creature => creature.id === id));
+    setCreature(creatures.find(creature => creature.id === id));
   }, [id]);
 
   if (!creature) return <>Loading creature "{id}"...</>;
 
   return (
-    <>
-      <Link
-        component={PageLink}
-        href={`${TibiaWikiUrl}/${creature.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        Temporary link to "{creature.name}" on TibiaWiki
-      </Link>
-      {JSON.stringify(creature)}
-    </>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Link
+          component={PageLink}
+          href={`${TibiaWikiUrl}/${creature.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          Temporary link to "{creature.name}" on TibiaWiki
+        </Link>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label='JSON'
+          multiline
+          rows={20}
+          value={JSON.stringify(creature, null, 2)}
+          variant='outlined'
+          disabled
+          fullWidth
+        />
+      </Grid>
+    </Grid>
   );
 
 }
