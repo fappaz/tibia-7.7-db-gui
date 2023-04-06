@@ -1,27 +1,22 @@
 import { objects } from "../../database/database.json";
-import { getBowsColumns, getAmmoColumns, getThrowableColumns } from "../../components/table/ObjectColumns";
+import { getWandAndRodColumns } from "../../components/table/ObjectColumns";
 import ObjectsTable from "../../components/table/ObjectsTable";
-import ObjectFlags from "../../api/objects/flags";
 import StandardPage from "../../components/StandardPage";
-import { Box, Tabs, Tab } from "@mui/material";
 import { TabContent, useTabContent } from "../../components/TabContent";
+import { Box, Tabs, Tab } from "@mui/material";
 
-/** @TODO (future) move each to their own file? */
+/**\
+ * @TODO (future) use constants
+ * @TODO (future) move each to their own file?
+ * */
 const tabs = [
   {
-    title: 'Bows',
-    data: objects.filter(({ flags }) => (flags || []).includes(ObjectFlags.Bow)),
-    columns: getBowsColumns(),
+    title: 'Wands',
+    professionId: 8,
   },
   {
-    title: 'Ammo',
-    data: objects.filter(({ flags }) => (flags || []).includes(ObjectFlags.Ammo)),
-    columns: getAmmoColumns(),
-  },
-  {
-    title: 'Throwables',
-    data: objects.filter(({ flags }) => (flags || []).includes(ObjectFlags.Throw)),
-    columns: getThrowableColumns(),
+    title: 'Rods',
+    professionId: 16,
   },
 ];
 
@@ -29,14 +24,14 @@ const tabs = [
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export default function DistanceItems({
+export default function WandsAndRodItems({
 
 } = {}) {
 
   const { activeTabIndex, handleTabChange } = useTabContent(0);
 
   return (
-    <StandardPage title='Distance items'>
+    <StandardPage title='Wands and Rods'>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={activeTabIndex} onChange={handleTabChange}>
           {
@@ -54,8 +49,8 @@ export default function DistanceItems({
         tabs.map((tab, index) => (
           <TabContent activeTabIndex={activeTabIndex} index={index} key={`tab-panel-${index}`}>
             <ObjectsTable
-              data={tab.data}
-              typeColumns={tab.columns}
+              data={objects.filter(({ attributes }) => (attributes || {}).Professions === tab.professionId)}
+              typeColumns={getWandAndRodColumns()}
             />
           </TabContent>
         ))

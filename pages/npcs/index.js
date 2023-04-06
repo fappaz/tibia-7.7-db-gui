@@ -2,7 +2,6 @@ import { Box, Link } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
-import { round } from '../../utils/Math';
 import PageLink from "next/link";
 import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
 import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';

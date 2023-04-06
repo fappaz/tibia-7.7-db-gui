@@ -42,24 +42,9 @@ const sidebarItems = [
     link: `/items/shields`,
   },
   {
-    label: `Helmets`,
-    icon: <><Image src={`/images/icons/golden-helmet.png`} alt={'Helmets'} width={24} height={24} /></>,
-    link: `/items/helmets`,
-  },
-  {
     label: `Armors`,
     icon: <><Image src={`/images/icons/golden-armor.png`} alt={'Armors'} width={24} height={24} /></>,
     link: `/items/armors`,
-  },
-  {
-    label: `Legs`,
-    icon: <><Image src={`/images/icons/golden-legs.png`} alt={'Legs'} width={24} height={24} /></>,
-    link: `/items/legs`,
-  },
-  {
-    label: `Boots`,
-    icon: <><Image src={`/images/icons/boots-of-haste.png`} alt={'Boots'} width={24} height={24} /></>,
-    link: `/items/boots`,
   },
   {
     label: `Amulets`,

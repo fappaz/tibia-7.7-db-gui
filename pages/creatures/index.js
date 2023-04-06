@@ -38,7 +38,7 @@ export default function Creatures({
           { field: "hitpoints", headerName: "HP", valueGetter: (params) => params.row.attributes.hitpoints },
           { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.attack },
           { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.defense },
-          { field: "armor", headerName: "armor", valueGetter: (params) => params.row.attributes.armor },
+          { field: "armor", headerName: "Armor", valueGetter: (params) => params.row.attributes.armor },
 
           {
             /** @TODO (future) replace with a horizontal  with the item image, name, rate and amount */
