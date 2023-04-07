@@ -21,6 +21,23 @@ import Image from 'next/image';
 
 const sidebarItems = [
   {
+    /** @TODO implement */
+    label: `Map`,
+    icon: <><Image src={`/images/icons/map.png`} alt={'Map'} width={24} height={24} /></>,
+    link: `/map`,
+  },
+  {
+    label: `Creatures`,
+    icon: <><Image src={`/images/icons/fire-devil.png`} alt={'Creatures'} width={24} height={24} /></>,
+    link: `/creatures`,
+  },
+  {
+    label: `NPCs`,
+    icon: <><Image src={`/images/icons/citizen.png`} alt={'NPCs'} width={24} height={24} /></>,
+    link: `/npcs`,
+  },
+  {}, // divider
+  {
     label: `Weapons`,
     icon: <><Image src={`/images/icons/warlord-sword.png`} alt={'Weapons'} width={24} height={24} /></>,
     link: `/items/weapons`,
@@ -58,14 +75,15 @@ const sidebarItems = [
   },
   {}, // divider
   {
-    label: `Creatures`,
-    icon: <><Image src={`/images/icons/fire-devil.png`} alt={'Creatures'} width={24} height={24} /></>,
-    link: `/creatures`,
+    /** @TODO implement */
+    label: `Runes`,
+    icon: <><Image src={`/images/icons/ultimate-healing-rune.png`} alt={'Runes'} width={24} height={24} /></>,
+    link: `/items/runes`,
   },
   {
-    label: `NPCs`,
-    icon: <><Image src={`/images/icons/citizen.png`} alt={'NPCs'} width={24} height={24} /></>,
-    link: `/npcs`,
+    label: `Spells`,
+    icon: <><Image src={`/images/icons/spellbook.png`} alt={'Spells'} width={24} height={24} /></>,
+    link: `/spells`,
   },
   {}, // divider
 ];
