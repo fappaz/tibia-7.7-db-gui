@@ -2,11 +2,15 @@ import Image from 'next/image';
 import CellItems from './CellItems';
 import { round } from '../../utils/Math';
 import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
-import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';
+import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
 import { Link } from "@mui/material";
 import PageLink from "next/link";
+
+/**
+ * @TODO (future) each type columns should be its own file
+ */
 
 /**
  * 
@@ -35,14 +39,14 @@ export default function getObjectColumns(typeColumns = []) {
 
     ...typeColumns,
 
-    { field: "attributes", headerName: "Attributes", flex: 1, valueGetter: (params) => Object.entries(params.row.attributes).map(([key, value]) => `${key}: ${value}`).join(', ') },
-    { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
+    { field: "attributes", headerName: "Attributes", flex: 1, valueGetter: (params) => Object.entries(params.row.attributes||{}).map(([key, value]) => `${key}: ${value}`).join(', ') },
+    { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => (params.row.flags||[]).join(', ') },
 
-    { field: "weight", headerName: "Weight (oz)", valueGetter: (params) => params.row.attributes.Weight / 100 },
+    { field: "weight", headerName: "Weight (oz)", valueGetter: (params) => (params.row.attributes||{Weight:0}).Weight / 100 },
     {
       field: "dropFrom", headerName: "Drop from", flex: 1, valueGetter: (params) => params.row.dropFrom.sort((a, b) => a.rate - b.rate),
       renderCell: (params) => {
-        const drops = params.row.dropFrom.map(drop => ({ label: drop.creature.name, link: { path: `/creature/${drop.creature.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%` }));
+        const drops = params.row.dropFrom.map(drop => ({ label: drop.creature.name, link: { path: `/creatures/${drop.creature.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%` }));
         return <CellItems items={drops} />;
       }
     },
@@ -51,7 +55,7 @@ export default function getObjectColumns(typeColumns = []) {
       renderCell: (params) => {
         /** @TODO (future) use this line instead once the NPCs page is implemented */
         // const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
-        const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `${TibiaWikiUrl}${offer.npc.name.replace(' ', '_')}`, newTab: true }, value: offer.price }));
+        const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: getTibiaWikiUrl(offer.npc.name), newTab: true }, value: offer.price }));
         return <CellItems items={offers} />;
       }
     },
@@ -60,7 +64,7 @@ export default function getObjectColumns(typeColumns = []) {
       renderCell: (params) => {
         /** @TODO (future) use this line instead once the NPCs page is implemented */
         // const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
-        const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `${TibiaWikiUrl}${offer.npc.name.replace(' ', '_')}`, newTab: true }, value: offer.price }));
+        const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: getTibiaWikiUrl(offer.npc.name), newTab: true }, value: offer.price }));
         return <CellItems items={offers} />;
       }
     },
@@ -70,7 +74,7 @@ export default function getObjectColumns(typeColumns = []) {
         const quests = params.row.questRewards.map(questReward => {
           /** @TODO (future) use this line instead once the NPCs page is implemented */
           // if (questReward.npc) return { label: questReward.npc.name, link: { path: `/npcs/${questReward.npc.id}` } };
-          if (questReward.npc) return { label: questReward.npc.name, link: { path: `${TibiaWikiUrl}${questReward.npc.name.replace(' ', '_')}`, newTab: true } };
+          if (questReward.npc) return { label: questReward.npc.name, link: { path: getTibiaWikiUrl(questReward.npc.name), newTab: true } };
           if (questReward.chest) return { label: `map`, link: { path: getTibiaMapsUrl(questReward.chest.coordinates), newTab: true } };
           return null;
         });
@@ -223,5 +227,18 @@ export const getRingColumns = () => {
     },
     { field: "uses", headerName: "Uses", valueGetter: (params) => params.row.attributes.TotalUses ? params.row.attributes.TotalUses : '' },
     { field: "expiration", headerName: "Expiration", valueGetter: (params) => params.row.attributes.TotalExpireTime ? `${params.row.attributes.TotalExpireTime} seconds` : '' },
+  ];
+}
+
+
+/**
+ * 
+ * @returns {import('@mui/x-data-grid').GridColDef[]} Relevant columns for this type of object.
+ */
+export const getFoodColumns = () => {
+  return [
+    { field: "nutrition", headerName: "Nutrition", valueGetter: (params) => params.row.attributes.Nutrition },
+    { field: "weightNutritionRatio", headerName: "Weight x nutrition ratio", valueGetter: (params) => round(params.row.attributes.Nutrition / params.row.attributes.Weight, 2) },
+    { field: "cumulative", headerName: "Cumulative", valueGetter: (params) => params.row.flags.Cumulative ? 'Yes' : 'No' },
   ];
 }

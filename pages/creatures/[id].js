@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { creatures } from "../../database/database.json";
 import { useState, useEffect } from "react";
-import { URL as TibiaWikiUrl } from "../../utils/TibiaWiki";
+import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
 
@@ -30,7 +30,7 @@ export default function Creature({
       <Grid item xs={12}>
         <Link
           component={PageLink}
-          href={`${TibiaWikiUrl}/${creature.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
+          href={getTibiaWikiUrl(creature.name)}
           target='_blank'
           rel='noopener noreferrer'
         >

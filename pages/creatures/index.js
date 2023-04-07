@@ -27,7 +27,7 @@ export default function Creatures({
             renderCell: (params) => (
               <Link
                 component={PageLink}
-                href={`/creature/${params.row.id}`}
+                href={`/creatures/${params.row.id}`}
               >
                 {params.row.name}
               </Link>
@@ -36,8 +36,8 @@ export default function Creatures({
 
           { field: "experience", headerName: "Exp", valueGetter: (params) => params.row.experience },
           { field: "hitpoints", headerName: "HP", valueGetter: (params) => params.row.attributes.hitpoints },
-          { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.attack },
-          { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.defense },
+          { field: "attack", headerName: "Attack", valueGetter: (params) => params.row.attributes.attack || '' },
+          { field: "defense", headerName: "Defense", valueGetter: (params) => params.row.attributes.defense || '' },
           { field: "armor", headerName: "Armor", valueGetter: (params) => params.row.attributes.armor },
 
           {
@@ -51,6 +51,8 @@ export default function Creatures({
               return <CellItems items={drops} />;
             }
           },
+          
+          { field: "summonCost", headerName: "Summon cost", valueGetter: (params) => params.row.summonCost || '' },
 
           { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
         ]}

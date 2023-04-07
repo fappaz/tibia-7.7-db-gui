@@ -11,8 +11,44 @@ const database = {
   creatures: [],
   npcs: [],
   objects: [],
-  // spells: [],
   // quests: [],
+
+  /**
+   * Retrieved from NPC 'Loria'
+   * @TODO add minimumLevel
+   * */
+  spells: [
+    { name: "find person", words: "exiva 'name'", vocations:[], taughtBy: [] }, 
+    { name: "light", words: "utevo lux", vocations:[], taughtBy: [] }, 
+    { name: "light healing", words: "exura", vocations:[], taughtBy: [] }, 
+    { name: "light magic missile", words: "adori", vocations:[], taughtBy: [] }, 
+    { name: "antidote", words: "exana pox", vocations:[], taughtBy: [] }, 
+    { name: "intense healing", words: "exura gran", vocations:[], taughtBy: [] }, 
+    { name: "poison field", words: "adevo grav pox", vocations:[], taughtBy: [] }, 
+    { name: "great light", words: "utevo gran lux", vocations:[], taughtBy: [] }, 
+    { name: "fire field", words: "adevo grav flam", vocations:[], taughtBy: [] }, 
+    { name: "heavy magic missile", words: "adori gran", vocations:[], taughtBy: [] }, 
+    { name: "magic shield", words: "utamo vita", vocations:[], taughtBy: [] }, 
+    { name: "fireball", words: "adori flam", vocations:[], taughtBy: [] }, 
+    { name: "energy field", words: "adevo grav vis", vocations:[], taughtBy: [] }, 
+    { name: "destroy field", words: "adito grav", vocations:[], taughtBy: [] }, 
+    { name: "fire wave", words: "exevo flam hur", vocations:[], taughtBy: [] }, 
+    { name: "ultimate healing", words: "exura vita", vocations:[], taughtBy: [] }, 
+    { name: "great fireball", words: "adori gran flam", vocations:[], taughtBy: [] }, 
+    { name: "fire bomb", words: "adevo mas flam", vocations:[], taughtBy: [] }, 
+    { name: "firebomb", words: "adevo mas flam", vocations:[], taughtBy: [] }, 
+    { name: "energy beam", words: "exevo vis lux", vocations:[], taughtBy: [] }, 
+    { name: "creature illusion", words: "utevo res ina 'creature'", vocations:[], taughtBy: [] }, 
+    { name: "poison wall", words: "adevo mas grav pox", vocations:[], taughtBy: [] }, 
+    { name: "explosion", words: "adevo mas hur", vocations:[], taughtBy: [] }, 
+    { name: "fire wall", words: "adevo mas grav flam", vocations:[], taughtBy: [] }, 
+    { name: "great energy beam", words: "exevo gran vis lux", vocations:[], taughtBy: [] }, 
+    { name: "invisible", words: "utana vid", vocations:[], taughtBy: [] }, 
+    { name: "summon creature", words: "utevo res 'creature'", vocations:[], taughtBy: [] }, 
+    { name: "energy wall", words: "adevo mas grav vis", vocations:[], taughtBy: [] }, 
+    { name: "energy wave", words: "exevo mort hur", vocations:[], taughtBy: [] }, 
+    { name: "sudden death", words: "adori vita vis", vocations:[], taughtBy: [] }, 
+  ],
 };
 
 const spritesDirPath = '../api/sprites/images';
@@ -22,7 +58,7 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
   
-  createGif(datObject.sprite.spriteIds.map(ids=>`${spritesDirPath}/${ids}.png`), `${gifsOutputDirPath}/${datObject.id}.gif`);
+  // createGif(datObject.sprite.spriteIds.map(ids=>`${spritesDirPath}/${ids}.png`), `${gifsOutputDirPath}/${datObject.id}.gif`);
 
   return {
     id: datObject.id,
@@ -59,6 +95,18 @@ database.npcs = npcsGmud.map((npcGmud) => {
   const location = { coordinates: Home };
   const buyOffers = Behaviours.buyOffers.map(offer => behaviourOfferToOffer(offer, npcGmud, 'sellTo')).filter(o => o);
   const sellOffers = Behaviours.sellOffers.map(offer => behaviourOfferToOffer(offer, npcGmud, 'buyFrom')).filter(o => o);
+  const teachSpells = Behaviours.teachSpells.map(teachSpell => {
+    const spellIndex = database.spells.findIndex(o => o.name === teachSpell.name);
+    if (spellIndex < 0) return null;
+    const spell = database.spells[spellIndex];
+    /** @TODO this is not being pushed to the database correctly */
+    database.spells[spellIndex].taughtBy.push[{ id: npcGmud.id, name: npcGmud.Name, price: teachSpell.price }];
+    if (!spell.vocations.includes(teachSpell.vocation)) database.spells[spellIndex].vocations.push(teachSpell.vocation);
+    return {
+      name: teachSpell.name,
+      price: teachSpell.price,
+    }
+  }).filter(o => o);
   const questRewards = [...new Set(Behaviours.questRewardItemIds)].map(itemId => {
     const itemIndex = database.objects.findIndex(o => o.id === itemId);
     if (itemIndex < 0) return null;
@@ -84,6 +132,7 @@ database.npcs = npcsGmud.map((npcGmud) => {
     buyOffers,
     sellOffers,
     questRewards,
+    teachSpells,
   };
 });
 
@@ -153,7 +202,7 @@ mapQuestsGmud.forEach((mapSector) => {
   });
 });
 
-async function createGif(sprites, targetPath, { delay = 200, repeat = 0, quality = 10 } = {}) {
+async function createGif(sprites, targetPath, { delay = 250, repeat = 0, quality = 10 } = {}) {
 
   const [width, height] = [32, 32];
   const canvas = createCanvas(width, height);

@@ -4,7 +4,7 @@ import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import PageLink from "next/link";
 import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
-import { URL as TibiaWikiUrl } from '../../utils/TibiaWiki';
+import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
 
 
 /**
@@ -29,7 +29,7 @@ export default function Npcs({
             renderCell: (params) => (
               <Link
                 component={PageLink}
-                href={`${TibiaWikiUrl}/${params.row.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
+                href={getTibiaWikiUrl(params.row.name)}
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -73,6 +73,19 @@ export default function Npcs({
                 label: offer.item.name,
                 link: { path: `/item/${offer.item.id}` },
                 value: offer.price,
+              }));
+              return <CellItems items={offers} />;
+            }
+          },
+
+          {
+            field: "teachSpells", headerName: "Teach spells", flex: 1, valueGetter: (params) => params.row.teachSpells.sort((a, b) => a.name.localeCompare(b.name)),
+            renderCell: (params) => {
+              const offers = params.row.teachSpells.map(spell => ({
+                label: spell.name,
+                /** @TODO slugify instead of encode */
+                link: { path: `/spell/${encodeURIComponent(spell.name)}` },
+                value: spell.price,
               }));
               return <CellItems items={offers} />;
             }

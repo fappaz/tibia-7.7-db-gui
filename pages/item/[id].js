@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { objects } from "../../database/database.json";
 import { useState, useEffect } from "react";
-import { URL as TibiaWikiUrl } from "../../utils/TibiaWiki";
+import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
 import Image from "next/image";
@@ -33,7 +33,7 @@ export default function Item({
           <Image src={`/images/sprites/${item.id}.gif`} alt={item.id} width={32} height={32} />
           <Link
             component={PageLink}
-            href={`${TibiaWikiUrl}/${item.name.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join('_')}`}
+            href={getTibiaWikiUrl(item.name.split)}
             target='_blank'
             rel='noopener noreferrer'
           >

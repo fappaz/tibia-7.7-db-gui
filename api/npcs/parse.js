@@ -80,6 +80,7 @@ function buildBehaviourSummary(lines) {
     buyOffers: [],
     sellOffers: [],
     questRewardItemIds: [],
+    teachSpells: [],
   };
   const sellOfferTopicIds = [];
   const buyOfferTopicIds = [];
@@ -101,6 +102,17 @@ function buildBehaviourSummary(lines) {
     if (functionArgs.match(/SetQuestValue/)) {
       const match = functionArgs.match(/Create\((\d+)/i);
       if (match) summary.questRewardItemIds.push(parseInt(match[1]));
+    }
+    if (['Knight', 'Paladin', 'Druid', 'Sorcerer'].includes(conditionsArgs.split(',', 2)[0])) {
+      const functionMatch = /Price=(\d+)?/g.exec(functionArgs);
+      if (functionMatch) {
+        const [, vocation, name] = /^(\w+),(".+")$/g.exec(conditionsArgs);
+        summary.teachSpells.push({
+          name: name.replaceAll(/"/g, '').split(',').map(word => word.trim()).join(' '),
+          vocation,
+          price: parseInt(functionMatch[1]),
+        });
+      }
     }
     behaviours.push(behaviour);
   }
