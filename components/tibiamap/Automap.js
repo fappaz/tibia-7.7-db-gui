@@ -102,41 +102,66 @@ const floors = [
  * - add shortcut to towns
  * - generate map from version 7.7
  * - use css module instead of inline css
+ * - jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
 export default function Map({
-  center = [MAP_WIDTH / 2, MAP_HEIGHT / 2],
-  floor = 7,
+  center = [MAP_WIDTH / 2, MAP_HEIGHT / 2, 7],
   markers = [],
   zoom = -2,
 } = {}) {
+  
+  const [map, setMap] = useState();
+  const [position, setPosition] = useState(center);
+  const activeFloor = position[2];
 
-  const [activeFloor, setActiveFloor] = useState(floor);
-  const mapControlsRef = useRef();
+  const onMove = useCallback(() => {
+    /**
+     * The issue with the map not updating its position when dragging is likely happening here.
+     * 
+     * */
+    // setPosition(position => {
+    //   const currentCenter = map.getCenter();
+    //   const newCenter = [currentCenter.lat, currentCenter.lng, position[2]];
+    //   console.log(`@TODO moving map to: `, JSON.stringify(newCenter));
+    //   return newCenter;
+    // });
+  }, [map]);
 
   useEffect(() => {
-    const f = L?.DomEvent?.disableClickPropagation;
-    if (!f || !mapControlsRef.current) return;
-    f(mapControlsRef.current);
-  }, [mapControlsRef]);
+    if (!map) return;
+    console.log(`@TODO ### position being updated to: `, position);
+    // const coordinates = pixelsToCoordinates(position, [MAP_WIDTH, MAP_HEIGHT]);
+    // map.setView(coordinates, map.getZoom(), { animate: true });
+    map.setView(position, map.getZoom(), { animate: true });
+  }, [map, position]);
+  
+  useEffect(() => {
+    if (!map) return;
+    map.on('movestart', onMove);
+    return () => {
+      map.off('movestart', onMove);
+    }
+  }, [map, onMove]);
+  
+  useEffect(() => {
+    console.log(`@TODO ### external change requested: `, center);
+    setPosition(position => center);
+  }, [center]);
 
   const handleFloorChange = (increment) => {
     let newFloor = activeFloor + increment;
     if (newFloor < floors[0].value) newFloor = floors[0].value;
     if (newFloor > floors[floors.length - 1].value) newFloor = floors[floors.length - 1].value;
-    setActiveFloor(newFloor);
-  };
 
-  useEffect(() => {
-    console.log('floor changed', floor);
-    setActiveFloor(floor);
-  }, [floor]);
+    setPosition(position => [position[0], position[1], newFloor]);
+  };
 
   return (
     <div id='map-root' style={{ display: 'flex', width: '100%', height: '100%' }}>
       <MapContainer
-        center={center}
+        center={center.slice(0, 2)}
         zoom={zoom}
         minZoom={-2}
         maxZoom={4}
@@ -148,6 +173,7 @@ export default function Map({
           imageRendering: "-webkit-optimize-contrast",
           imageRendering: "pixelated",
         }}
+        ref={setMap}
       >
         <ImageOverlay
           url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
@@ -162,30 +188,19 @@ export default function Map({
             </Marker>
           ))
         }
-        <MoveMap center={center} />
+        <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.9)', fontSize: '10px' }}>
+          {position.join(', ')}
+        </div>
       </MapContainer>
-      <div ref={mapControlsRef}>
-        <Box>
-          <ButtonGroup variant='outlined' orientation='vertical'>
-            <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0 }>+</Button>
-            <Button disabled>{floors[activeFloor].label}</Button>
-            <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
-          </ButtonGroup>
-        </Box>
-      </div>
+
+      <ButtonGroup variant='outlined' orientation='vertical'>
+        <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}>+</Button>
+        <Button disabled>{floors[activeFloor].label}</Button>
+        <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
+      </ButtonGroup>
 
     </div>
   );
-}
-
-function MoveMap({ center }) {
-
-  const map = useMap();
-
-  const coordinates = pixelsToCoordinates(center, [MAP_WIDTH, MAP_HEIGHT]);
-  map.setView(coordinates, map.getZoom(), { animate: true });
-
-  return null; // return null to avoid rendering anything
 }
 
 function pixelsToCoordinates([x, y], [width, height]) {

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import database from "../../database/database.json";
 import { useState, useEffect } from "react";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
-import { Box, Divider, Grid, Link, List, ListItem, ListItemButton, ListItemText, TextField, Tab, Tabs } from "@mui/material";
+import { Box, Divider, Grid, Link, List, ListItem, ListItemButton, ListItemText, TextField, Tab, Tabs, Typography } from "@mui/material";
 import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
 import TibiaMap from "../../components/tibiamap";
@@ -65,7 +65,7 @@ export default function Creature({
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <LocationMap markers={creature.spawns.map(spawn => ({ coordinates: spawn.coordinates, label: `${spawn.amount}x every ${spawn.interval} seconds` }))} />
+            <LocationMap markers={creature.spawns.map(spawn => ({ coordinates: spawn.coordinates, label: `${spawn.amount}x every ${spawn.interval} seconds - ${spawn.coordinates.join(', ')}` }))} />
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={2}>
@@ -111,6 +111,7 @@ export function Drops({
 }
 
 /**
+ * @TODO move to its own file
  * @TODO jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
@@ -120,9 +121,8 @@ export function LocationMap({
   mapProps = {},
 } = {}) {
 
-  const [activeMarker, setActiveMarker] = useState(markers.length > 0 ? markers[0] : null);
-  const position = activeMarker?.coordinates ? activeMarker.coordinates.slice(0, 2) : undefined;
-  const floor = activeMarker?.coordinates ? activeMarker.coordinates.slice(2, 3)[0] : undefined;
+  const [activeMarker, setActiveMarker] = useState([...markers].length > 0 ? markers[0] : undefined);
+
   return (
     <>
       <Box
@@ -133,7 +133,7 @@ export function LocationMap({
       >
         <MarkersQuickAccess markers={markers} onSelect={setActiveMarker} selected={activeMarker} />
         <Box p={1} flexGrow={1}>
-          <TibiaMap center={position} floor={floor} markers={markers} {...mapProps} />
+          <TibiaMap center={activeMarker.coordinates} markers={markers} {...mapProps} />
         </Box>
       </Box>
     </>
@@ -142,6 +142,7 @@ export function LocationMap({
 
 
 /**
+ * @TODO move to its own file
  * @TODO jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
@@ -153,26 +154,42 @@ export function MarkersQuickAccess({
 } = {}) {
 
   return (
-    <List sx={{ overflow: 'auto' }}>
-      {
-        markers.map((marker, index) => (
-          <div key={index}>
-            <ListItem disablePadding>
-              <ListItemButton selected={JSON.stringify(selected.coordinates) === JSON.stringify(marker.coordinates)} onClick={() => onSelect(marker)}>
-                <ListItemText primary={marker.coordinates.join(', ')} />
-              </ListItemButton>
-            </ListItem>
+    <div style={{ overflow: 'auto' }}>
+      <Typography variant='caption'>{markers.length} spawn(s):</Typography>
+      <List>
+        <Divider />
+        {
+          markers
+            .sort((a,b) => {
+              /** Sort by 'z,x,y' asc */
+              const format = c => c.toString().padStart(5, '0');
+              const aString = a.coordinates.map(format);
+              const aFormatted = `${aString[2]},${aString[0]},${aString[1]}`;
+              const bString = b.coordinates.map(format);
+              const bFormatted = `${bString[2]},${bString[0]},${bString[1]}`;
+              return aFormatted.localeCompare(bFormatted);
+            })
+            .map((marker, index) => (
+              <div key={index}>
+                <ListItem disablePadding>
+                  <ListItemButton selected={JSON.stringify(selected.coordinates) === JSON.stringify(marker.coordinates)} onClick={() => onSelect(marker)}>
+                    <ListItemText secondary={`${index+1}. ${marker.coordinates.join(', ')}`} />
+                  </ListItemButton>
+                </ListItem>
 
-            <Divider />
-          </div>
-        ))
-      }
-    </List>
+                <Divider />
+              </div>
+            )
+          )
+        }
+      </List>
+    </div>
   );
 }
 
 
 /**
+ * @TODO move to its own file
  * @TODO jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
