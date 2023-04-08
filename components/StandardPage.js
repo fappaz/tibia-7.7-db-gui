@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 import Title from "./text/Title";
 
@@ -13,14 +13,14 @@ export default function StandardPage({
 } = {}) {
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
+    <div id='page-root' style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box mb={2}>
         <Title>{title}</Title>
-      </Grid>
+      </Box>
 
-      <Grid item xs={12}>
+      <div id='page-content' style={{ flexGrow: 1, height: '100%' }}>
         {children}
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   )
 }

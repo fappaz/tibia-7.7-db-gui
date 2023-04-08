@@ -16,7 +16,7 @@ export default function ObjectsTable({
 
   /** @TODO fix layout */
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box id='table-root' sx={{ display: "flex", height: "100vh" }}>
       <DataGrid
         rows={data}
 

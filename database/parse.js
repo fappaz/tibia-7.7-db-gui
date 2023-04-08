@@ -58,6 +58,7 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
   
+  // uncomment this to generate the images again
   // createGif(datObject.sprite.spriteIds.map(ids=>`${spritesDirPath}/${ids}.png`), `${gifsOutputDirPath}/${datObject.id}.gif`);
 
   return {
@@ -151,6 +152,7 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
     },
     outfit: creatureGmud.Outfit,
     flags: creatureGmud.Flags,
+    spawns: creatureGmud.spawns,
   };
   
   const hitpointsSkill = creatureGmud.Skills.find(skill => skill.id === 'HitPoints');

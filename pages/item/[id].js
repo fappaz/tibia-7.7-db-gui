@@ -5,6 +5,7 @@ import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
 import Image from "next/image";
+import StandardPage from "../../components/StandardPage";
 
 /**
  * @TODO jsdoc
@@ -27,18 +28,26 @@ export default function Item({
   if (!item) return <>Loading item "{id}"...</>;
 
   return (
-    <>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+    <StandardPage
+      title={
+        <div style={{ display: 'flex' }}>
           <Image src={`/images/sprites/${item.id}.gif`} alt={item.id} width={32} height={32} />
+          {`${item.name} (`}
           <Link
             component={PageLink}
-            href={getTibiaWikiUrl(item.name.split)}
+            href={getTibiaWikiUrl(item.name)}
             target='_blank'
             rel='noopener noreferrer'
           >
-            Temporary link to "{item.name}" on TibiaWiki
+            TibiaWiki
           </Link>
+          {`)`}
+        </div>
+      }
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -52,7 +61,7 @@ export default function Item({
           />
         </Grid>
       </Grid>
-    </>
+    </StandardPage>
   );
 
 }
