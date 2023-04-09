@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Box, Button, Card, ButtonGroup } from "@mui/material";
-import { ImageOverlay, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { ImageOverlay, MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { AUTOMAP_HEIGHT, AUTOMAP_WIDTH, pixelsToLatLng, latLngToPixels } from '../../utils/TibiaMaps';
 
 
 // Create a Leaflet icon object using the default icon images
@@ -16,13 +17,10 @@ const defaultIcon = new L.icon({
   shadowSize: [41, 41],
 });
 
-const MAP_WIDTH = 2560;
-const MAP_HEIGHT = 2048;
-
 const imageBounds = [
   [0, 0], // Top-left coordinates in pixels
-  // [MAP_WIDTH, MAP_HEIGHT], // Bottom-right coordinates in pixels
-  [MAP_HEIGHT, MAP_WIDTH], // Bottom-right coordinates in pixels
+  // [AUTOMAP_WIDTH, AUTOMAP_HEIGHT], // Bottom-right coordinates in pixels
+  [AUTOMAP_HEIGHT, AUTOMAP_WIDTH], // Bottom-right coordinates in pixels
 ];
 
 const floors = [
@@ -94,12 +92,10 @@ const floors = [
 
 /**
  * @TODO
- * - fix map position when clicking on marker then moving around - most urgent!
  * - support coordinates from url params
  * - support custom marker icons (might face issues, see https://github.com/PaulLeCam/react-leaflet/issues/563 and https://stackoverflow.com/questions/73331688/how-to-use-svg-component-in-react-leaflet)
  * - improve UI of multiple floors
  * - show name of towns?
- * - add shortcut to towns
  * - generate map from version 7.7
  * - use css module instead of inline css
  * - jsdoc
@@ -107,47 +103,52 @@ const floors = [
  * @returns {import("react").ReactNode}
  */
 export default function Map({
-  center = [MAP_WIDTH / 2, MAP_HEIGHT / 2, 7],
+  center = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7],
   markers = [],
   zoom = -2,
 } = {}) {
-  
+
   const [map, setMap] = useState();
-  const [position, setPosition] = useState(center);
+  const [position, setPosition] = useState(() => pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]));
   const activeFloor = position[2];
 
   const onMove = useCallback(() => {
+    console.log(`@TODO ### moving map.............`);
     /**
      * The issue with the map not updating its position when dragging is likely happening here.
      * 
      * */
-    // setPosition(position => {
-    //   const currentCenter = map.getCenter();
-    //   const newCenter = [currentCenter.lat, currentCenter.lng, position[2]];
-    //   console.log(`@TODO moving map to: `, JSON.stringify(newCenter));
-    //   return newCenter;
-    // });
+    setPosition(position => {
+      const currentCenter = map.getCenter();
+      const newCenter = [currentCenter.lat.toFixed(0), currentCenter.lng.toFixed(0), position[2]];
+      // const newCenter = [currentCenter.lng.toFixed(0), currentCenter.lat.toFixed(0), position[2]];
+      console.log(`@TODO updating position from`, currentCenter , `to: `, JSON.stringify(newCenter));
+      return newCenter;
+    });
   }, [map]);
 
   useEffect(() => {
     if (!map) return;
-    console.log(`@TODO ### position being updated to: `, position);
-    // const coordinates = pixelsToCoordinates(position, [MAP_WIDTH, MAP_HEIGHT]);
-    // map.setView(coordinates, map.getZoom(), { animate: true });
-    map.setView(position, map.getZoom(), { animate: true });
-  }, [map, position]);
-  
-  useEffect(() => {
-    if (!map) return;
-    map.on('movestart', onMove);
+    map.on('move', onMove);
     return () => {
-      map.off('movestart', onMove);
+      map.off('move', onMove);
     }
   }, [map, onMove]);
-  
+
   useEffect(() => {
-    console.log(`@TODO ### external change requested: `, center);
-    setPosition(position => center);
+    if (!map) return;
+    console.log(`@TODO ### position being updated to: `, position);
+    // const coordinates = pixelsToLatLng(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]);
+    // map.setView(coordinates, map.getZoom(), { animate: true });
+    map.setView(position, map.getZoom(), { animate: false });
+  }, [map, position]);
+
+  useEffect(() => {
+    // console.log(`@TODO ### external change requested from `, map.getCenter(), 'to', center);
+    const position = pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]);
+    // console.log(`@TODO ### coordinates to pixels?: `, position);
+    setPosition(currentState => position);
+    // setPosition(position => center);
   }, [center]);
 
   const handleFloorChange = (increment) => {
@@ -181,15 +182,15 @@ export default function Map({
         />
         {
           markers.filter(marker => marker.coordinates.slice(2, 3)[0] === activeFloor).map((marker, index) => (
-            <Marker key={index} position={pixelsToCoordinates(marker.coordinates, [MAP_WIDTH, MAP_HEIGHT])} icon={defaultIcon}>
+            <Marker key={index} position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])} icon={defaultIcon}>
               <Popup>
                 {marker.label}
               </Popup>
             </Marker>
           ))
         }
-        <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.9)', fontSize: '10px' }}>
-          {position.join(', ')}
+        <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
+          {latLngToPixels(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]).join(', ')}
         </div>
       </MapContainer>
 
@@ -203,6 +204,32 @@ export default function Map({
   );
 }
 
-function pixelsToCoordinates([x, y], [width, height]) {
-  return [height - y, x];
-};
+
+/**
+ * 
+ * @usage
+ * ```js
+ * <MapListener center={position} onCenterChanged={map => {
+ *    const coordinates = map.getCenter();
+ *    setPosition(position => [coordinates.lat, coordinates.lng, position[2]]);
+ *  }} />
+ * ```
+ */
+function MapListener({ center, onCenterChanged } = {}) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, map.getZoom(), { animate: true });
+  }, [center]);
+
+  useEffect(() => {
+    if (!map) return;
+    const onMove = () => onCenterChanged(map);
+    map.on('movestart', onMove);
+    return () => {
+      map.off('movestart', onMove);
+    }
+  }, [map, onCenterChanged]);
+
+  return null;
+}

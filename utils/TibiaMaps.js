@@ -1,6 +1,10 @@
 
 export const getTibiaMapsUrl = (coordinates = []) => `https://tibiamaps.io/map#${coordinates.join(',')}:1`;
 
+/** version 13.x */
+export const AUTOMAP_WIDTH = 2560;
+export const AUTOMAP_HEIGHT = 2048;
+
 // cipfried is +13x, +39y away from doublet (maybe at 1002-1006-07)
 // fandom minX,minY = 124.00, 121.00
 // maps minX,minY = 31744,30976
@@ -59,3 +63,11 @@ export function coordinatesToMapSector(x, y, z) {
     relativeY: relativeY
   };
 }
+
+export function pixelsToLatLng([x, y, z], [width, height]) {
+  return [height - y, x, z];
+};
+
+export function latLngToPixels([lat, lng, z], [width, height]) {
+  return [lng, height - lat, z];
+};
