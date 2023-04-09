@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import CellItems from './CellItems';
 import { round } from '../../utils/Math';
-import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
+import { largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
 import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
 import ObjectFlags from '../../api/objects/flags';
 import ObjectAttributes from '../../api/objects/attributes';
@@ -75,7 +75,7 @@ export default function getObjectColumns(typeColumns = []) {
           /** @TODO (future) use this line instead once the NPCs page is implemented */
           // if (questReward.npc) return { label: questReward.npc.name, link: { path: `/npcs/${questReward.npc.id}` } };
           if (questReward.npc) return { label: questReward.npc.name, link: { path: getTibiaWikiUrl(questReward.npc.name), newTab: true } };
-          if (questReward.chest) return { label: `map`, link: { path: getTibiaMapsUrl(questReward.chest.coordinates), newTab: true } };
+          if (questReward.chest) return { label: `map`, link: { path: `/map?at=${largeCoordinatesToAutomapCoordinates(questReward.chest.coordinates)}`} };
           return null;
         });
         return <CellItems items={quests} />;

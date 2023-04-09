@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Box, Button, Card, ButtonGroup } from "@mui/material";
-import { ImageOverlay, MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { useState, useEffect, useCallback } from 'react';
+import { Button, ButtonGroup } from "@mui/material";
+import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AUTOMAP_HEIGHT, AUTOMAP_WIDTH, pixelsToLatLng, latLngToPixels } from '../../utils/TibiaMaps';
@@ -16,6 +16,7 @@ const defaultIcon = new L.icon({
   tooltipAnchor: [16, -28],
   shadowSize: [41, 41],
 });
+
 
 const imageBounds = [
   [0, 0], // Top-left coordinates in pixels
@@ -91,12 +92,10 @@ const floors = [
 
 /**
  * @TODO
- * - fix default center issue
- * - support coordinates from url params
  * - support custom marker icons (might face issues, see https://github.com/PaulLeCam/react-leaflet/issues/563 and https://stackoverflow.com/questions/73331688/how-to-use-svg-component-in-react-leaflet)
  * - improve UI of multiple floors
- * - show name of towns?
  * - generate map from version 7.7
+ * - show name of towns?
  * - use css module instead of inline css
  * - jsdoc
  * @param {Object} props The props.

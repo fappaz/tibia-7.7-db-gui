@@ -1,6 +1,6 @@
 import { Box, Divider, List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import TibiaMap from './tibiamap';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * @TODO jsdoc
@@ -14,16 +14,20 @@ export default function LocationMap({
     items: [],
     title: 'Quick access',
   },
-  defaultMarker,
+  coordinates,
 } = {}) {
 
-  const [activeMarker, setActiveMarker] = useState(defaultMarker);
+  const [_coordinates, setCoordinates] = useState(coordinates);
+
+  useEffect(() => {
+    setCoordinates(coordinates);
+  }, [coordinates]);
 
   return (
     <Box display='flex' sx={{ width: '100%', height: '100%' }}>
-      <QuickAccess markers={quickAccess.items} onSelect={setActiveMarker} selected={activeMarker} title={quickAccess.title} />
+      <QuickAccess markers={quickAccess.items} onSelect={setCoordinates} coordinates={_coordinates} title={quickAccess.title} />
       <Box p={1} flexGrow={1}>
-        <TibiaMap center={activeMarker?.coordinates} markers={markers} {...mapProps} />
+        <TibiaMap center={_coordinates} markers={markers} {...mapProps} />
       </Box>
     </Box>
   );
@@ -38,7 +42,7 @@ export default function LocationMap({
  */
 export function QuickAccess({
   markers = [],
-  selected = {},
+  coordinates = [],
   onSelect,
   title,
 } = {}) {
@@ -52,7 +56,7 @@ export function QuickAccess({
           markers.map((marker, index) => (
             <div key={index}>
               <ListItem disablePadding>
-                <ListItemButton selected={JSON.stringify(selected.coordinates) === JSON.stringify(marker.coordinates)} onClick={() => onSelect(marker)}>
+                <ListItemButton selected={JSON.stringify(coordinates) === JSON.stringify(marker.coordinates)} onClick={() => onSelect(marker.coordinates)}>
                   <ListItemText primary={marker?.label} secondary={`${index + 1}. ${marker.coordinates.join(',')}`} />
                 </ListItemButton>
               </ListItem>

@@ -76,7 +76,7 @@ export default function Creature({
                   title: `${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`,
                   items: quickAccessMarkers,
                 }}
-                defaultMarker={quickAccessMarkers[0]}
+                coordinates={quickAccessMarkers[0].coordinates}
               />
             </Box>
           </TabContent>

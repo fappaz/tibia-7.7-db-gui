@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import PageLink from "next/link";
-import { getTibiaMapsUrl } from '../../utils/TibiaMaps';
+import { largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
 import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
 
 
@@ -43,7 +43,7 @@ export default function Npcs({
             renderCell: (params) => (
               <Link
                 component={PageLink}
-                href={getTibiaMapsUrl(params.row.location.coordinates)}
+                href={`/map?at=${largeCoordinatesToAutomapCoordinates(params.row.location.coordinates)}`}
                 target='_blank'
                 rel='noopener noreferrer'
               >
