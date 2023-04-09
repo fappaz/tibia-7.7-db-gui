@@ -1,11 +1,13 @@
 import { useRouter } from "next/router";
-import { objects } from "../../database/database.json";
+import database from "../../database/database.json";
 import { useState, useEffect } from "react";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Grid, Link, TextField } from "@mui/material";
 import PageLink from "next/link";
 import Image from "next/image";
 import StandardPage from "../../components/StandardPage";
+
+const objects = database.objects;
 
 /**
  * @TODO jsdoc
@@ -22,7 +24,9 @@ export default function Item({
 
   useEffect(function onPageMount() {
     if (!id) return;
-    setItem(objects.find(item => item.id === parseInt(id)));
+    let item = objects.find(item => `${item.id}` === `${id}`);
+    if (!item) item = objects.find(item => item.name.toLowerCase() === `${id}`.toLowerCase());
+    setItem(item);
   }, [id]);
 
   if (!item) return <>Loading item "{id}"...</>;
