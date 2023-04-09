@@ -36,12 +36,8 @@ export function useTabContent(initialTabIndex = 0) {
   
   const [activeTabIndex, setActiveTabIndex] = useState(initialTabIndex);
 
-  const handleTabChange = (event, newValue) => {
-    setActiveTabIndex(newValue);
-  };
-
   return {
     activeTabIndex,
-    handleTabChange,
+    setActiveTabIndex,
   }
 }

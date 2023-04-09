@@ -12,6 +12,12 @@ import { getCreaturePage } from "../../utils/TibiaWebsite";
 import { round } from "../../utils/Math";
 import ObjectsTable from "../../components/table/ObjectsTable";
 
+const tabs = [
+  { name: 'Spawns' },
+  { name: 'Drops' },
+  { name: 'Json' },
+];
+
 /**
  * @TODO jsdoc
  * @param {Object} props The props.
@@ -22,16 +28,20 @@ export default function Creature({
 } = {}) {
 
   const router = useRouter();
-  const { id } = router.query;
+  const { id, tab } = router.query;
   const [creature, setCreature] = useState(null);
-  const { activeTabIndex, handleTabChange } = useTabContent(0);
+  const { activeTabIndex, setActiveTabIndex } = useTabContent(0);
 
-  useEffect(function onPageMount() {
+  useEffect(function onQueryChanged() {
     if (!id) return;
     let creature = database.creatures.find(creature => `${creature.id}` === `${id}`);
     if (!creature) creature = database.creatures.find(creature => creature.name.toLowerCase() === `${id}`.toLowerCase());
     setCreature(creature);
-  }, [id]);
+    
+    if (!tab) return;
+    const tabIndex = tabs.findIndex(({ name }) => name.toUpperCase() === `${tab}`.toUpperCase()) || 0;
+    setActiveTabIndex(tabIndex);
+  }, [id, tab]);
 
   if (!creature) return <>Loading creature "{id}"...</>;
 
@@ -60,7 +70,7 @@ export default function Creature({
 
         <Grid item xs={12} md={9} lg={10}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={activeTabIndex} onChange={handleTabChange}>
+            <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
               <Tab id={`tab-spawns`} label={`Spawns`} />
               <Tab id={`tab-drops`} label={`Drops`} />
               <Tab id={`tab-json`} label={`JSON`} />
@@ -68,17 +78,11 @@ export default function Creature({
           </Box>
 
           <TabContent activeTabIndex={activeTabIndex} index={0}>
-
-            <Box style={{ height: '30rem' }}>
-              <LocationMap
-                markers={markers}
-                quickAccess={{
-                  title: `${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`,
-                  items: quickAccessMarkers,
-                }}
-                coordinates={quickAccessMarkers[0].coordinates}
-              />
-            </Box>
+            <Spawns 
+              creature={creature}
+              markers={markers}
+              quickAccessMarkers={quickAccessMarkers}
+            />
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={1}>
@@ -95,6 +99,30 @@ export default function Creature({
 
 }
 
+/**
+ * @TODO jsdoc
+ * @param {Object} props The props.
+ * @returns {import("react").ReactNode}
+ */
+export function Spawns({
+  creature,
+  markers = [],
+  quickAccessMarkers = [],
+} = {}) {
+
+  return (
+    <Box style={{ height: '30rem' }}>
+      <LocationMap
+        markers={markers}
+        quickAccess={{
+          title: `${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`,
+          items: quickAccessMarkers,
+        }}
+        coordinates={quickAccessMarkers[0].coordinates}
+      />
+    </Box>
+  );
+}
 
 /**
  * @TODO jsdoc
@@ -158,7 +186,7 @@ export function Details({
           target='_blank'
           rel='noopener noreferrer'
         >
-        <Typography variant='caption'>Official website</Typography>
+          <Typography variant='caption'>Official website</Typography>
         </Link>
       </List>
     </Card>
@@ -173,7 +201,7 @@ export function Details({
 export function Drops({
   creature,
 } = {}) {
-  
+
   const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
 
   return (
@@ -193,7 +221,6 @@ export function Drops({
     />
   );
 }
-
 
 /**
  * @TODO move to its own file?

@@ -1,10 +1,11 @@
-import { Box, Link } from "@mui/material";
+import { Box, Link, Tooltip } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import PageLink from "next/link";
 import { largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
 import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
+import TibiaMap from "../../components/tibiamap";
 
 
 /**
@@ -40,14 +41,15 @@ export default function Npcs({
 
           {
             field: "location", headerName: "Location", width: 130,
+            valueGetter: (params) => largeCoordinatesToAutomapCoordinates(params.row.location.coordinates),
             renderCell: (params) => (
               <Link
                 component={PageLink}
-                href={`/map?at=${largeCoordinatesToAutomapCoordinates(params.row.location.coordinates)}`}
+                href={`/map?at=${params.value}`}
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                Map
+                {params.value.join(',')}
               </Link>
             )
           },

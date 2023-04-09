@@ -4,6 +4,7 @@ import database from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import { round } from '../../utils/Math';
 import PageLink from "next/link";
+import StandardPage from "../../components/StandardPage";
 
 const creatures = database.creatures;
 
@@ -12,18 +13,18 @@ const creatures = database.creatures;
  * @returns {import("react").ReactNode}
  */
 export default function Creatures({
-  
+
 } = {}) {
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <StandardPage title='Creatures' contentProps={{ style: { height: '72vh' } }}>
       <DataGrid
         rows={creatures.filter(creature => creature.id && !['gamemaster'].includes(creature.id))}
 
         columns={[
           // { field: "id", headerName: "ID", width: 130 },
           /** @TODO (future) show images */
-          
+
           {
             field: "name", headerName: "Name", width: 130,
             renderCell: (params) => (
@@ -53,7 +54,23 @@ export default function Creatures({
               return <CellItems items={drops} />;
             }
           },
-          
+
+          {
+            field: "spawns", headerName: "Spawns", width: 140, valueGetter: (params) => params.row.spawns.reduce((total, spawn) => total + spawn.amount, 0),
+            renderCell: (params) => (
+              params.value > 0 && (
+                <Link
+                  component={PageLink}
+                  href={`/creatures/${params.row.id}?tab=spawns`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {`${params.row.spawns.reduce((total, spawn) => total + spawn.amount, 0)} in ${params.row.spawns.length} places`}
+                </Link>
+              )
+            )
+          },
+
           { field: "summonCost", headerName: "Summon cost", valueGetter: (params) => params.row.summonCost || '' },
 
           { field: "flags", headerName: "Flags", flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
@@ -77,7 +94,7 @@ export default function Creatures({
 
         disableVirtualization
       />
-    </Box>
+    </StandardPage>
   );
 
 }

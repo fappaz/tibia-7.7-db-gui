@@ -10,6 +10,7 @@ import Title from "./text/Title";
 export default function StandardPage({
   title,
   children,
+  contentProps,
 } = {}) {
 
   return (
@@ -18,7 +19,7 @@ export default function StandardPage({
         <Title>{title}</Title>
       </Box>
 
-      <div id='page-content' style={{ flexGrow: 1, height: '100%' }}>
+      <div id='page-content' style={{ flexGrow: 1 }} {...contentProps}>
         {children}
       </div>
     </div>
