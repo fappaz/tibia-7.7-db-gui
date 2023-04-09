@@ -14,7 +14,7 @@ export default function ObjectsTable({
   tableProps = {},
 } = {}) {
 
-  /** @TODO fix layout */
+  /** @TODO adjust height to match page height */
   return (
     <Box id='table-root' sx={{ display: "flex", height: "100vh" }}>
       <DataGrid

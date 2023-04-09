@@ -1,0 +1,16 @@
+export default {
+  KickBoxes: 'KickBoxes',
+  Unpushable: 'Unpushable',
+  DistanceFighting: 'DistanceFighting',
+  KickCreatures: 'KickCreatures',
+  SeeInvisible: 'SeeInvisible',
+  NoSummon: 'NoSummon',
+  NoIllusion: 'NoIllusion',
+  NoConvince: 'NoConvince',
+  NoPoison: 'NoPoison',
+  NoLifeDrain: 'NoLifeDrain',
+  NoParalyze: 'NoParalyze',
+  NoBurning: 'NoBurning',
+  NoEnergy: 'NoEnergy',
+  NoHit: 'NoHit',
+};
