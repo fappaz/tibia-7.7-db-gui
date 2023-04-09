@@ -7,6 +7,7 @@ import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
 import TibiaMap from "../../components/tibiamap";
 import { TabContent, useTabContent } from "../../components/TabContent";
+import LocationMap from "../../components/LocationMap";
 
 /**
  * @TODO jsdoc
@@ -28,6 +29,22 @@ export default function Creature({
   }, [id]);
 
   if (!creature) return <>Loading creature "{id}"...</>;
+
+  const markers = creature.spawns.map(spawn => ({
+    coordinates: spawn.coordinates,
+    label: `${spawn.amount}x every ${spawn.interval} seconds - ${spawn.coordinates.join(', ')}`,
+    summary: `${spawn.amount}x (${spawn.interval} s)`,
+  }));
+
+  const quickAccessMarkers = markers.map(marker => ({...marker, label: marker.summary })).sort((a, b) => {
+    /** Sort by 'z,x,y' asc */
+    const format = c => c.toString().padStart(5, '0');
+    const aString = a.coordinates.map(format);
+    const aFormatted = `${aString[2]},${aString[0]},${aString[1]}`;
+    const bString = b.coordinates.map(format);
+    const bFormatted = `${bString[2]},${bString[0]},${bString[1]}`;
+    return aFormatted.localeCompare(bFormatted);
+  });
 
   return (
     <StandardPage
@@ -65,21 +82,17 @@ export default function Creature({
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <LocationMap
-              markers={creature.spawns.map(spawn => ({
-                coordinates: spawn.coordinates,
-                quickAccess: { label: `${spawn.amount}x (${spawn.interval} s)` },
-                label: `${spawn.amount}x every ${spawn.interval} seconds - ${spawn.coordinates.join(', ')}`
-              }))}
-              quickAccessTitle={`${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`}
-            />
-            {/* <LocationMap markers={[
-              { coordinates: [0, 0, 7], label: '0, 0, 7', amount: 0, interval: 0 },
-              { coordinates: [0, 1000, 7], label: '0, 1000, 7', amount: 0, interval: 0 },
-              { coordinates: [1000, 0, 7], label: '1000, 0, 7', amount: 0, interval: 0 },
-              { coordinates: [2560, 0, 7], label: '2560, 0, 7', amount: 0, interval: 0 },
-              { coordinates: [0, 2048, 7], label: '0, 2048, 7', amount: 0, interval: 0 },
-            ].map(spawn => ({ coordinates: spawn.coordinates, label: `${spawn.amount}x every ${spawn.interval} seconds - ${spawn.coordinates.join(', ')}` }))} /> */}
+
+            <Box style={{ height: '30rem' }}>
+              <LocationMap
+                markers={markers}
+                quickAccess={{
+                  title: `${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`,
+                  items: quickAccessMarkers,
+                }}
+                defaultMarker={quickAccessMarkers[0]}
+              />
+            </Box>
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={2}>
@@ -121,85 +134,6 @@ export function Drops({
     <>
       Drops @TODO
     </>
-  );
-}
-
-/**
- * @TODO move to its own file
- * @TODO jsdoc
- * @param {Object} props The props.
- * @returns {import("react").ReactNode}
- */
-export function LocationMap({
-  markers = [],
-  mapProps = {},
-  quickAccessTitle,
-} = {}) {
-
-  const [activeMarker, setActiveMarker] = useState([...markers].length > 0 ? markers[0] : undefined);
-
-  return (
-    <>
-      <Box
-        style={{
-          display: 'flex',
-          height: '30rem',
-        }}
-      >
-        <MarkersQuickAccess markers={markers} onSelect={setActiveMarker} selected={activeMarker} title={quickAccessTitle} />
-        <Box p={1} flexGrow={1}>
-          <TibiaMap center={activeMarker.coordinates} markers={markers} {...mapProps} />
-        </Box>
-      </Box>
-    </>
-  );
-}
-
-
-/**
- * @TODO move to its own file
- * @TODO jsdoc
- * @param {Object} props The props.
- * @returns {import("react").ReactNode}
- */
-export function MarkersQuickAccess({
-  markers = [],
-  selected = {},
-  onSelect,
-  title,
-} = {}) {
-
-  return (
-    <div style={{ overflow: 'auto' }}>
-      { !!title && <Typography variant='caption'>{title}</Typography> }
-      <List>
-        <Divider />
-        {
-          markers
-            .sort((a,b) => {
-              /** Sort by 'z,x,y' asc */
-              const format = c => c.toString().padStart(5, '0');
-              const aString = a.coordinates.map(format);
-              const aFormatted = `${aString[2]},${aString[0]},${aString[1]}`;
-              const bString = b.coordinates.map(format);
-              const bFormatted = `${bString[2]},${bString[0]},${bString[1]}`;
-              return aFormatted.localeCompare(bFormatted);
-            })
-            .map((marker, index) => (
-              <div key={index}>
-                <ListItem disablePadding>
-                  <ListItemButton selected={JSON.stringify(selected.coordinates) === JSON.stringify(marker.coordinates)} onClick={() => onSelect(marker)}>
-                    <ListItemText primary={marker?.quickAccess?.label} secondary={`${index+1}. ${marker.coordinates.join(',')}`} />
-                  </ListItemButton>
-                </ListItem>
-
-                <Divider />
-              </div>
-            )
-          )
-        }
-      </List>
-    </div>
   );
 }
 

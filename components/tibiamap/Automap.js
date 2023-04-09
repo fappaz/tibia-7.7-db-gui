@@ -19,7 +19,6 @@ const defaultIcon = new L.icon({
 
 const imageBounds = [
   [0, 0], // Top-left coordinates in pixels
-  // [AUTOMAP_WIDTH, AUTOMAP_HEIGHT], // Bottom-right coordinates in pixels
   [AUTOMAP_HEIGHT, AUTOMAP_WIDTH], // Bottom-right coordinates in pixels
 ];
 
@@ -92,6 +91,7 @@ const floors = [
 
 /**
  * @TODO
+ * - fix default center issue
  * - support coordinates from url params
  * - support custom marker icons (might face issues, see https://github.com/PaulLeCam/react-leaflet/issues/563 and https://stackoverflow.com/questions/73331688/how-to-use-svg-component-in-react-leaflet)
  * - improve UI of multiple floors
@@ -105,7 +105,7 @@ const floors = [
 export default function Map({
   center = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7],
   markers = [],
-  zoom = -2,
+  zoom = 0,
 } = {}) {
 
   const [map, setMap] = useState();
@@ -113,16 +113,9 @@ export default function Map({
   const activeFloor = position[2];
 
   const onMove = useCallback(() => {
-    console.log(`@TODO ### moving map.............`);
-    /**
-     * The issue with the map not updating its position when dragging is likely happening here.
-     * 
-     * */
     setPosition(position => {
       const currentCenter = map.getCenter();
       const newCenter = [currentCenter.lat.toFixed(0), currentCenter.lng.toFixed(0), position[2]];
-      // const newCenter = [currentCenter.lng.toFixed(0), currentCenter.lat.toFixed(0), position[2]];
-      console.log(`@TODO updating position from`, currentCenter , `to: `, JSON.stringify(newCenter));
       return newCenter;
     });
   }, [map]);
@@ -137,18 +130,12 @@ export default function Map({
 
   useEffect(() => {
     if (!map) return;
-    console.log(`@TODO ### position being updated to: `, position);
-    // const coordinates = pixelsToLatLng(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]);
-    // map.setView(coordinates, map.getZoom(), { animate: true });
     map.setView(position, map.getZoom(), { animate: false });
   }, [map, position]);
 
   useEffect(() => {
-    // console.log(`@TODO ### external change requested from `, map.getCenter(), 'to', center);
     const position = pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]);
-    // console.log(`@TODO ### coordinates to pixels?: `, position);
     setPosition(currentState => position);
-    // setPosition(position => center);
   }, [center]);
 
   const handleFloorChange = (increment) => {
@@ -160,76 +147,60 @@ export default function Map({
   };
 
   return (
-    <div id='map-root' style={{ display: 'flex', width: '100%', height: '100%' }}>
-      <MapContainer
-        center={center.slice(0, 2)}
-        zoom={zoom}
-        minZoom={-2}
-        maxZoom={4}
-        crs={L.CRS.Simple}
-        style={{
-          height: "100%",
-          width: "100%",
-          imageRendering: "-moz-crisp-edges",
-          imageRendering: "-webkit-optimize-contrast",
-          imageRendering: "pixelated",
-        }}
-        ref={setMap}
-      >
-        <ImageOverlay
-          url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
-          bounds={imageBounds}
-        />
-        {
-          markers.filter(marker => marker.coordinates.slice(2, 3)[0] === activeFloor).map((marker, index) => (
-            <Marker key={index} position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])} icon={defaultIcon}>
-              <Popup>
-                {marker.label}
-              </Popup>
-            </Marker>
-          ))
-        }
-        <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
-          {latLngToPixels(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]).join(', ')}
+    <>
+      <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
+
+        <div id='map-root' style={{ display: 'flex', position: `absolute`, width: '100%', height: '100%' }}>
+          <MapContainer
+            center={center.slice(0, 2)}
+            zoom={zoom}
+            minZoom={-2}
+            maxZoom={4}
+            crs={L.CRS.Simple}
+            style={{
+              height: "100%",
+              width: "100%",
+              imageRendering: "-moz-crisp-edges",
+              imageRendering: "-webkit-optimize-contrast",
+              imageRendering: "pixelated",
+            }}
+            ref={setMap}
+          >
+
+            <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
+              <ImageOverlay
+                url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
+                bounds={imageBounds}
+              />
+              {
+                markers.filter(marker => marker.coordinates.slice(2, 3)[0] === activeFloor).map((marker, index) => (
+                  <Marker key={index} position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])} icon={defaultIcon}>
+                    <Popup>
+                      {marker.label}
+                    </Popup>
+                  </Marker>
+                ))
+              }
+
+              <div style={{ position: `absolute`, left: `50%`, top: 0, bottom: 0, width: `1px`, borderLeft: `1px dashed yellow`, zIndex: 400 }} ></div>
+              <div style={{ position: `absolute`, top: `50%`, left: 0, right: 0, height: `1px`, borderTop: `1px dashed yellow`, zIndex: 400 }} ></div>
+            </div>
+
+            <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
+              {latLngToPixels(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]).join(', ')}
+            </div>
+          </MapContainer>
+
+          <ButtonGroup variant='outlined' orientation='vertical'>
+            <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}>+</Button>
+            <Button disabled>{floors[activeFloor].label}</Button>
+            <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
+          </ButtonGroup>
+
         </div>
-      </MapContainer>
 
-      <ButtonGroup variant='outlined' orientation='vertical'>
-        <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}>+</Button>
-        <Button disabled>{floors[activeFloor].label}</Button>
-        <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
-      </ButtonGroup>
+      </div>
 
-    </div>
+    </>
   );
-}
-
-
-/**
- * 
- * @usage
- * ```js
- * <MapListener center={position} onCenterChanged={map => {
- *    const coordinates = map.getCenter();
- *    setPosition(position => [coordinates.lat, coordinates.lng, position[2]]);
- *  }} />
- * ```
- */
-function MapListener({ center, onCenterChanged } = {}) {
-  const map = useMap();
-
-  useEffect(() => {
-    map.setView(center, map.getZoom(), { animate: true });
-  }, [center]);
-
-  useEffect(() => {
-    if (!map) return;
-    const onMove = () => onCenterChanged(map);
-    map.on('movestart', onMove);
-    return () => {
-      map.off('movestart', onMove);
-    }
-  }, [map, onCenterChanged]);
-
-  return null;
 }

@@ -1,9 +1,11 @@
 import { Box, Link } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { creatures } from "../../database/database.json";
+import database from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import { round } from '../../utils/Math';
 import PageLink from "next/link";
+
+const creatures = database.creatures;
 
 /**
  * @param {Object} props The props.
