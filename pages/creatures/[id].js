@@ -11,6 +11,7 @@ import Property from "../../components/Property";
 import { getCreaturePage } from "../../utils/TibiaWebsite";
 import { round } from "../../utils/Math";
 import ObjectsTable from "../../components/table/ObjectsTable";
+import Image from 'next/image';
 
 const tabs = [
   { name: 'Spawns' },
@@ -37,7 +38,7 @@ export default function Creature({
     let creature = database.creatures.find(creature => `${creature.id}` === `${id}`);
     if (!creature) creature = database.creatures.find(creature => creature.name.toLowerCase() === `${id}`.toLowerCase());
     setCreature(creature);
-    
+
     if (!tab) return;
     const tabIndex = tabs.findIndex(({ name }) => name.toUpperCase() === `${tab}`.toUpperCase()) || 0;
     setActiveTabIndex(tabIndex);
@@ -78,7 +79,7 @@ export default function Creature({
           </Box>
 
           <TabContent activeTabIndex={activeTabIndex} index={0}>
-            <Spawns 
+            <Spawns
               creature={creature}
               markers={markers}
               quickAccessMarkers={quickAccessMarkers}
@@ -136,6 +137,15 @@ export function Details({
   return (
     <Card sx={{ px: 2 }}>
       <List dense>
+        <ListItem disableGutters >
+          <Image
+            src={`/images/sprites/${creature.outfit.id}.gif`}
+            alt={creature.id}
+            width={creature.outfit.dat.sprite.width * 32}
+            height={creature.outfit.dat.sprite.height * 32} 
+            style={{ objectPosition: 'center' }}
+          />
+        </ListItem>
         {
           [
             { label: 'ID', value: creature.id },

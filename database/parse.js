@@ -1,11 +1,10 @@
 const fs = require('fs');
-const { createCanvas, Image } = require('canvas');
-const GIFEncoder = require('gifencoder');
 const creaturesGmud = require('../api/creatures/creatures.gmud.json');
 const npcsGmud = require('../api/npcs/npcs.gmud.json');
 const objectsGmud = require('../api/objects/objects.gmud.json');
 const datObjectsGmud = require('../api/dat/dat.gmud.json');
 const mapQuestsGmud = require('../api/map/mapQuests.gmud.json');
+const { saveGif } = require('../utils/Sprite');
 
 const database = {
   creatures: [],
@@ -52,14 +51,13 @@ const database = {
 };
 
 const spritesDirPath = '../api/sprites/images';
-const gifsOutputDirPath = '../public/images';
+const gifsOutputDirPath = '../public/images/sprites';
 database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.flags.immovable).map((datObject) => {
   const objectGmud = objectsGmud.find((objectGmud) => objectGmud.TypeID === datObject.id);
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
   
-  // uncomment this to generate the images again
-  // createGif(datObject.sprite.spriteIds.map(ids=>`${spritesDirPath}/${ids}.png`), `${gifsOutputDirPath}/${datObject.id}.gif`);
+  // saveGif(datObject, spritesDirPath, `${gifsOutputDirPath}/${datObject.id}.gif`);
 
   return {
     id: datObject.id,
@@ -73,6 +71,13 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
     questRewards: [],
   }
 }).filter((object) => object);
+
+datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach((datOutfit) => {
+  const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
+  if (!creatureGmud ) return null;
+  
+  saveGif(datOutfit, spritesDirPath, `${gifsOutputDirPath}/${datOutfit.id}.gif`);
+});
 
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
@@ -184,6 +189,8 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
 
   creature.drops = drops;
 
+  creature.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === creature.id);
+
   return creature;
 });
 
@@ -204,40 +211,6 @@ mapQuestsGmud.forEach((mapSector) => {
   });
 });
 
-async function createGif(sprites, targetPath, { delay = 250, repeat = 0, quality = 10 } = {}) {
 
-  const [width, height] = [32, 32];
-  const canvas = createCanvas(width, height);
-  const context = canvas.getContext('2d');
-
-
-  const encoder = new GIFEncoder(width, height); 
-  encoder.createWriteStream({ repeat, delay, quality }).pipe(fs.createWriteStream(targetPath));
-  encoder.start();
-  encoder.setTransparent(0xff00ff);
-
-  for (const frame of sprites) {
-    if (!fs.existsSync(frame)) {
-      console.warn(`File not found: ${frame}`);
-      continue;
-    }
-
-    const image = new Image();
-    await new Promise((resolve, reject) => {
-      image.onload = () => resolve(image);
-      image.onerror = (error) => {
-        console.error(`Error loading image: ${frame}`, error);
-        reject(error);
-      };
-      image.src = frame;
-    });
-    context.fillStyle = '#ff00ff';
-    context.fillRect(0, 0, width, height);
-    context.drawImage(image, 0, 0, width, height);
-    encoder.addFrame(context);
-    context.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  encoder.finish();
-}
 
 fs.writeFileSync('database.json', JSON.stringify(database, null, 2));

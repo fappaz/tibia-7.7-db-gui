@@ -16,7 +16,7 @@ export default function ObjectsTable({
 
   /** @TODO adjust height to match page height */
   return (
-    <Box id='table-root' sx={{ display: "flex", height: "100vh" }}>
+    <Box id='table-root' sx={{ display: "flex", height: "70vh" }}>
       <DataGrid
         rows={data}
 

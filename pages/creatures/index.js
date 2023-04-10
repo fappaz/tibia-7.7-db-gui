@@ -5,6 +5,7 @@ import CellItems from '../../components/table/CellItems';
 import { round } from '../../utils/Math';
 import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
+import Image from 'next/image';
 
 const creatures = database.creatures;
 
@@ -22,8 +23,11 @@ export default function Creatures({
         rows={creatures.filter(creature => creature.id && !['gamemaster'].includes(creature.id))}
 
         columns={[
-          // { field: "id", headerName: "ID", width: 130 },
-          /** @TODO (future) show images */
+          {
+            field: "id", headerName: "Image", renderCell: (params) => (
+              <Image src={`/images/sprites/${params.row.outfit.id}.gif`} alt={params.row.id} width={32} height={32} />
+            )
+          },
 
           {
             field: "name", headerName: "Name", width: 130,
