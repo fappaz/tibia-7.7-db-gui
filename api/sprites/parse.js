@@ -90,7 +90,7 @@ async function generateImages() {
   const FIRST_VALID_SPRITE_ID = 1;
   const LAST_VALID_SPRITE_ID = 10961;
   const file = fs.openSync(SPRITE_PATH, 'r');
-  /** @TODO investigate why it sometimes it writes 0 bytes to some files when doing 8k+ at once */
+  /** @TODO investigate why it sometimes it writes 0 bytes to some files when doing more than 8188 at once */
   for (let i = FIRST_VALID_SPRITE_ID; i <= LAST_VALID_SPRITE_ID; i++) {
     const sprite = readSprite(file, i);
     const base64 = await sprite.png.getBase64Async(Jimp.MIME_PNG);
@@ -98,7 +98,7 @@ async function generateImages() {
       console.warn(`Item ${i} base 64 is too short:`, base64);
       continue;
     }
-    sprite.png.write(`${PNGS_TARGET_PATH}/${i}.png`);
+    await sprite.png.write(`${PNGS_TARGET_PATH}/${i}.png`);
   }
 }
 

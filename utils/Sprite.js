@@ -1,11 +1,12 @@
 const fs = require('fs');
 const { createCanvas, Image } = require('canvas');
 const GIFEncoder = require('gifencoder');
+const gifFrames = require('gif-frames');
 
 /**
- * @TODO (future) fix background color in some sprites (e.g.: dragon)
- * @TODO (future) some sprites are missing, might be issue with the dat parser though
- * @TODO (future) instead of saving the gif, it should return the animations, so the caller can decide which ones to use (useful to save just the creature walking down, for instance)
+ * @TODO (future) fix background color in some sprites (e.g.: dragon, lion, etc)
+ * @TODO (future) apply outfit colors
+ * @TODO (future) instead of saving the gif, it should return the animations or frames, so the caller can decide which ones to use (useful to save just the creature walking down, for instance)
  * @TODO jsdoc
  * @param {Dat} dat The dat object.
  * @param {string} srcPath The path to the sprite images folder.
@@ -76,14 +77,17 @@ async function saveGif(dat, srcPath, targetPath, {
       const repeatXItem = animation[i];
 
       for (const part of repeatXItem) {
+        
         const image = new Image();
-        await new Promise((resolve, reject) => {
-          image.onload = () => resolve(image);
-          image.onerror = (error) => {
-            console.warn(`Error loading image: "${part.imageFile}". This could be on purpose though, as sometimes the sprite has an ID of 0.`, error);
-          };
-          image.src = part.imageFile;
-        });
+        if (fs.existsSync(part.imageFile)) {
+          await new Promise((resolve, reject) => {
+            image.onload = () => resolve(image);
+            image.onerror = (error) => {
+              console.warn(`Error loading image: "${part.imageFile}". This could be on purpose though, as sometimes the sprite has an ID of 0.`, error);
+            };
+            image.src = part.imageFile;
+          });
+        };
         if (image.src) {
           context.drawImage(image, part.x, part.y, unitWidth, unitHeight);
         }
@@ -97,6 +101,27 @@ async function saveGif(dat, srcPath, targetPath, {
   encoder.finish();
 }
 
+/**
+ * @TODO jsdoc
+ * @param {*} srcPath 
+ * @param {*} targetDirPath 
+ * @param {*} frames 
+ */
+async function exportGifFramesToPng(srcPath, targetDirPath, filenamePrefix, frames) {
+  try {
+    if (!fs.existsSync(srcPath)) return;
+    const frameData = await gifFrames({ url: srcPath, frames: frames || 'all', outputType: 'png' });
+    for (let i = 0; i < frameData.length; i++) {
+      const frame = frameData[i];
+      const filepath = `${targetDirPath}/${filenamePrefix}-${frames[i]}.png`;
+      await frame.getImage().pipe(fs.createWriteStream(filepath));
+    }
+  } catch (error) {
+    console.error(`Failed to save frames "${frames}" from "${srcPath}" to "${targetDirPath}/${filenamePrefix}.png"`, error);
+  }
+}
+
 module.exports = {
   saveGif,
+  exportGifFramesToPng,
 };

@@ -209,6 +209,7 @@ const readData = (filePath, listener) => {
        * If x repeat = 2 and y repeat = 2, such is the case for a table, you would have gotten something that looked like this:
           11 12
           21 22
+       * Further info: https://tpforums.org/forum/showthread.php?899-Reading-the-Tibia-dat-file
        */
       [sprite.blendFramesCount, sprite.repeatX, sprite.repeatY, sprite.repeatZ, sprite.animationsCount] = readBytes(fd, [1, 1, 1, 1, 1]);
       let spriteCount = sprite.width * sprite.height * sprite.blendFramesCount * sprite.repeatX * sprite.repeatY * sprite.repeatZ * sprite.animationsCount;

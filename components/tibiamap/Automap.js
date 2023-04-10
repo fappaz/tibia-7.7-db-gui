@@ -91,7 +91,7 @@ const floors = [
 ];
 
 /**
- * @TODO
+ * @TODO (future)
  * - support custom marker icons (might face issues, see https://github.com/PaulLeCam/react-leaflet/issues/563 and https://stackoverflow.com/questions/73331688/how-to-use-svg-component-in-react-leaflet)
  * - improve UI of multiple floors
  * - generate map from version 7.7
@@ -105,12 +105,29 @@ export default function Map({
   center = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7],
   markers = [],
   zoom = 0,
-  onMarkerClicked,
 } = {}) {
 
   const [map, setMap] = useState();
   const [position, setPosition] = useState(() => pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]));
   const activeFloor = position[2];
+  const customMarkerIcons = markers.filter(marker => marker.icon).reduce((icons, marker) => {
+    const id = marker.icon.url;
+    if (icons[id]) return icons;
+    return {
+      ...icons,
+      [id]: new L.icon({
+        iconUrl: marker.icon.url,
+        // shadowUrl: '/images/icons/marker-shadow.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        // iconSize: [marker.icon.width, marker.icon.height],
+        // iconAnchor: [marker.icon.width / 2, marker.icon.height],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+        shadowSize: [41, 41],
+      }),
+    };
+  }, {});
 
   const onMove = useCallback(() => {
     setPosition(position => {
@@ -177,13 +194,11 @@ export default function Map({
                   <Marker
                     key={index}
                     position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])}
-                    icon={defaultIcon}
-                    eventHandlers={{
-                      click: (event) => onMarkerClicked ? onMarkerClicked(event, marker) : null,
-                    }}
+                    icon={marker.icon ? customMarkerIcons[marker.icon.url] : defaultIcon}
+                    eventHandlers={marker.eventHandlers}
                   >
                     <Popup>
-                      { marker.renderPopUp ? marker.renderPopUp() : marker.label }
+                      {marker.renderPopUp ? marker.renderPopUp() : marker.label}
                     </Popup>
                   </Marker>
                 ))

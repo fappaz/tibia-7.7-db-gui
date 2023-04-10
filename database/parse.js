@@ -4,7 +4,7 @@ const npcsGmud = require('../api/npcs/npcs.gmud.json');
 const objectsGmud = require('../api/objects/objects.gmud.json');
 const datObjectsGmud = require('../api/dat/dat.gmud.json');
 const mapQuestsGmud = require('../api/map/mapQuests.gmud.json');
-const { saveGif } = require('../utils/Sprite');
+const { saveGif, exportGifFramesToPng } = require('../utils/Sprite');
 
 const database = {
   creatures: [],
@@ -51,13 +51,13 @@ const database = {
 };
 
 const spritesDirPath = '../api/sprites/images';
-const gifsOutputDirPath = '../public/images/sprites';
+const spritesOutputDirPath = '../public/images/sprites';
 database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.flags.immovable).map((datObject) => {
   const objectGmud = objectsGmud.find((objectGmud) => objectGmud.TypeID === datObject.id);
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
   
-  // saveGif(datObject, spritesDirPath, `${gifsOutputDirPath}/${datObject.id}.gif`);
+  saveGif(datObject, spritesDirPath, `${spritesOutputDirPath}/${datObject.id}.gif`);
 
   return {
     id: datObject.id,
@@ -72,12 +72,14 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   }
 }).filter((object) => object);
 
-// datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach((datOutfit) => {
-//   const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
-//   if (!creatureGmud ) return null;
+datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit) => {
+  const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
+  if (!creatureGmud ) return null;
   
-//   saveGif(datOutfit, spritesDirPath, `${gifsOutputDirPath}/${datOutfit.id}.gif`);
-// });
+  const gifPath = `${spritesOutputDirPath}/${datOutfit.id}.gif`;
+  await saveGif(datOutfit, spritesDirPath, gifPath);
+  await exportGifFramesToPng(gifPath, spritesOutputDirPath, datOutfit.id, [0]);
+});
 
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
