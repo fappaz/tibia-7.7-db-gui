@@ -10,7 +10,7 @@ const database = {
   creatures: [],
   npcs: [],
   objects: [],
-  // quests: [],
+  quests: [],
 
   /**
    * Retrieved from NPC 'Loria'
@@ -72,12 +72,12 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   }
 }).filter((object) => object);
 
-datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach((datOutfit) => {
-  const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
-  if (!creatureGmud ) return null;
+// datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach((datOutfit) => {
+//   const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
+//   if (!creatureGmud ) return null;
   
-  saveGif(datOutfit, spritesDirPath, `${gifsOutputDirPath}/${datOutfit.id}.gif`);
-});
+//   saveGif(datOutfit, spritesDirPath, `${gifsOutputDirPath}/${datOutfit.id}.gif`);
+// });
 
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
@@ -196,8 +196,8 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
 
 mapQuestsGmud.forEach((mapSector) => {
   mapSector.questTiles.forEach((tile) => {
-    const questId = tile.objects.reduce((questId, object) => object.chestQuestNumber);
-    tile.objects.filter(o=>o.itemId).forEach((object) => {
+    const { chestQuestNumber: questId } = tile.objects.find(object => object.chestQuestNumber) || {};
+    const rewardItems = tile.objects.filter(o=>o.itemId).map((object) => {
       const { itemId } = object;
       const itemIndex = database.objects.findIndex(q => q.id === itemId);
       if (itemIndex < 0) return;
@@ -207,10 +207,19 @@ mapQuestsGmud.forEach((mapSector) => {
           questId,
         }
       });
-    });
+      return database.objects[itemIndex];
+    }).filter(o=>o).map(item => ({ id: item.id, name: item.name }));
+
+    if (database.quests.findIndex(quest=>`${quest.id}` === `${questId}`) >= 0) return;
+    database.quests.push({
+      id: questId,
+      coordinates: tile.coordinates,
+      type: 'chest',
+      rewards: {
+        items: rewardItems,
+      },
+    })
   });
 });
-
-
 
 fs.writeFileSync('database.json', JSON.stringify(database, null, 2));
