@@ -36,6 +36,21 @@ const sidebarItems = [
     icon: <><Image src={`/images/icons/citizen.png`} alt={'NPCs'} width={24} height={24} /></>,
     link: `/npcs`,
   },
+  {
+    label: `Quests`,
+    icon: <><Image src={`/images/icons/chest.png`} alt={'Quests'} width={24} height={24} /></>,
+    link: `/quests`,
+  },
+  // {
+  //   label: `Keys`,
+  //   icon: <><Image src={`/images/icons/silver-key.png`} alt={'Keys'} width={24} height={24} /></>,
+  //   link: `/keys`,
+  // },
+  // {
+  //   label: `Books`,
+  //   icon: <><Image src={`/images/icons/book.png`} alt={'Books'} width={24} height={24} /></>,
+  //   link: `/books`,
+  // },
   {}, // divider
   {
     label: `Weapons`,

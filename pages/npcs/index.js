@@ -2,6 +2,7 @@ import { Box, Link, Tooltip } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
+import StandardPage from '../../components/StandardPage';
 import PageLink from "next/link";
 import { largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
 import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
@@ -17,7 +18,8 @@ export default function Npcs({
 } = {}) {
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    
+    <StandardPage title='NPCs' contentProps={{ style: { height: '72vh' } }}>
       <DataGrid
         rows={npcs}
 
@@ -117,7 +119,7 @@ export default function Npcs({
           toolbar: GridToolbar
         }}
       />
-    </Box>
+    </StandardPage>
   );
 
 }

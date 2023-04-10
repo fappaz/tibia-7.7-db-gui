@@ -30,7 +30,7 @@ export function TabContent({ children, activeTabIndex, index, ...other } = {}) {
 /**
  * 
  * @param {Number} initialTabIndex The initial tab index.
- * @returns {activeTabIndex: Number, handleTabChange: Function }
+ * @returns {activeTabIndex: Number, setActiveTabIndex: Function }
  */
 export function useTabContent(initialTabIndex = 0) {
   

@@ -105,6 +105,7 @@ export default function Map({
   center = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7],
   markers = [],
   zoom = 0,
+  onMarkerClicked,
 } = {}) {
 
   const [map, setMap] = useState();
@@ -173,9 +174,16 @@ export default function Map({
               />
               {
                 markers.filter(marker => marker.coordinates.slice(2, 3)[0] === activeFloor).map((marker, index) => (
-                  <Marker key={index} position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])} icon={defaultIcon}>
+                  <Marker
+                    key={index}
+                    position={pixelsToLatLng(marker.coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT])}
+                    icon={defaultIcon}
+                    eventHandlers={{
+                      click: (event) => onMarkerClicked ? onMarkerClicked(event, marker) : null,
+                    }}
+                  >
                     <Popup>
-                      {marker.label}
+                      { marker.renderPopUp ? marker.renderPopUp() : marker.label }
                     </Popup>
                   </Marker>
                 ))

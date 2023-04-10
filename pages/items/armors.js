@@ -36,12 +36,12 @@ export default function ArmorItems({
 
 } = {}) {
 
-  const { activeTabIndex, handleTabChange } = useTabContent(0);
+  const { activeTabIndex, setActiveTabIndex } = useTabContent(0);
 
   return (
     <StandardPage title='Armor items'>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={activeTabIndex} onChange={handleTabChange}>
+        <Tabs value={activeTabIndex} onChange={(e, tabIndex) => setActiveTabIndex(tabIndex)}>
           {
             tabs.map((tab, index) => (
               <Tab
