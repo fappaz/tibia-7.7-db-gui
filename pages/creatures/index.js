@@ -148,11 +148,11 @@ export function Spawns({
 
   const [creature, setCreature] = useState(null);
   const markers = creature ? getSpawnMarkers(creature) : creatures.reduce((markers, creature) => [...markers, ...getSpawnMarkers(creature)], []);
-  const coordinates = markers[0].coordinates;
+  const coordinates = creature ? markers[0].coordinates : undefined;
 
   return (
     <Grid container spacing={2} style={{ height: '74vh' }}>
-      <Grid item xs={12} md={4} lg={2}>
+      <Grid item xs={12} md={4} lg={3}>
         <DataGrid
           rows={creatures}
 
@@ -160,7 +160,7 @@ export function Spawns({
 
             {
               field: "id", headerName: "Image", renderCell: (params) => (
-                <Image src={`/images/sprites/${params.row.outfit.id}.gif`} alt={params.row.id} width={32} height={32} />
+                <Image src={`/images/sprites/${params.row.outfit.id}-0.png`} alt={params.row.id} width={32} height={32} />
               )
             },
 
@@ -189,16 +189,16 @@ export function Spawns({
           }}
 
           onRowClick={(params) => {
-            setCreature(params.row)
+            setCreature(creature => params.row === creature ? null : params.row);
           }}
         />
       </Grid>
 
-      <Grid item xs={12} md={8} lg={10}>
+      <Grid item xs={12} md={8} lg={9}>
         <TibiaMap
           center={coordinates}
           markers={markers}
-          zoom={3}
+          zoom={1}
         />
       </Grid>
     </Grid>

@@ -14,6 +14,10 @@ const questChestMarkers = quests.filter(quest => quest.type === 'chest').sort((a
   return {
     coordinates,
     label: `Quest ${quest.id} - ${coordinates.join(',')}. Rewards: ${quest.rewards.items.map(item => item.name).join(', ')}`,
+    icon: {
+      // url: '/images/icons/chest.png'
+      color: 'yellow',
+    }
   };
 });
 
@@ -31,7 +35,7 @@ export default function QuestMap({
 
   useEffect(function onQueryChanged() {
     if (!id) return;
-    let quest = quests.find(quest => `${quest.id}` === `${id}`);
+    const quest = quests.find(quest => `${quest.id}` === `${id}`);
     setCreature(quest);
   }, [id]);
 

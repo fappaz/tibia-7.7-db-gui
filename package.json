@@ -14,8 +14,10 @@
     "@mui/x-data-grid": "^6.0.4",
     "gif-frames": "^1.0.1",
     "leaflet": "^1.9.3",
+    "leaflet-pixi-overlay": "^1.9.4",
     "lodash": "^4.17.21",
     "next": "latest",
+    "pixi.js": "^5.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-leaflet": "^4.2.1"
