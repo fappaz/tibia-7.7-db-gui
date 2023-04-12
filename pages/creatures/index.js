@@ -36,7 +36,7 @@ export default function Creatures({
       </TabContent>
 
       <TabContent activeTabIndex={activeTabIndex} index={1}>
-        <Spawns creatures={creatures} />
+        <Spawns creatures={creatures.filter(creature => creature.spawns.length > 0)} />
       </TabContent>
     </StandardPage>
   );
