@@ -84,7 +84,7 @@ function appendSpawns(text) {
     const [, id, x, y, z, radius, amount, interval] = match;
     const creatureIndex = creatures.findIndex(creature => creature.id === parseInt(id));
     if (creatureIndex < 0) return;
-    const coordinates = [parseInt(x) - MIN_X, parseInt(y) - MIN_Y, parseInt(z)];
+    const coordinates = [parseInt(x), parseInt(y), parseInt(z)];
     creatures[creatureIndex].spawns.push({
       coordinates,
       radius: parseInt(radius),

@@ -72,6 +72,7 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   }
 }).filter((object) => object);
 
+/** Save one gif frame to jpg so it can be used as non-animated icons (e.g.: map markers) */
 datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit) => {
   const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
   if (!creatureGmud ) return null;
@@ -80,7 +81,6 @@ datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit
   await saveGif(datOutfit, spritesDirPath, gifPath);
   await exportGifFramesToPng(gifPath, spritesOutputDirPath, datOutfit.id, [0]);
 });
-
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
   const itemIndex = database.objects.findIndex(o => o.id === itemId);

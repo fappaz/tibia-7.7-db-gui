@@ -1,6 +1,5 @@
 import { Box, Grid } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
-import { largeCoordinatesToAutomapCoordinates } from "../../utils/TibiaMaps";
 import { useRouter } from "next/router";
 import database from "../../database/database.json";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -10,7 +9,7 @@ import CellItems from "../../components/table/CellItems";
 
 const quests = database.quests;
 const questChestMarkers = quests.filter(quest => quest.type === 'chest').sort((a, b) => a.id - b.id).map(quest => {
-  const coordinates = largeCoordinatesToAutomapCoordinates(quest.coordinates);
+  const coordinates = quest.coordinates;
   return {
     coordinates,
     label: `Quest ${quest.id} - ${coordinates.join(',')}. Rewards: ${quest.rewards.items.map(item => item.name).join(', ')}`,
@@ -39,7 +38,7 @@ export default function QuestMap({
     setCreature(quest);
   }, [id]);
 
-  const coordinates = quest? largeCoordinatesToAutomapCoordinates(quest.coordinates) : questChestMarkers.find(marker => marker.coordinates[2] === 7).coordinates;
+  const coordinates = quest? quest.coordinates : questChestMarkers.find(marker => marker.coordinates[2] === 7).coordinates;
 
   return (
     <StandardPage title='Quests'>
@@ -52,7 +51,7 @@ export default function QuestMap({
 
               { field: "id", headerName: "ID", width: 70, valueGetter: (params) => params.row.id },
               { field: "type", headerName: "Type", width: 70, valueGetter: (params) => params.row.type },
-              { field: "location", headerName: "Location", width: 120, valueGetter: (params) => largeCoordinatesToAutomapCoordinates(params.row.coordinates).join(',') },
+              { field: "location", headerName: "Location", width: 120, valueGetter: (params) => params.row.coordinates.join(',') },
 
               {
                 field: "rewards", headerName: "Rewards", flex: 1,
@@ -92,7 +91,6 @@ export default function QuestMap({
           <TibiaMap
             center={coordinates}
             markers={questChestMarkers} 
-            // onMarkerClicked={(event, marker) => {}}
           />
         </Grid>
       </Grid>

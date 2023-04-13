@@ -4,9 +4,7 @@ import { npcs } from "../../database/database.json";
 import CellItems from '../../components/table/CellItems';
 import StandardPage from '../../components/StandardPage';
 import PageLink from "next/link";
-import { largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
 import { getTibiaWikiUrl } from '../../utils/TibiaWiki';
-import TibiaMap from "../../components/tibiamap";
 
 
 /**
@@ -43,7 +41,7 @@ export default function Npcs({
 
           {
             field: "location", headerName: "Location", width: 130,
-            valueGetter: (params) => largeCoordinatesToAutomapCoordinates(params.row.location.coordinates),
+            valueGetter: (params) => params.row.location.coordinates,
             renderCell: (params) => (
               <Link
                 component={PageLink}

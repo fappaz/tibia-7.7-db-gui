@@ -15,6 +15,7 @@ const defaultMapPosition = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7];
 export default function Map(props) {
 
   return (
-    <Automap center={defaultMapPosition} {...props}/>
+    // <Automap center={defaultMapPosition} {...props}/>
+    <Automap {...props}/>
   );
 }

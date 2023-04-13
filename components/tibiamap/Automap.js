@@ -3,83 +3,22 @@ import { Button, ButtonGroup } from "@mui/material";
 import { ImageOverlay, MapContainer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { AUTOMAP_HEIGHT, AUTOMAP_WIDTH, pixelsToLatLng, latLngToPixels, landmarks, largeCoordinatesToAutomapCoordinates } from '../../utils/TibiaMaps';
+import { MIN_X, MIN_Y, MAX_X, MAX_Y, pixelsToLatLng, latLngToPixels, landmarks } from '../../utils/TibiaMaps';
 import PixiOverlay from './PixiOverlay';
 
 const imageBounds = [
-  [0, 0], // Top-left coordinates in pixels
-  [AUTOMAP_HEIGHT, AUTOMAP_WIDTH], // Bottom-right coordinates in pixels
+  [MIN_Y, MIN_X], // Top-left coordinates
+  [MAX_Y, MAX_X], // Bottom-right coordinates
 ];
 
-const floors = [
-  {
-    value: 0,
-    label: '+7',
-  },
-  {
-    value: 1,
-    label: '+6',
-  },
-  {
-    value: 2,
-    label: '+5',
-  },
-  {
-    value: 3,
-    label: '+4',
-  },
-  {
-    value: 4,
-    label: '+3',
-  },
-  {
-    value: 5,
-    label: '+2',
-  },
-  {
-    value: 6,
-    label: '+1',
-  },
-  {
-    value: 7,
-    label: '0',
-  },
-  {
-    value: 8,
-    label: '-1',
-  },
-  {
-    value: 9,
-    label: '-2',
-  },
-  {
-    value: 10,
-    label: '-3',
-  },
-  {
-    value: 11,
-    label: '-4',
-  },
-  {
-    value: 12,
-    label: '-5',
-  },
-  {
-    value: 13,
-    label: '-6',
-  },
-  {
-    value: 14,
-    label: '-7',
-  },
-  {
-    value: 15,
-    label: '-8',
-  },
-];
+const defaultFloorIndex = 7;
+const floors = new Array(16).fill(0).map((value, index) => {
+  const delta = defaultFloorIndex - index;
+  const sign = delta > 0 ? '+' : '';
+  return { value: index, label: `${sign}${delta}` };
+});
 
-const mapCenter = [AUTOMAP_WIDTH / 2, AUTOMAP_HEIGHT / 2, 7];
-const defaultCenter = largeCoordinatesToAutomapCoordinates(landmarks[landmarks.length - 1].largeCoordinates);
+const defaultCenter = landmarks[landmarks.length - 1].coordinates;
 
 /**
  * @TODO (future)
@@ -98,7 +37,7 @@ export default function Map({
 } = {}) {
 
   const [map, setMap] = useState();
-  const [position, setPosition] = useState(() => pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]));
+  const [position, setPosition] = useState(() => pixelsToLatLng(center));
   const activeFloor = position[2];
 
   const onMove = useCallback(() => {
@@ -117,13 +56,13 @@ export default function Map({
     }
   }, [map, onMove]);
 
-  useEffect(() => {
+  useEffect(function onPositionChanged() {
     if (!map) return;
     map.setView(position, map.getZoom(), { animate: false });
   }, [map, position]);
 
-  useEffect(() => {
-    const position = pixelsToLatLng(center, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]);
+  useEffect(function onCenterChanged() {
+    const position = pixelsToLatLng(center);
     setPosition(currentState => position);
   }, [center]);
 
@@ -161,7 +100,7 @@ export default function Map({
               <ImageOverlay
                 url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
                 bounds={imageBounds}
-                zIndex={-1} // more than this and it will render over the PixiOverlay
+                zIndex={-1} // z index is negative so PixiOverlay can be rendered on top
                 opacity={0.8}
               />
               <PixiOverlay
@@ -170,21 +109,21 @@ export default function Map({
                     const { icon, coordinates, label, ...overlayData } = marker;
                     return {
                       id: marker.id || coordinates.join(','),
-                      position: pixelsToLatLng(coordinates, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]),
+                      position: pixelsToLatLng(coordinates),
                       ...(icon ? {
                         icon: {
                           id: icon.id || icon.color || icon.url,
                           image: icon.url,
                           color: icon.color,
-                          type: icon.url ? 'png' : icon.type || 'svg',
+                          type: icon.type || (icon.url ? 'png' : 'svg'),
                         },
                       } : {
-                        icon: { color: 'red', type: 'svg' },
+                        icon: { color: 'yellow', type: 'svg' },
                       }),
                       tooltip: label,
+                      // popup: '<div>All good!</div>',
                       // popup: renderToString(<div>All good!</div>),
                       // onClick: () => alert("marker clicked"),
-                      // tooltip: "Hey!",
                       ...overlayData,
                     };
                   })
@@ -195,13 +134,13 @@ export default function Map({
             </div>
 
             <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
-              {latLngToPixels(position, [AUTOMAP_WIDTH, AUTOMAP_HEIGHT]).join(', ')}
+              {latLngToPixels(position).join(', ')}
             </div>
           </MapContainer>
 
           <ButtonGroup variant='outlined' orientation='vertical'>
             <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}>+</Button>
-            <Button onDoubleClick={() => setPosition(defaultCenter)}>{floors[activeFloor].label}</Button>
+            <Button onDoubleClick={() => setPosition(pixelsToLatLng(defaultCenter))}>{floors[activeFloor].label}</Button>
             <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
           </ButtonGroup>
 

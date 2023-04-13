@@ -6,6 +6,7 @@ const gifFrames = require('gif-frames');
 /**
  * @TODO (future) fix background color in some sprites (e.g.: dragon, lion, etc)
  * @TODO (future) apply outfit colors
+ * @TODO (future) fix sprite of creatures with no outfit id (throwers)
  * @TODO (future) instead of saving the gif, it should return the animations or frames, so the caller can decide which ones to use (useful to save just the creature walking down, for instance)
  * @TODO jsdoc
  * @param {Dat} dat The dat object.
