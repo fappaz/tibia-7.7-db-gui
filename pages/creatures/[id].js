@@ -12,11 +12,17 @@ import { getCreaturePage } from "../../utils/TibiaWebsite";
 import { round } from "../../utils/Math";
 import ObjectsTable from "../../components/table/ObjectsTable";
 import Image from 'next/image';
+import i18n from "../../api/i18n";
+import flags from "../../api/creatures/flags";
+import { useTranslation } from "react-i18next";
+
+const getColumnHeaderI18n = (field) => i18n.t(`contexts.creatures.table.columns.${field}.header`);
+const getFlagI18n = (flag) => i18n.t(`contexts.creatures.flags.${flag}`);
 
 const tabs = [
-  { name: 'Spawns' },
-  { name: 'Drops' },
-  { name: 'Json' },
+  { name: getColumnHeaderI18n('spawns') },
+  { name: getColumnHeaderI18n('drops') },
+  { name: i18n.t('json') },
 ];
 
 /**
@@ -32,6 +38,7 @@ export default function Creature({
   const { id, tab } = router.query;
   const [creature, setCreature] = useState(null);
   const { activeTabIndex, setActiveTabIndex } = useTabContent(0);
+  const { t } = useTranslation();
 
   useEffect(function onQueryChanged() {
     if (!id) return;
@@ -44,7 +51,7 @@ export default function Creature({
     setActiveTabIndex(tabIndex);
   }, [id, tab]);
 
-  if (!creature) return <>Loading creature "{id}"...</>;
+  if (!creature) return <>{t('loading')}</>;
 
   const markers = creature.spawns.map(spawn => ({
     coordinates: spawn.coordinates,
@@ -72,9 +79,9 @@ export default function Creature({
         <Grid item xs={12} md={9} lg={10}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
-              <Tab id={`tab-spawns`} label={`Spawns`} />
-              <Tab id={`tab-drops`} label={`Drops`} />
-              <Tab id={`tab-json`} label={`JSON`} />
+              {
+                tabs.map(({ name }, index) => <Tab id={`tab-${index}`} label={name} />)
+              }
             </Tabs>
           </Box>
 
@@ -111,12 +118,14 @@ function Spawns({
   quickAccessMarkers = [],
 } = {}) {
 
+  const { t } = useTranslation();
+
   return (
     <Box style={{ height: '30rem' }}>
       <LocationMap
         markers={markers}
         quickAccess={{
-          title: `${creature.spawns.reduce((total, spawn) => total + spawn.amount, 0)} found in ${creature.spawns.length} places`,
+          title: t('contexts.creatures.table.columns.spawns.value', { count: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
           items: quickAccessMarkers,
         }}
         coordinates={quickAccessMarkers[0].coordinates}
@@ -133,11 +142,13 @@ function Spawns({
 function Details({
   creature,
 } = {}) {
+  
+  const { t } = useTranslation();
 
   return (
     <Card sx={{ px: 2 }}>
       <List dense>
-        <ListItem disableGutters >
+        <ListItem disableGutters sx={{ py: 2 }}>
           <Image
             src={`/images/sprites/${creature.outfit.id}.gif`}
             alt={creature.id}
@@ -149,21 +160,20 @@ function Details({
         <Divider />
         {
           [
-            { label: 'ID', value: creature.id },
-            { label: 'Experience', value: creature.experience },
-            { label: 'Hitpoints', value: creature.attributes.hitpoints },
-            { label: 'Attack', value: creature.attributes.attack },
-            { label: 'Defense', value: creature.attributes.defense },
-            { label: 'Armor', value: creature.attributes.armor },
+            { label: getColumnHeaderI18n('id'), value: creature.id },
+            { label: getColumnHeaderI18n('experience'), value: creature.experience },
+            { label: getColumnHeaderI18n('hitpoints'), value: creature.attributes.hitpoints },
+            { label: getColumnHeaderI18n('attack'), value: creature.attributes.attack },
+            { label: getColumnHeaderI18n('defense'), value: creature.attributes.defense },
+            { label: getColumnHeaderI18n('armor'), value: creature.attributes.armor },
             {},
-            { label: 'Summon cost', value: creature.summonCost },
-            { label: 'See invisible', value: creature.flags.includes('SeeInvisible') ? 'yes' : 'no' },
-            { label: 'Keep distance', value: creature.flags.includes('KeepDistance') ? 'yes' : 'no' },
-            { label: 'Pushable', value: creature.flags.includes('Unpushable') ? 'no' : 'yes' },
-            { label: 'Pushes boxes', value: creature.flags.includes('KickBoxes') ? 'yes' : 'no' },
-            { label: 'Pushes creatures', value: creature.flags.includes('KickCreatures') ? 'yes' : 'no' },
-            /** format immunities */
-            { label: 'Immunities', value: creature.flags.filter(flag => ['NoBurning', 'NoPoison', 'NoEnergy', 'NoLifeDrain', 'NoParalyze'].includes(flag)).join(', ') },
+            { label: getColumnHeaderI18n('summonCost'), value: creature.summonCost },
+            { label: getFlagI18n(flags.SeeInvisible), value: creature.flags.includes(flags.SeeInvisible) ? t('yes') : t('no' )},
+            { label: getFlagI18n(flags.DistanceFighting), value: creature.flags.includes(flags.DistanceFighting) ? t('yes') : t('no' )},
+            { label: getFlagI18n(flags.Unpushable), value: creature.flags.includes(flags.Unpushable) ? t('yes') : t('no' )},
+            { label: getFlagI18n(flags.KickBoxes), value: creature.flags.includes(flags.KickBoxes) ? t('yes') : t('no' )},
+            { label: getFlagI18n(flags.KickCreatures), value: creature.flags.includes(flags.KickCreatures) ? t('yes') : t('no' )},
+            { label: getColumnHeaderI18n('immunities'), value: creature.flags.filter(flag => [flags.NoBurning, flags.NoPoison, flags.NoEnergy, flags.NoLifeDrain, flags.NoParalyze].includes(flag)).map(flag => getFlagI18n(flag)).join(', ') },
           ].map((property, index) => (
             <div key={index}>
               {
@@ -186,7 +196,7 @@ function Details({
             target='_blank'
             rel='noopener noreferrer'
           >
-            <Typography variant='caption'>TibiaWiki</Typography>
+            <Typography variant='caption'>{t('externalPages.tibiaWiki')}</Typography>
           </Link>
         </ListItem>
         <ListItem disableGutters>
@@ -196,7 +206,7 @@ function Details({
             target='_blank'
             rel='noopener noreferrer'
           >
-            <Typography variant='caption'>Official website</Typography>
+            <Typography variant='caption'>{t('externalPages.tibia')}</Typography>
           </Link>
         </ListItem>
       </List>
@@ -242,11 +252,13 @@ function Drops({
 function Json({
   object,
 } = {}) {
+  
+  const { t } = useTranslation();
 
   return (
     <>
       <TextField
-        label='JSON'
+        label={t('json')}
         multiline
         rows={17}
         value={JSON.stringify(object, null, 2)}

@@ -18,27 +18,32 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PageLink from "next/link";
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
+import i18n from '../api/i18n';
+import { t } from 'i18next';
+
+const getSidebarOptionLabel = id => t([`pages.${id}.title`, `contexts.${id}.name`, id]);
 
 const sidebarItems = [
   {
     /** @TODO implement */
-    label: `Map`,
-    icon: <><Image src={`/images/icons/map.png`} alt={'Map'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('map'),
+    icon: <><Image src={`/images/icons/map.png`} alt={getSidebarOptionLabel('map')} width={24} height={24} /></>,
     link: `/map`,
   },
   {
-    label: `Creatures`,
-    icon: <><Image src={`/images/icons/fire-devil.png`} alt={'Creatures'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('creatures'),
+    icon: <><Image src={`/images/icons/fire-devil.png`} alt={getSidebarOptionLabel('creatures')} width={24} height={24} /></>,
     link: `/creatures`,
   },
   {
-    label: `NPCs`,
-    icon: <><Image src={`/images/icons/citizen.png`} alt={'NPCs'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('npcs'),
+    icon: <><Image src={`/images/icons/citizen.png`} alt={getSidebarOptionLabel('npcs')} width={24} height={24} /></>,
     link: `/npcs`,
   },
   {
-    label: `Quests`,
-    icon: <><Image src={`/images/icons/chest.png`} alt={'Quests'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('quests'),
+    icon: <><Image src={`/images/icons/chest.png`} alt={getSidebarOptionLabel('quests')} width={24} height={24} /></>,
     link: `/quests`,
   },
   // {
@@ -53,51 +58,51 @@ const sidebarItems = [
   // },
   {}, // divider
   {
-    label: `Weapons`,
-    icon: <><Image src={`/images/icons/warlord-sword.png`} alt={'Weapons'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('weapons'),
+    icon: <><Image src={`/images/icons/warlord-sword.png`} alt={getSidebarOptionLabel('weapons')} width={24} height={24} /></>,
     link: `/items/weapons`,
   },
   {
-    label: `Wands and Rods`,
-    icon: <><Image src={`/images/icons/wand-of-inferno.png`} alt={'Wands and Rods'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('wandsAndRods'),
+    icon: <><Image src={`/images/icons/wand-of-inferno.png`} alt={getSidebarOptionLabel('wandsAndRods')} width={24} height={24} /></>,
     link: `/items/wands`,
   },
   {
-    label: `Distance weapons`,
-    icon: <><Image src={`/images/icons/bow.png`} alt={'Distance weapons'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('distanceWeapons'),
+    icon: <><Image src={`/images/icons/bow.png`} alt={getSidebarOptionLabel('distanceWeapons')} width={24} height={24} /></>,
     link: `/items/distance`,
   },
   {}, // divider
   {
-    label: `Shields`,
-    icon: <><Image src={`/images/icons/blessed-shield.png`} alt={'Shields'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('shields'),
+    icon: <><Image src={`/images/icons/blessed-shield.png`} alt={getSidebarOptionLabel('shields')} width={24} height={24} /></>,
     link: `/items/shields`,
   },
   {
-    label: `Armor items`,
-    icon: <><Image src={`/images/icons/golden-armor.png`} alt={'Armor items'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('armorItems'),
+    icon: <><Image src={`/images/icons/golden-armor.png`} alt={getSidebarOptionLabel('armorItems')} width={24} height={24} /></>,
     link: `/items/armors`,
   },
   {
-    label: `Amulets`,
-    icon: <><Image src={`/images/icons/ruby-amulet.png`} alt={'Amulets'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('amulets'),
+    icon: <><Image src={`/images/icons/ruby-amulet.png`} alt={getSidebarOptionLabel('amulets')} width={24} height={24} /></>,
     link: `/items/amulets`,
   },
   {
-    label: `Rings`,
-    icon: <><Image src={`/images/icons/ring-of-the-sky.png`} alt={'Rings'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('rings'),
+    icon: <><Image src={`/images/icons/ring-of-the-sky.png`} alt={getSidebarOptionLabel('rings')} width={24} height={24} /></>,
     link: `/items/rings`,
   },
   {}, // divider
   {
     /** @TODO implement */
-    label: `Runes`,
-    icon: <><Image src={`/images/icons/ultimate-healing-rune.png`} alt={'Runes'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('runes'),
+    icon: <><Image src={`/images/icons/ultimate-healing-rune.png`} alt={getSidebarOptionLabel('runes')} width={24} height={24} /></>,
     link: `/items/runes`,
   },
   {
-    label: `Spells`,
-    icon: <><Image src={`/images/icons/spellbook.png`} alt={'Spells'} width={24} height={24} /></>,
+    label: getSidebarOptionLabel('spells'),
+    icon: <><Image src={`/images/icons/spellbook.png`} alt={getSidebarOptionLabel('spells')} width={24} height={24} /></>,
     link: `/spells`,
   },
   {}, // divider
@@ -172,6 +177,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Layout({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -199,7 +205,7 @@ export default function Layout({ children }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Tibia 7.7 database
+            {t('appTitle')}
           </Typography>
         </Toolbar>
       </AppBar>

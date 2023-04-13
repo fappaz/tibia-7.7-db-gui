@@ -1,15 +1,8 @@
-import { Box, Grid, Link, Tab, Tabs } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
 import database from "../../database/database.json";
-import CellItems from '../../components/table/CellItems';
-import TibiaMap from '../../components/tibiamap';
-import { round } from '../../utils/Math';
-import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
-import Image from 'next/image';
-import { TabContent, useTabContent } from "../../components/TabContent";
-import { useState } from "react";
-import CreaturesTable from "../../components/table/CreaturesTable";
+import CreaturesTable from "../../components/creatures/Table";
+import { useTranslation } from "react-i18next";
 
 const creatures = database.creatures;
 
@@ -22,10 +15,12 @@ export default function Creatures({
 
 } = {}) {
 
+  const { t } = useTranslation();
+
   return (
-    <StandardPage title='Creatures' contentProps={{ style: { height: '72vh' } }}>
+    <StandardPage title={t('contexts.creatures.name')} contentProps={{ style: { height: '72vh' } }}>
       <Box style={{ height: '70vh' }}>
-        <CreaturesTable creatures={creatures} />
+        <CreaturesTable rows={creatures} />
       </Box>
     </StandardPage>
   );

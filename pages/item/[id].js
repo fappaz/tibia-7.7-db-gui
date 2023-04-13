@@ -6,7 +6,7 @@ import { Box, Card, Divider, Grid, Link, List, ListItem, Tab, Tabs, TextField, T
 import PageLink from "next/link";
 import Image from "next/image";
 import StandardPage from "../../components/StandardPage";
-import CreaturesTable, { columnModel } from "../../components/table/CreaturesTable";
+import CreaturesTable, { columnModel } from "../../components/creatures/Table";
 import { round } from "../../utils/Math";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import Property from "../../components/Property";
