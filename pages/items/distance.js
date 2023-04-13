@@ -4,7 +4,7 @@ import ObjectsTable from "../../components/table/ObjectsTable";
 import ObjectFlags from "../../api/objects/flags";
 import StandardPage from "../../components/StandardPage";
 import { Box, Tabs, Tab } from "@mui/material";
-import { TabContent, useTabContent } from "../../components/TabContent";
+import TabContent, { useTabContent } from "../../components/TabContent";
 
 /** @TODO (future) move each to their own file? */
 const tabs = [

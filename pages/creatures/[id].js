@@ -5,7 +5,7 @@ import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Box, Card, Divider, Grid, Link, List, ListItem, ListItemText, TextField, Tab, Tabs, Typography } from "@mui/material";
 import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
-import { TabContent, useTabContent } from "../../components/TabContent";
+import TabContent, { useTabContent } from "../../components/TabContent";
 import LocationMap from "../../components/LocationMap";
 import Property from "../../components/Property";
 import { getCreaturePage } from "../../utils/TibiaWebsite";
@@ -105,7 +105,7 @@ export default function Creature({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export function Spawns({
+function Spawns({
   creature,
   markers = [],
   quickAccessMarkers = [],
@@ -130,7 +130,7 @@ export function Spawns({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export function Details({
+function Details({
   creature,
 } = {}) {
 
@@ -146,6 +146,7 @@ export function Details({
             style={{ objectPosition: 'center' }}
           />
         </ListItem>
+        <Divider />
         {
           [
             { label: 'ID', value: creature.id },
@@ -189,15 +190,15 @@ export function Details({
           </Link>
         </ListItem>
         <ListItem disableGutters>
+          <Link
+            component={PageLink}
+            href={getCreaturePage(creature.name)}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Typography variant='caption'>Official website</Typography>
+          </Link>
         </ListItem>
-        <Link
-          component={PageLink}
-          href={getCreaturePage(creature.name)}
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Typography variant='caption'>Official website</Typography>
-        </Link>
       </List>
     </Card>
   );
@@ -208,7 +209,7 @@ export function Details({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export function Drops({
+function Drops({
   creature,
 } = {}) {
 
@@ -238,7 +239,7 @@ export function Drops({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-export function Json({
+function Json({
   object,
 } = {}) {
 
@@ -247,7 +248,7 @@ export function Json({
       <TextField
         label='JSON'
         multiline
-        rows={18}
+        rows={17}
         value={JSON.stringify(object, null, 2)}
         variant='outlined'
         disabled

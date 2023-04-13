@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
  * @param {Number} props.index This tab's index.
  * @returns {import("react").ReactNode}
  */
-export function TabContent({ children, activeTabIndex, index, ...other } = {}) {
+export default function TabContent({ children, activeTabIndex, index, ...other } = {}) {
   
   return (
     <div

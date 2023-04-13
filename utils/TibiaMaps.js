@@ -116,7 +116,7 @@ export const landmarks = [
   { id: "Hills", name: "Hills", coordinates: [32553,31827,6], },
   { id: "Home", name: "Home", coordinates: [32316,31942,7], },
   { id: "Kazordoon", name: "Kazordoon", coordinates: [32632,31916,8], },
-  { id: "KingsIsle", name: "KingsIsle", coordinates: [32174,31940,7], },
+  { id: "KingsIsle", name: "Kings Isle", coordinates: [32174,31940,7], },
   { id: "Marid", name: "Marid", coordinates: [33103,32539,6], },
   { id: "Minoroom", name: "Mino room", coordinates: [32139,32109,11], },
   { id: "Minocity", name: "Mintwallin", coordinates: [32404,32124,15], },

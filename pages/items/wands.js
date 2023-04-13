@@ -2,7 +2,7 @@ import { objects } from "../../database/database.json";
 import { getWandAndRodColumns } from "../../components/table/ObjectColumns";
 import ObjectsTable from "../../components/table/ObjectsTable";
 import StandardPage from "../../components/StandardPage";
-import { TabContent, useTabContent } from "../../components/TabContent";
+import TabContent, { useTabContent } from "../../components/TabContent";
 import { Box, Tabs, Tab } from "@mui/material";
 
 /**\
