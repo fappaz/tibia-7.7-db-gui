@@ -47,7 +47,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.coordinates,
-      label: `${row.name} - ${row.coordinates.join(',')}`,
+      label: i18n.t(`contexts.landmarks.marker.tooltip`, { coordinates: row.coordinates.join(','), name: row.name }),
       icon: {
         color: 'yellow',
         id: row.id,
@@ -69,7 +69,7 @@ const markerTypes = {
         ...creaturesColumns.spawns,
         renderCell: (params) => (
           <Link onClick={() => onLocationClick(params.row.spawns[0].coordinates)}>
-            {i18n.t('contexts.creatures.table.columns.spawns.value', { count: params.value, placesCount: params.row.spawns.length })}
+            {i18n.t('contexts.creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
           </Link>
         )
       },
@@ -81,7 +81,7 @@ const markerTypes = {
           markers.push({
             id: row.id,
             coordinates: spawn.coordinates,
-            label: `${spawn.amount}x ${row.name} every ${round(spawn.interval / 60, 1)} minutes - ${spawn.coordinates.join(',')}`,
+            label: i18n.t(`contexts.creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), name: row.name, amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
             icon: {
               url: `/images/sprites/${row.outfit.id}-0.png`,
             },
@@ -97,6 +97,7 @@ const markerTypes = {
     iconSrc: '/images/icons/citizen.png',
     data: database.npcs,
     getColumns: ({ onLocationClick, } = {}) => [
+      npcsColumns.sprite,
       npcsColumns.name,
       {
         ...npcsColumns.coordinates,
@@ -106,7 +107,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.location.coordinates,
-      label: `NPC ${row.name} - ${row.location.coordinates.join(',')}`,
+      label: i18n.t(`contexts.npcs.marker.tooltip`, { coordinates: row.location.coordinates.join(','), name: row.name }),
       icon: {
         url: '/images/icons/citizen.png',
       }
@@ -127,7 +128,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.coordinates,
-      label: `${row.rewards.items.length} rewards - ${row.coordinates.join(',')}`,
+      label: i18n.t(`contexts.quests.marker.tooltip`, { coordinates: row.coordinates.join(','), id: row.id, rewardsCount: row.rewards.items.length }),
       icon: {
         url: '/images/icons/chest.png',
       }

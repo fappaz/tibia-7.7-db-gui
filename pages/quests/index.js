@@ -1,11 +1,11 @@
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
 import { useRouter } from "next/router";
 import database from "../../database/database.json";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import TibiaMap from '../../components/tibiamap';
 import { useState, useEffect } from "react";
-import CellItems from "../../components/table/CellItems";
+import QuestsTable from "../../components/quests/Table";
+import { useTranslation } from "react-i18next";
 
 const quests = database.quests;
 const questChestMarkers = quests.filter(quest => quest.type === 'chest').sort((a, b) => a.id - b.id).map(quest => {
@@ -31,58 +31,24 @@ export default function QuestMap({
   const router = useRouter();
   const { id } = router.query;
   const [quest, setQuest] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(function onQueryChanged() {
     if (!id) return;
     const quest = quests.find(quest => `${quest.id}` === `${id}`);
-    setCreature(quest);
+    setQuest(quest);
   }, [id]);
 
   const coordinates = quest? quest.coordinates : questChestMarkers.find(marker => marker.coordinates[2] === 7).coordinates;
 
   return (
-    <StandardPage title='Quests'>
+    <StandardPage title={t('contexts.quests.name')} >
       <Grid container spacing={2} style={{ height: '74vh'}}>
         <Grid item xs={12} md={4}>
-          <DataGrid
+          <QuestsTable
             rows={quests}
-
-            columns={[
-
-              { field: "id", headerName: "ID", width: 70, valueGetter: (params) => params.row.id },
-              { field: "type", headerName: "Type", width: 70, valueGetter: (params) => params.row.type },
-              { field: "location", headerName: "Location", width: 120, valueGetter: (params) => params.row.coordinates.join(',') },
-
-              {
-                field: "rewards", headerName: "Rewards", flex: 1,
-                renderCell: (params) => {
-                  const rewards = params.row.rewards.items.map(item => ({
-                    label: item.name,
-                    link: { path: `/item/${item.id}`, newTab: true },
-                  }));
-                  return <CellItems items={rewards} />;
-                }
-              },
-            ]}
-            getRowHeight={() => 'auto'}
-
-            initialState={{
-              columns: {
-                columnVisibilityModel: {
-                  type: false,
-                },
-              },
-              sorting: {
-                sortModel: [{ field: 'id', sort: 'asc' }],
-              },
-            }}
-
-            slots={{
-              toolbar: GridToolbar
-            }}
-
-            onRowClick={(params) => {
-              setQuest(params.row)
+            tableProps={{
+              onRowClick: (params) => setQuest(params.row),
             }}
           />
         </Grid>

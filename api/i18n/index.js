@@ -25,7 +25,10 @@ export const defaultLanguages = {
             NoLifeDrain: 'Life drain',
             NoParalyze: 'Paralyze',
           },
-          marker: { tooltip: '[{{coordinates}}] {{count}}x {{- name}} every {{minutes}} minute(s)' },
+          marker: {
+            tooltip: '[{{coordinates}}] {{amount}}x {{- name}} every {{minutes}} minute(s)',
+            quickAccessSummary: '{{amount}}x ({{minutes}} min)',
+          },
           name: 'Creatures',
           table: {
             columns: {
@@ -39,11 +42,29 @@ export const defaultLanguages = {
               summonCost: { header: 'Summon cost', },
               flags: { header: 'Flags', },
               name: { header: 'Name', },
-              spawns: { header: 'Spawns', value: '{{count}} in {{placesCount}} places' },
+              spawns: { header: 'Spawns', value: '{{amount}} in {{placesCount}} places' },
               sprite: { header: 'Sprite', },
               immunities: { header: 'Immunities' }
             }
           }
+        },
+        items: {
+          name: 'Items',
+          table: {
+            columns: {
+              sprite: { header: 'Sprite', },
+              id: { header: 'ID', },
+              name: { header: 'Name', },
+              weight: { header: 'Weight', value: '{{value}} oz.' },
+              dropFrom: { header: 'Drop from', },
+              buyFrom: { header: 'Buy from', },
+              sellTo: { header: 'Sell to', },
+              quests: { header: 'Quests', },
+              attributes: { header: 'Attributes', },
+              flags: { header: 'Flags', },
+              dropRate: { header: 'Drop rate', value: '{{rate}}%', tooltip: '1 every {{count}}' },
+            },
+          },
         },
         landmarks: {
           name: 'Landmarks',
@@ -72,7 +93,7 @@ export const defaultLanguages = {
         },
         quests: {
           name: 'Quests',
-          marker: { tooltip: '[{{coordinates}}] {{rewardsCount}} reward(s)' },
+          marker: { tooltip: '[{{coordinates}}] Quest {{id}}, {{rewardsCount}} reward(s)' },
           table: {
             columns: {
               id: { header: 'ID', },
@@ -89,6 +110,7 @@ export const defaultLanguages = {
       json: 'JSON',
       loading: 'Loading...',
       no: 'No',
+      none: 'None',
       pages: {
         amulets: {
           title: 'Amulets',

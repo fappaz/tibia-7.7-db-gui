@@ -149,7 +149,7 @@ function Drops({
   return (
     <Box sx={{ height: '60vh' }}>
       <CreaturesTable
-        creatures={filteredCreatures}
+        rows={filteredCreatures}
         columns={[
           columnModel.sprite,
           columnModel.name,

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import database from "../../database/database.json";
 import { useState, useEffect } from "react";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
-import { Box, Card, Divider, Grid, Link, List, ListItem, ListItemText, TextField, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Card, Divider, Grid, Link, List, ListItem, ListItemText, TextField, Tab, Tabs, Typography, Tooltip } from "@mui/material";
 import PageLink from "next/link";
 import StandardPage from "../../components/StandardPage";
 import TabContent, { useTabContent } from "../../components/TabContent";
@@ -53,22 +53,6 @@ export default function Creature({
 
   if (!creature) return <>{t('loading')}</>;
 
-  const markers = creature.spawns.map(spawn => ({
-    coordinates: spawn.coordinates,
-    label: `${spawn.amount}x every ${spawn.interval} seconds - ${spawn.coordinates.join(', ')}`,
-    summary: `${spawn.amount}x (${spawn.interval} s)`,
-  }));
-
-  const quickAccessMarkers = markers.map(marker => ({ ...marker, label: marker.summary })).sort((a, b) => {
-    /** Sort by 'z,x,y' asc */
-    const format = c => c.toString().padStart(5, '0');
-    const aString = a.coordinates.map(format);
-    const aFormatted = `${aString[2]},${aString[0]},${aString[1]}`;
-    const bString = b.coordinates.map(format);
-    const bFormatted = `${bString[2]},${bString[0]},${bString[1]}`;
-    return aFormatted.localeCompare(bFormatted);
-  });
-
   return (
     <StandardPage title={`${creature.name.charAt(0).toUpperCase()}${creature.name.slice(1)}`}>
       <Grid container spacing={2}>
@@ -88,8 +72,6 @@ export default function Creature({
           <TabContent activeTabIndex={activeTabIndex} index={0}>
             <Spawns
               creature={creature}
-              markers={markers}
-              quickAccessMarkers={quickAccessMarkers}
             />
           </TabContent>
 
@@ -114,18 +96,32 @@ export default function Creature({
  */
 function Spawns({
   creature,
-  markers = [],
-  quickAccessMarkers = [],
 } = {}) {
 
   const { t } = useTranslation();
+
+  const markers = creature.spawns.map(spawn => ({
+    coordinates: spawn.coordinates,
+    label: t(`contexts.creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), amount: spawn.amount, name: creature.name, minutes: round(spawn.interval / 60, 1) }),
+    summary: t(`contexts.creatures.marker.quickAccessSummary`, { amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
+  }));
+
+  const quickAccessMarkers = markers.map(marker => ({ ...marker, label: marker.summary })).sort((a, b) => {
+    /** Sort by 'z,x,y' asc */
+    const format = c => c.toString().padStart(5, '0');
+    const aString = a.coordinates.map(format);
+    const aFormatted = `${aString[2]},${aString[0]},${aString[1]}`;
+    const bString = b.coordinates.map(format);
+    const bFormatted = `${bString[2]},${bString[0]},${bString[1]}`;
+    return aFormatted.localeCompare(bFormatted);
+  });
 
   return (
     <Box style={{ height: '30rem' }}>
       <LocationMap
         markers={markers}
         quickAccess={{
-          title: t('contexts.creatures.table.columns.spawns.value', { count: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
+          title: t('contexts.creatures.table.columns.spawns.value', { amount: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
           items: quickAccessMarkers,
         }}
         coordinates={quickAccessMarkers[0].coordinates}
@@ -142,7 +138,7 @@ function Spawns({
 function Details({
   creature,
 } = {}) {
-  
+
   const { t } = useTranslation();
 
   return (
@@ -153,7 +149,7 @@ function Details({
             src={`/images/sprites/${creature.outfit.id}.gif`}
             alt={creature.id}
             width={creature.outfit.dat.sprite.width * 32}
-            height={creature.outfit.dat.sprite.height * 32} 
+            height={creature.outfit.dat.sprite.height * 32}
             style={{ objectPosition: 'center' }}
           />
         </ListItem>
@@ -168,16 +164,16 @@ function Details({
             { label: getColumnHeaderI18n('armor'), value: creature.attributes.armor },
             {},
             { label: getColumnHeaderI18n('summonCost'), value: creature.summonCost },
-            { label: getFlagI18n(flags.SeeInvisible), value: creature.flags.includes(flags.SeeInvisible) ? t('yes') : t('no' )},
-            { label: getFlagI18n(flags.DistanceFighting), value: creature.flags.includes(flags.DistanceFighting) ? t('yes') : t('no' )},
-            { label: getFlagI18n(flags.Unpushable), value: creature.flags.includes(flags.Unpushable) ? t('yes') : t('no' )},
-            { label: getFlagI18n(flags.KickBoxes), value: creature.flags.includes(flags.KickBoxes) ? t('yes') : t('no' )},
-            { label: getFlagI18n(flags.KickCreatures), value: creature.flags.includes(flags.KickCreatures) ? t('yes') : t('no' )},
-            { label: getColumnHeaderI18n('immunities'), value: creature.flags.filter(flag => [flags.NoBurning, flags.NoPoison, flags.NoEnergy, flags.NoLifeDrain, flags.NoParalyze].includes(flag)).map(flag => getFlagI18n(flag)).join(', ') },
+            { label: getFlagI18n(flags.SeeInvisible), value: creature.flags.includes(flags.SeeInvisible) ? t('yes') : t('no') },
+            { label: getFlagI18n(flags.DistanceFighting), value: creature.flags.includes(flags.DistanceFighting) ? t('yes') : t('no') },
+            { label: getFlagI18n(flags.Unpushable), value: creature.flags.includes(flags.Unpushable) ? t('yes') : t('no') },
+            { label: getFlagI18n(flags.KickBoxes), value: creature.flags.includes(flags.KickBoxes) ? t('yes') : t('no') },
+            { label: getFlagI18n(flags.KickCreatures), value: creature.flags.includes(flags.KickCreatures) ? t('yes') : t('no') },
+            { label: getColumnHeaderI18n('immunities'), value: creature.flags.filter(flag => [flags.NoBurning, flags.NoPoison, flags.NoEnergy, flags.NoLifeDrain, flags.NoParalyze].includes(flag)).map(flag => getFlagI18n(flag)).join(', ') || t('none') },
           ].map((property, index) => (
             <div key={index}>
               {
-                property.value ? (
+                property.label ? (
                   <ListItem disableGutters>
                     <Property label={property.label} value={property.value} />
                   </ListItem>
@@ -223,6 +219,7 @@ function Drops({
   creature,
 } = {}) {
 
+  const { t } = useTranslation();
   const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
 
   return (
@@ -230,13 +227,19 @@ function Drops({
       data={items}
       typeColumns={[
         {
-          field: 'dropRate', headerName: 'Drop rate',
+          field: 'dropRate', headerName: t(`contexts.items.table.columns.dropRate.header`),
           valueGetter: (params) => {
             const drop = params.row.dropFrom.find(drop => drop.creature.id === creature.id);
             if (!drop) return 0;
             return round((drop.rate + 1) / 10, 3);
           },
-          renderCell: (params) => `${params.value}%`,
+          renderCell: (params) => (
+            <Tooltip title={t(`contexts.items.table.columns.dropRate.tooltip`, { count: round(100 / params.value, 0) })}>
+              <span>
+                {t(`contexts.items.table.columns.dropRate.value`, { rate: params.value })}
+              </span>
+            </Tooltip>
+          ),
         },
       ]}
     />
@@ -252,7 +255,7 @@ function Drops({
 function Json({
   object,
 } = {}) {
-  
+
   const { t } = useTranslation();
 
   return (

@@ -37,7 +37,7 @@ export const columnModel = {
         component={PageLink}
         href={`/map?at=${params.value}`}
       >
-        {params.row.name}
+        {params.value}
       </Link>
     )
   },

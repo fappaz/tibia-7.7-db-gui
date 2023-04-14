@@ -19,9 +19,7 @@ export default function Creatures({
 
   return (
     <StandardPage title={t('contexts.creatures.name')} contentProps={{ style: { height: '72vh' } }}>
-      <Box style={{ height: '70vh' }}>
-        <CreaturesTable rows={creatures} />
-      </Box>
+      <CreaturesTable rows={creatures} />
     </StandardPage>
   );
 

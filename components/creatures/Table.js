@@ -72,7 +72,7 @@ export const columnModel = {
           target='_blank'
           rel='noopener noreferrer'
         >
-          {i18n.t('contexts.creatures.table.columns.spawns.value', { count: params.value, placesCount: params.row.spawns.length })}
+          {i18n.t('contexts.creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
         </Link>
       )
     )
