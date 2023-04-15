@@ -57,14 +57,14 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
   
-  saveGif(datObject, spritesDirPath, `${spritesOutputDirPath}/${datObject.id}.gif`);
+  // saveGif(datObject, spritesDirPath, `${spritesOutputDirPath}/${datObject.id}.gif`);
 
   return {
     id: datObject.id,
     name: objectGmud.Name,
     article: objectGmud.Article,
-    flags: objectGmud.Flags,
-    attributes: objectGmud.Attributes,
+    flags: objectGmud.Flags || [],
+    attributes: objectGmud.Attributes || {},
     buyFrom: [],
     sellTo: [],
     dropFrom: [],
@@ -73,14 +73,14 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
 }).filter((object) => object);
 
 /** Save one gif frame to jpg so it can be used as non-animated icons (e.g.: map markers) */
-datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit) => {
-  const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
-  if (!creatureGmud ) return null;
+// datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit) => {
+//   const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
+//   if (!creatureGmud ) return null;
   
-  const gifPath = `${spritesOutputDirPath}/${datOutfit.id}.gif`;
-  await saveGif(datOutfit, spritesDirPath, gifPath);
-  await exportGifFramesToPng(gifPath, spritesOutputDirPath, datOutfit.id, [0]);
-});
+//   const gifPath = `${spritesOutputDirPath}/${datOutfit.id}.gif`;
+//   await saveGif(datOutfit, spritesDirPath, gifPath);
+//   await exportGifFramesToPng(gifPath, spritesOutputDirPath, datOutfit.id, [0]);
+// });
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
   const itemIndex = database.objects.findIndex(o => o.id === itemId);
