@@ -16,6 +16,7 @@ import { columnModel as questsColumns } from "../../components/quests/Table";
 import { round } from "lodash";
 import i18n from "../../api/i18n";
 import { useTranslation } from "react-i18next";
+import { random } from "../../utils/Math";
 
 /**
  * @TODO :
@@ -68,7 +69,7 @@ const markerTypes = {
       {
         ...creaturesColumns.spawns,
         renderCell: (params) => (
-          <Link onClick={() => onLocationClick(params.row.spawns[0].coordinates)}>
+          <Link onClick={() => onLocationClick(params.row.spawns[random(0, params.row.spawns.length - 1)].coordinates)}>
             {i18n.t('creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
           </Link>
         )

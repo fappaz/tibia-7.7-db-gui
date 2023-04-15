@@ -7,9 +7,11 @@ import { Link, Tooltip } from "@mui/material";
 import i18n from "../../api/i18n";
 import attributes from "../../api/objects/attributes";
 import flags from "../../api/objects/flags";
+import { types, subtypes } from "../../api/objects/types";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { round } from "../../utils/Math";
 import { get } from "lodash";
+import { insertArrayAt } from "../../utils/Array";
 
 
 /** specific */
@@ -119,6 +121,7 @@ export const columnModel = {
     if (BodyPosition === 0) notes.push(i18n.t('items.attributes.BodyPosition.values.0'));
     if (TotalExpireTime > 0) notes.push(i18n.t(`items.attributes.TotalExpireTime.value`, { value: TotalExpireTime }));  
     if (TotalUses > 0) notes.push(i18n.t(`items.attributes.TotalUses.value`, { value: TotalUses }));
+    return notes.join(', ');
   }},
 
   /** Columns for wands and rods (WandRange > 0) */
@@ -131,14 +134,21 @@ export const columnModel = {
 
   /** Columns for distance weapons (BowRange or BowAmmoType > 0 ) */
   bowRange: { field: "bowRange", headerName: getColumnHeaderI18n('bowRange'), valueGetter: (params) => params.row.attributes.BowRange, renderCell: (params) => getValueI18n('bowRange', { value: params.value } )  },
-  bowAmmo: { field: "bowAmmo", headerName: getColumnHeaderI18n('bowAmmo'), xxxxxxxx: "Ammo type", valueGetter: (params) => i18n.t(`items.attributes.BowAmmoType.values.${params.row.attributes.BowAmmoType}`) },
+  bowAmmo: { field: "bowAmmo", headerName: getColumnHeaderI18n('bowAmmo'), valueGetter: (params) => i18n.t(`items.attributes.BowAmmoType.values.${params.row.attributes.BowAmmoType}`) },
 
   /** Columns for shields (flag === Shield) */
   shieldDefense: { field: "shieldDefense", headerName: getColumnHeaderI18n('shieldDefense'), valueGetter: (params) => params.row.attributes.ShieldDefendValue },
 
   /** Columns for armor items (ArmorValue > 0 && BodyPosition > 0) */
   armor: { field: "armor", headerName: getColumnHeaderI18n('armor'), valueGetter: (params) => params.row.attributes.ArmorValue },
-  bodyPosition: { field: "bodyPosition", headerName: getColumnHeaderI18n('bodyPosition'), valueGetter: (params) => i18n.t(`items.attributes.ArmorValue.values.${params.row.attributes.ArmorValue}`) },
+  bodyPosition: { field: "bodyPosition", headerName: getColumnHeaderI18n('bodyPosition'), valueGetter: (params) => {
+    const { BodyPosition = -1 } = get(params, 'row.attributes', {});
+    if (BodyPosition >= 0) return i18n.t(`items.attributes.BodyPosition.values.${params.row.attributes.BodyPosition}`);
+    const itemFlags = get(params, 'row.flags', []);
+    if (itemFlags.includes(flags.Shield)) return i18n.t('items.flags.Shield');
+    if (itemFlags.includes(flags.Weapon)) return i18n.t('items.flags.Weapon');
+    return '';
+   }},
 
   /** Columns for amulets (BodyPosition === 2) and rings (BodyPosition === 9) */
   effects: {
@@ -210,6 +220,7 @@ export const defaultColumns = [
   /** specific */
   columnModel.sprite,
   columnModel.name,
+  columnModel.bodyPosition,
   columnModel.weight,
   columnModel.dropFrom,
   columnModel.buyFrom,
@@ -220,100 +231,60 @@ export const defaultColumns = [
 ];
 
 /**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for weapons.
+ * @type {Object.<string, import("@mui/x-data-grid").ColDef[]>} The columns for each item type.
  */
-export const weaponsColumns = [
-  columnModel.attack,
-  columnModel.defense,
-  columnModel.weaponType,
-  columnModel.weaponNotes,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for a single weapon type.
- */
-export const weaponColumns = [
-  columnModel.attack,
-  columnModel.defense,
-  columnModel.weaponNotes,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for wands and rods.
- */
-export const wandsColumns = [
-  columnModel.minimumLevel,
-  columnModel.vocation,
-  columnModel.wandRange,
-  columnModel.wandManaConsumption,
-  columnModel.wandAttackStrength,
-  columnModel.wandDamageType,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for distance weapons.
- */
-export const distanceWeaponsColumns = [
-  columnModel.bowRange,
-  columnModel.bowAmmo,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for shields.
- */
-export const shieldsColumns = [
-  columnModel.shieldDefense,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for armor items.
- */
-export const armorItemsColumns = [
-  columnModel.armor,
-  columnModel.bodyPosition,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for amulets and rings.
- */
-export const amuletsAndRingsColumns = [
-  columnModel.effects,
-  columnModel.uses,
-  columnModel.expire,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for ammunition.
- */
-export const ammoColumns = [
-  columnModel.ammoAttack,
-  columnModel.ammoType,
-  columnModel.ammoSpecialEffect,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for throwables.
- */
-export const throwablesColumns = [
-  columnModel.throwableAttack,
-  columnModel.throwableRange,
-  columnModel.throwableBreakChance,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for food.
- */
-export const foodColumns = [
-  columnModel.nutrition,
-  columnModel.weightNutritionRatio,
-  columnModel.cumulative,
-];
-
-/**
- * @type {import("@mui/x-data-grid").ColDef[]} The columns for runes.
- */
-export const runesColumns = [
-];
+export const columnsByType = {
+  [types.ammo.id]: [
+    columnModel.ammoAttack,
+    columnModel.ammoType,
+    columnModel.ammoSpecialEffect,
+  ],
+  [types.weapons.id]: [
+    columnModel.attack,
+    columnModel.defense,
+    columnModel.weaponType,
+    columnModel.weaponNotes,
+  ],
+  [types.wands.id]: [
+    columnModel.minimumLevel,
+    columnModel.vocation,
+    columnModel.wandRange,
+    columnModel.wandManaConsumption,
+    columnModel.wandAttackStrength,
+    columnModel.wandDamageType,
+  ],
+  [types.bows.id]: [
+    columnModel.bowRange,
+    columnModel.bowAmmo,
+  ],
+  [types.shields.id]: [
+    columnModel.shieldDefense,
+  ],
+  [types.armors.id]: [
+    columnModel.armor,
+  ],
+  [types.amulets.id]: [
+    columnModel.effects,
+    columnModel.uses,
+    columnModel.expire,
+  ],
+  [types.rings.id]: [
+    columnModel.effects,
+    columnModel.uses,
+    columnModel.expire,
+  ],
+  [types.throwables.id]: [
+    columnModel.throwableAttack,
+    columnModel.throwableRange,
+    columnModel.throwableBreakChance,
+  ],
+  [types.food.id]: [
+    columnModel.nutrition,
+    columnModel.weightNutritionRatio,
+    columnModel.cumulative,
+  ],
+  [types.runes.id]: [],
+};
 
 /**
  * @type {import("@mui/x-data-grid").DataGridProps} The default table props.
@@ -326,6 +297,7 @@ export const defaultTableProps = {
         id: false,
         attributes: false,
         flags: false,
+        bodyPosition: false,
       },
     },
     sorting: {
@@ -359,11 +331,7 @@ export function getCustomColumns({
   columnsToInsert = [],
   index = 2
 } = {}) {
-  return [
-    ...originalColumns.slice(0, index),
-    ...columnsToInsert,
-    ...originalColumns.slice(index)
-  ];
+  return insertArrayAt(originalColumns, index, columnsToInsert);
 }
 
 /**

@@ -25,9 +25,13 @@ export default function StandardPage({
         p: 3,
       }}
     >
-      <Box mb={2}>
-        <Title>{title}</Title>
-      </Box>
+      {
+        !!title && (
+          <Box mb={2}>
+            <Title>{title}</Title>
+          </Box>
+        )
+      }
 
       <div id='page-content' style={{ flexGrow: 1 }} {...contentProps}>
         {children}

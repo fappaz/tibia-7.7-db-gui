@@ -4,12 +4,14 @@ import PageLink from "next/link";
 import React from "react";
 import CellItems from "../table/CellItems";
 import { round } from "../../utils/Math";
-import { Link } from "@mui/material";
+import { Link, Tooltip } from "@mui/material";
 import i18n from "../../api/i18n";
+import { insertArrayAt } from "../../utils/Array";
 
 /** specific */
 const context = 'creatures';
 const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}.header`);
+const getValueI18n = (field, variables = {}) => i18n.t([`${context}.table.columns.${field}.value`, `${context}.attributes.${field}.values.${variables?.value}`, field], variables);
 
 /**
  * @typedef {Object.<string, import("@mui/x-data-grid").ColDef>} ColumnModel
@@ -81,7 +83,40 @@ export const columnModel = {
   summonCost: { field: "summonCost", headerName: getColumnHeaderI18n('summonCost'), valueGetter: (params) => params.row.summonCost || '' },
   
   flags: { field: "flags", headerName: getColumnHeaderI18n('flags'), flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
+
+  /** Columns that depend on variables outside the table, therefore are functions that return columns */
+  dropRate: (itemId) => ({
+    field: 'dropRate', headerName: getColumnHeaderI18n('dropRate'),
+    valueGetter: (params) => {
+      const drop = params.row.drops.find(drop => drop.item.id === itemId);
+      if (!drop) return 0;
+      return round((drop.rate + 1) / 10, 3);
+    },
+    renderCell: (params) => (
+      <Tooltip title={i18n.t(`items.table.columns.dropRate.tooltip`, { count: round(100 / params.value, 0) })}>
+        <span>
+          {getValueI18n(`dropRate`, { value: params.value })}
+        </span>
+      </Tooltip>
+    ),
+  }),
 };
+
+/**
+ * Insert an array into another array at a given index. 
+ * Useful for when inserting columns into the table after other important default columns.
+ * @param {Object[]} [originalColumns] The original columns. Default is the defaultColumns.
+ * @param {Object[]} columnsToInsert The columns to be inserted at the given index.
+ * @param {Number} index The index to insert the columns at. Default is 2.
+ * @returns {Object[]} The new array.
+ */
+export function getCustomColumns({
+  originalColumns = defaultColumns,
+  columnsToInsert = [],
+  index = 2,
+} = {}) {
+  return insertArrayAt(originalColumns, index, columnsToInsert);
+}
 
 /**
  * @type {import("@mui/x-data-grid").ColDef[]} The default columns.

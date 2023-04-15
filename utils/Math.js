@@ -21,3 +21,13 @@ export const round = (value, precision) => {
     return Math.round(value);
   }
 };
+
+
+/**
+ * @param {number} min The minimum number.
+ * @param {number} max The maximum number.
+ * @returns {number} The random number.
+ */
+export const random = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

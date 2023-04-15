@@ -8,7 +8,7 @@ export const defaultLanguages = {
       components: {
         dataGrid: {
           search: 'Search',
-          /** @TODO add other i18n */
+          /** @TODO add other i18n, see: https://mui.com/x/react-data-grid/localization/ */
         }
       },
       creatures: {
@@ -43,7 +43,8 @@ export const defaultLanguages = {
             name: { header: 'Name', },
             spawns: { header: 'Spawns', value: '{{amount}} in {{placesCount}} places' },
             sprite: { header: 'Sprite', },
-            immunities: { header: 'Immunities' }
+            immunities: { header: 'Immunities' },
+            dropRate: { header: 'Drop rate', value: '{{value}}%', tooltip: '1 every {{count}}' },
           }
         }
       },
@@ -159,6 +160,8 @@ export const defaultLanguages = {
           },
         },
         flags: {
+          Shield: 'Shield',
+          Weapon: 'Weapon',
         },
         name: 'Items',
         table: {
@@ -331,6 +334,7 @@ export const defaultLanguages = {
           title: 'Weapons',
         },
       },
+      rawData: 'Raw data',
       timeUnits: {
         seconds: 'seconds',
         minutes: 'minutes',

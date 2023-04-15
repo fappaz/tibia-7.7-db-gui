@@ -6,14 +6,24 @@ import { Box, Card, Divider, Grid, Link, List, ListItem, Tab, Tabs, TextField, T
 import PageLink from "next/link";
 import Image from "next/image";
 import StandardPage from "../../components/StandardPage";
-import CreaturesTable, { columnModel } from "../../components/creatures/Table";
+import CreaturesTable, { columnModel, defaultTableProps, getCustomColumns } from "../../components/creatures/Table";
 import { round } from "../../utils/Math";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import Property from "../../components/Property";
 import { useTranslation } from "react-i18next";
+import i18n from "../../api/i18n";
+import DetailsCard from "../../components/items/DetailsCard";
 
 const objects = database.objects;
 const creatures = database.creatures;
+
+const getColumnHeaderI18n = (field) => i18n.t(`items.table.columns.${field}.header`);
+const tabs = [
+  { name: i18n.t('creatures.table.columns.drops.header') },
+  { name: getColumnHeaderI18n('buyFrom') },
+  { name: getColumnHeaderI18n('sellTo') },
+  { name: i18n.t('rawData') },
+];
 
 /**
  * @TODO i18n
@@ -44,16 +54,15 @@ export default function Item({
     <StandardPage title={`${item.name.charAt(0).toUpperCase()}${item.name.slice(1)}`}>
       <Grid container spacing={2} sx={{ height: '100%'}} >
         <Grid item xs={12} md={3} lg={2}>
-          <Details item={item} />
+          <DetailsCard item={item} />
         </Grid>
 
         <Grid item xs={12} md={9} lg={10}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
-              <Tab id={`tab-drops`} label={`Drops`} />
-              <Tab id={`tab-buy-from`} label={`Buy from`} />
-              <Tab id={`tab-sell-to`} label={`Sell to`} />
-              <Tab id={`tab-json`} label={`JSON`} />
+              {
+                tabs.map(({ name }, index) => <Tab id={`tab-${index}`} label={name} />)
+              }
             </Tabs>
           </Box>
 
@@ -70,71 +79,13 @@ export default function Item({
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={3}>
-            <Json object={item} />
+            <RawData object={item} />
           </TabContent>
         </Grid>
       </Grid>
     </StandardPage>
   );
 
-}
-
-
-/**
- * @TODO jsdoc
- * @param {Object} props The props.
- * @returns {import("react").ReactNode}
- */
-function Details({
-  item,
-} = {}) {
-
-  return (
-    <Card sx={{ px: 2 }}>
-      <List dense>
-        <ListItem disableGutters >
-          <Image
-            src={`/images/sprites/${item.id}.gif`}
-            alt={item.id}
-            width={32}
-            height={32}
-            style={{ objectPosition: 'center' }}
-          />
-        </ListItem>
-        <Divider />
-        {
-          [
-            { label: 'ID', value: item.id },
-            { label: 'Weight', value: `${item.attributes.Weight} oz.` },
-
-          ].map((property, index) => (
-            <div key={index}>
-              {
-                property.value ? (
-                  <ListItem disableGutters>
-                    <Property label={property.label} value={property.value} />
-                  </ListItem>
-                ) : (
-                  <Divider />
-                )
-              }
-            </div>
-          ))
-        }
-        <Divider />
-        <ListItem disableGutters>
-          <Link
-            component={PageLink}
-            href={getTibiaWikiUrl(item.name)}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Typography variant='caption'>TibiaWiki</Typography>
-          </Link>
-        </ListItem>
-      </List>
-    </Card>
-  );
 }
 
 /**
@@ -148,37 +99,15 @@ function Drops({
 
   const creatureIds = item.dropFrom.map(drop => drop.creature.id);
   const filteredCreatures = creatures.filter(creature => creatureIds.includes(creature.id));
+  const tableProps = {...defaultTableProps};
+  tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
+  tableProps.initialState.columns.columnVisibilityModel.drops = false;
 
   return (
     <CreaturesTable
       rows={filteredCreatures}
-      columns={[
-        columnModel.sprite,
-        columnModel.name,
-        {
-          field: 'dropRate',
-          headerName: 'Drop rate',
-          width: 150,
-          valueGetter: ({ row }) => {
-            const drop = row.drops.find(drop => drop.item.id === item.id);
-            return drop ? round((drop.rate + 1) / 10) : 0;
-          },
-          renderCell: ({ value }) => `${value}%`,
-        },
-        columnModel.experience,
-        columnModel.hitpoints,
-        columnModel.attack,
-        columnModel.defense,
-        columnModel.armor,
-        columnModel.drops,
-      ]}
-      tableProps={{
-        initialState: {
-          sorting: {
-            sortModel: [{ field: 'dropRate', sort: 'desc' }],
-          },
-        }
-      }}
+      columns={getCustomColumns({ columnsToInsert: [columnModel.dropRate(item.id)] })}
+      tableProps={tableProps}
     />
   );
 }
@@ -189,7 +118,7 @@ function Drops({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-function Json({
+function RawData({
   object,
 } = {}) {
 

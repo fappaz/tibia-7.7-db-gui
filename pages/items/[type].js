@@ -3,100 +3,99 @@ import flags from "../../api/objects/flags";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import StandardPage from "../../components/StandardPage";
-import Table, { getCustomColumns, columnModel, defaultColumns, defaultTableProps, weaponColumns, shieldsColumns, foodColumns, runesColumns, throwablesColumns, armorItemsColumns, amuletsAndRingsColumns, weaponsColumns, distanceWeaponsColumns, ammoColumns, wandsColumns } from "../../components/items/Table";
+import Table, { getCustomColumns, columnModel, defaultColumns, defaultTableProps, columnsByType, weaponColumns, shieldsColumns, foodColumns, runesColumns, throwablesColumns, armorItemsColumns, amuletsAndRingsColumns, weaponsColumns, distanceWeaponsColumns, ammoColumns, wandsColumns } from "../../components/items/Table";
 import { useTranslation } from "react-i18next";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import { Box, Tabs, Tab } from "@mui/material";
+import { types as itemTypes, subtypes as itemSubtypes } from "../../api/objects/types";
 
 const objects = database.objects;
 
 /** @TODO (future) move each to their own file? */
 const tables = {
   ammo: {
-    filter: (item) => (item.attributes?.AmmoType || 0) > 0,
-    columns: getCustomColumns({ columnsToInsert: ammoColumns }),
+    filter: itemTypes.ammo.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.ammo.id] }),
     sortModel: [{ field: columnModel.ammoAttack.field, sort: 'asc' }]
   },
   amulets: {
-    filter: (item) => item.attributes?.BodyPosition === 2,
-    columns: getCustomColumns({ columnsToInsert: amuletsAndRingsColumns }),
+    filter: itemTypes.amulets.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.amulets.id] }),
   },
   armors: {
-    filter: (item) => item.attributes?.BodyPosition === 4,
-    columns: getCustomColumns({ columnsToInsert: armorItemsColumns }),
+    filter: itemSubtypes.armors.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.armors.id] }),
     sortModel: [{ field: columnModel.armor.field, sort: 'asc' }]
   },
   axes: {
-    filter: (item) => item.attributes?.WeaponType === 3,
-    columns: getCustomColumns({ columnsToInsert: weaponColumns }),
+    filter: itemSubtypes.axes.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.weapons.id] }),
     sortModel: [{ field: columnModel.attack.field, sort: 'asc' }]
   },
   boots: {
-    filter: (item) => item.attributes?.BodyPosition === 8,
-    columns: getCustomColumns({ columnsToInsert: armorItemsColumns }),
+    filter: itemSubtypes.boots.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.armors.id] }),
     sortModel: [{ field: columnModel.armor.field, sort: 'asc' }]
   },
   bows: {
-    filter: (item) => item.attributes?.BowRange || 0 > 0,
-    columns: getCustomColumns({ columnsToInsert: distanceWeaponsColumns }),
+    filter: itemTypes.bows.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.bows.id] }),
   },
   clubs: {
-    filter: (item) => item.attributes?.WeaponType === 2,
-    columns: getCustomColumns({ columnsToInsert: weaponColumns }),
+    filter: itemSubtypes.clubs.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.weapons.id] }),
     sortModel: [{ field: columnModel.attack.field, sort: 'asc' }]
   },
   food: {
-    filter: (item) => (item.flags || []).includes(flags.Food),
-    columns: getCustomColumns({ columnsToInsert: foodColumns }),
+    filter: itemTypes.food.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.food.id] }),
   },
   helmets: {
-    filter: (item) => item.attributes?.BodyPosition === 1,
-    columns: getCustomColumns({ columnsToInsert: armorItemsColumns }),
+    filter: itemSubtypes.helmets.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.armors.id] }),
     sortModel: [{ field: columnModel.armor.field, sort: 'asc' }]
   },
   legs: {
-    filter: (item) => item.attributes?.BodyPosition === 7,
-    columns: getCustomColumns({ columnsToInsert: armorItemsColumns }),
+    filter: itemSubtypes.legs.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.armors.id] }),
     sortModel: [{ field: columnModel.armor.field, sort: 'asc' }]
   },
   rings: {
-    filter: (item) => item.attributes?.BodyPosition === 9,
-    columns: getCustomColumns({ columnsToInsert: amuletsAndRingsColumns }),
+    filter: itemTypes.rings.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.rings.id] }),
   },
   rods: {
-    filter: (item) => (item.attributes?.WandRange || 0) > 0 && item.attributes?.Professions === 16,
-    columns: getCustomColumns({ columnsToInsert: wandsColumns }),
+    filter: itemSubtypes.rods.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.wands.id] }),
     sortModel: [{ field: columnModel.minimumLevel.field, sort: 'asc' }]
   },
   runes: {
-    /** @TODO (future) creature a constant for meanings (e.g.: Meaning 40 = blank rune) */
-    filter: (item) => (item.flags || []).includes(flags.Rune) || item.attributes?.Meaning === 40,
-    columns: getCustomColumns({ columnsToInsert: runesColumns }),
-    // sortModel: [{ field: columnModel.minimumLevel.field, sort: 'asc' }]
+    filter: itemTypes.runes.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.runes.id] }),
   },
   shields: {
-    filter: (item) => (item.flags || []).includes(flags.Shield),
-    columns: getCustomColumns({ columnsToInsert: shieldsColumns }),
+    filter: itemTypes.shields.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.shields.id] }),
     sortModel: [{ field: columnModel.shieldDefense.field, sort: 'asc' }]
   },
   swords: {
-    filter: (item) => item.attributes?.WeaponType === 1,
-    columns: getCustomColumns({ columnsToInsert: weaponColumns }),
+    filter: itemSubtypes.swords.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.weapons.id] }),
     sortModel: [{ field: columnModel.attack.field, sort: 'asc' }]
   },
   throwables: {
-    filter: (item) => (item.attributes?.ThrowRange || 0) > 0,
-    columns: getCustomColumns({ columnsToInsert: throwablesColumns }),
+    filter: itemTypes.throwables.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.throwables.id] }),
     sortModel: [{ field: columnModel.throwableAttack.field, sort: 'asc' }]
   },
   wands: {
-    filter: (item) => (item.attributes?.WandRange || 0) > 0 && item.attributes?.Professions === 8,
-    columns: getCustomColumns({ columnsToInsert: wandsColumns }),
+    filter: itemSubtypes.wands.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.wands.id] }),
     sortModel: [{ field: columnModel.minimumLevel.field, sort: 'asc' }]
   },
   weapons: {
-    filter: (item) => (item.attributes?.WeaponType || 0) > 0,
-    columns: getCustomColumns({ columnsToInsert: weaponsColumns }),
+    filter: itemTypes.weapons.filter,
+    columns: getCustomColumns({ columnsToInsert: columnsByType[itemTypes.weapons.id] }),
     sortModel: [{ field: columnModel.attack.field, sort: 'asc' }]
   },
 };

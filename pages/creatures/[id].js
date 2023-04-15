@@ -10,7 +10,7 @@ import LocationMap from "../../components/LocationMap";
 import Property from "../../components/Property";
 import { getCreaturePage } from "../../utils/TibiaWebsite";
 import { round } from "../../utils/Math";
-import ItemsTable, { getCustomColumns, columnModel } from "../../components/items/Table";
+import ItemsTable, { getCustomColumns, columnModel, defaultTableProps } from "../../components/items/Table";
 import Image from 'next/image';
 import i18n from "../../api/i18n";
 import flags from "../../api/creatures/flags";
@@ -22,7 +22,7 @@ const getFlagI18n = (flag) => i18n.t(`creatures.flags.${flag}`);
 const tabs = [
   { name: getColumnHeaderI18n('spawns') },
   { name: getColumnHeaderI18n('drops') },
-  { name: i18n.t('json') },
+  { name: i18n.t('rawData') },
 ];
 
 /**
@@ -80,7 +80,7 @@ export default function Creature({
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={2}>
-            <Json object={creature} />
+            <RawData object={creature} />
           </TabContent>
         </Grid>
       </Grid>
@@ -219,33 +219,15 @@ function Drops({
   creature,
 } = {}) {
 
-  const { t } = useTranslation();
   const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
+  const tableProps = {...defaultTableProps};
+  tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
 
   return (
-    // <ObjectsTable
-    //   data={items}
-    //   typeColumns={[
-    //     {
-    //       field: 'dropRate', headerName: t(`items.table.columns.dropRate.header`),
-    //       valueGetter: (params) => {
-    //         const drop = params.row.dropFrom.find(drop => drop.creature.id === creature.id);
-    //         if (!drop) return 0;
-    //         return round((drop.rate + 1) / 10, 3);
-    //       },
-    //       renderCell: (params) => (
-    //         <Tooltip title={t(`items.table.columns.dropRate.tooltip`, { count: round(100 / params.value, 0) })}>
-    //           <span>
-    //             {t(`items.table.columns.dropRate.value`, { rate: params.value })}
-    //           </span>
-    //         </Tooltip>
-    //       ),
-    //     },
-    //   ]}
-    // />
     <ItemsTable
       rows={items}
       columns={getCustomColumns({ columnsToInsert: [columnModel.dropRate(creature.id)] })}
+      tableProps={tableProps}
     />
   );
 }
@@ -256,7 +238,7 @@ function Drops({
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
-function Json({
+function RawData({
   object,
 } = {}) {
 
