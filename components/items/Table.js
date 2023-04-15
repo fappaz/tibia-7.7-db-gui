@@ -110,7 +110,7 @@ export const columnModel = {
   expireOrUses: { field: "expireOrUses", headerName: getColumnHeaderI18n('expireOrUses'), valueGetter: (params) => {
     const attributes = get(params, 'row.attributes', {});
     const { TotalExpireTime = 0, TotalUses = 0 } = attributes; 
-    if (TotalExpireTime > 0) return i18n.t(`items.attributes.TotalExpireTime.value`, { value: TotalExpireTime, timeUnit: i18n.t('seconds') });  
+    if (TotalExpireTime > 0) return i18n.t(`items.attributes.TotalExpireTime.value`, { value: TotalExpireTime, timeUnit: i18n.t('timeUnits.seconds') });  
     if (TotalUses > 0) return i18n.t(`items.attributes.TotalUses.value`, { value: TotalUses });  
     return '';
   }},
@@ -119,7 +119,7 @@ export const columnModel = {
     const attributes = get(params, 'row.attributes', {});
     const { BodyPosition = 0, TotalExpireTime = 0, TotalUses = 0 } = attributes; 
     if (BodyPosition === 0) notes.push(i18n.t('items.attributes.BodyPosition.values.0'));
-    if (TotalExpireTime > 0) notes.push(i18n.t(`items.attributes.TotalExpireTime.value`, { value: TotalExpireTime }));  
+    if (TotalExpireTime > 0) notes.push(i18n.t(`items.attributes.TotalExpireTime.value`, { value: TotalExpireTime, timeUnit: i18n.t('timeUnits.seconds') }));  
     if (TotalUses > 0) notes.push(i18n.t(`items.attributes.TotalUses.value`, { value: TotalUses }));
     return notes.join(', ');
   }},

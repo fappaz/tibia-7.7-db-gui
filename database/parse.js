@@ -63,6 +63,7 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
     id: datObject.id,
     name: objectGmud.Name,
     article: objectGmud.Article,
+    description: objectGmud.Description,
     flags: objectGmud.Flags || [],
     attributes: objectGmud.Attributes || {},
     buyFrom: [],
