@@ -20,9 +20,8 @@ import PageLink from "next/link";
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import i18n from '../api/i18n';
-import { t } from 'i18next';
 
-const getSidebarOptionLabel = id => t([`pages.${id}.title`, `contexts.${id}.name`, id]);
+const getSidebarOptionLabel = id => i18n.t([`pages.${id}.title`, `${id}.name`, id]);
 
 const sidebarItems = [
   {
@@ -254,13 +253,7 @@ export default function Layout({ children }) {
           ))}
         </List>
       </Drawer>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3
-        }}
-      >
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <DrawerHeader />
         {children}
       </Box>

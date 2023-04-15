@@ -10,11 +10,13 @@ import CreaturesTable, { columnModel } from "../../components/creatures/Table";
 import { round } from "../../utils/Math";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import Property from "../../components/Property";
+import { useTranslation } from "react-i18next";
 
 const objects = database.objects;
 const creatures = database.creatures;
 
 /**
+ * @TODO i18n
  * @TODO jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
@@ -27,6 +29,7 @@ export default function Item({
   const { id } = router.query;
   const [item, setItem] = useState(null);
   const { activeTabIndex, setActiveTabIndex } = useTabContent(0);
+  const { t } = useTranslation();
 
   useEffect(function onPageMount() {
     if (!id) return;
@@ -35,11 +38,11 @@ export default function Item({
     setItem(item);
   }, [id]);
 
-  if (!item) return <>Loading item "{id}"...</>;
+  if (!item) return <>{t('loading')}</>;
 
   return (
     <StandardPage title={`${item.name.charAt(0).toUpperCase()}${item.name.slice(1)}`}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ height: '100%'}} >
         <Grid item xs={12} md={3} lg={2}>
           <Details item={item} />
         </Grid>
@@ -94,7 +97,7 @@ function Details({
             src={`/images/sprites/${item.id}.gif`}
             alt={item.id}
             width={32}
-            height={32} 
+            height={32}
             style={{ objectPosition: 'center' }}
           />
         </ListItem>
@@ -103,7 +106,7 @@ function Details({
           [
             { label: 'ID', value: item.id },
             { label: 'Weight', value: `${item.attributes.Weight} oz.` },
-            
+
           ].map((property, index) => (
             <div key={index}>
               {
@@ -145,40 +148,38 @@ function Drops({
 
   const creatureIds = item.dropFrom.map(drop => drop.creature.id);
   const filteredCreatures = creatures.filter(creature => creatureIds.includes(creature.id));
-  
+
   return (
-    <Box sx={{ height: '60vh' }}>
-      <CreaturesTable
-        rows={filteredCreatures}
-        columns={[
-          columnModel.sprite,
-          columnModel.name,
-          {
-            field: 'dropRate',
-            headerName: 'Drop rate',
-            width: 150,
-            valueGetter: ({ row }) => {
-              const drop = row.drops.find(drop => drop.item.id === item.id);
-              return drop ? round((drop.rate + 1) / 10) : 0;
-            },
-            renderCell: ({ value }) => `${value}%`,
+    <CreaturesTable
+      rows={filteredCreatures}
+      columns={[
+        columnModel.sprite,
+        columnModel.name,
+        {
+          field: 'dropRate',
+          headerName: 'Drop rate',
+          width: 150,
+          valueGetter: ({ row }) => {
+            const drop = row.drops.find(drop => drop.item.id === item.id);
+            return drop ? round((drop.rate + 1) / 10) : 0;
           },
-          columnModel.experience,
-          columnModel.hitpoints,
-          columnModel.attack,
-          columnModel.defense,
-          columnModel.armor,
-          columnModel.drops,
-        ]}
-        tableProps={{
-          initialState: {
-            sorting: {
-              sortModel: [{ field: 'dropRate', sort: 'desc' }],
-            },
-          }
-        }}
-      />
-    </Box>
+          renderCell: ({ value }) => `${value}%`,
+        },
+        columnModel.experience,
+        columnModel.hitpoints,
+        columnModel.attack,
+        columnModel.defense,
+        columnModel.armor,
+        columnModel.drops,
+      ]}
+      tableProps={{
+        initialState: {
+          sorting: {
+            sortModel: [{ field: 'dropRate', sort: 'desc' }],
+          },
+        }
+      }}
+    />
   );
 }
 

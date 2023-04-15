@@ -3,8 +3,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Layout from '../components/layout';
-import { useEffect } from 'react';
 import '../api/i18n';
+import '../styles/globals.css';
 
 export default function App({ Component, pageProps }) {
 

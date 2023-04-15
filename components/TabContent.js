@@ -6,24 +6,35 @@ import { Box } from "@mui/material";
  * @param {Object} props The props.
  * @param {import("react").ReactNode[]} [props.children] The content of the tab.
  * @param {Number} props.activeTabIndex The current active tab index.
+ * @param {Number} [props.tabsHeight] (optional) The tabs height, in pixels. (default: 32)
  * @param {Number} props.index This tab's index.
  * @returns {import("react").ReactNode}
  */
-export default function TabContent({ children, activeTabIndex, index, ...other } = {}) {
+export default function TabContent({
+  children,
+  activeTabIndex,
+  index,
+  tabsHeight = 32,
+  ...other
+} = {}) {
   
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={activeTabIndex !== index}
       id={`tab-${index}`}
+      sx={{
+        // height: '100%',
+        height: `calc(100% - ${tabsHeight}px)`,
+      }}
       {...other}
     >
       {activeTabIndex === index && (
-        <Box sx={{ py: 2 }}>
+        <Box sx={{ py: 2, height: '100%' }}>
           {children}
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

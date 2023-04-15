@@ -47,7 +47,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.coordinates,
-      label: i18n.t(`contexts.landmarks.marker.tooltip`, { coordinates: row.coordinates.join(','), name: row.name }),
+      label: i18n.t(`landmarks.marker.tooltip`, { coordinates: row.coordinates.join(','), name: row.name }),
       icon: {
         color: 'yellow',
         id: row.id,
@@ -69,7 +69,7 @@ const markerTypes = {
         ...creaturesColumns.spawns,
         renderCell: (params) => (
           <Link onClick={() => onLocationClick(params.row.spawns[0].coordinates)}>
-            {i18n.t('contexts.creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
+            {i18n.t('creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
           </Link>
         )
       },
@@ -81,7 +81,7 @@ const markerTypes = {
           markers.push({
             id: row.id,
             coordinates: spawn.coordinates,
-            label: i18n.t(`contexts.creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), name: row.name, amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
+            label: i18n.t(`creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), name: row.name, amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
             icon: {
               url: `/images/sprites/${row.outfit.id}-0.png`,
             },
@@ -107,7 +107,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.location.coordinates,
-      label: i18n.t(`contexts.npcs.marker.tooltip`, { coordinates: row.location.coordinates.join(','), name: row.name }),
+      label: i18n.t(`npcs.marker.tooltip`, { coordinates: row.location.coordinates.join(','), name: row.name }),
       icon: {
         url: '/images/icons/citizen.png',
       }
@@ -128,7 +128,7 @@ const markerTypes = {
     getMarkers: (rows) => rows.map(row => ({
       id: row.id,
       coordinates: row.coordinates,
-      label: i18n.t(`contexts.quests.marker.tooltip`, { coordinates: row.coordinates.join(','), id: row.id, rewardsCount: row.rewards.items.length }),
+      label: i18n.t(`quests.marker.tooltip`, { coordinates: row.coordinates.join(','), id: row.id, rewardsCount: row.rewards.items.length }),
       icon: {
         url: '/images/icons/chest.png',
       }
@@ -231,7 +231,7 @@ export default function Map({
               return (
                 <Grid item key={`button-${id}`}>
                   <MarkerButton
-                    tooltip={t('pages.map.markerTypeTooltip', { count: selectedIds.length, type: t(`contexts.${id}.name`) })}
+                    tooltip={t('pages.map.markerTypeTooltip', { count: selectedIds.length, type: t(`${id}.name`) })}
                     count={selectedIds.length}
                     iconSrc={markerType.iconSrc}
                     onClick={(e) => {

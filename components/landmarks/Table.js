@@ -7,7 +7,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 /** specific */
 const context = 'landmarks';
-const getColumnHeaderI18n = (field) => i18n.t(`contexts.${context}.table.columns.${field}.header`);
+const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}.header`);
 
 /**
  * @typedef {Object.<string, import("@mui/x-data-grid").ColDef>} ColumnModel

@@ -6,13 +6,14 @@ import TibiaMap from '../../components/tibiamap';
 import { useState, useEffect } from "react";
 import QuestsTable from "../../components/quests/Table";
 import { useTranslation } from "react-i18next";
+import i18n from "../../api/i18n";
 
 const quests = database.quests;
 const questChestMarkers = quests.filter(quest => quest.type === 'chest').sort((a, b) => a.id - b.id).map(quest => {
   const coordinates = quest.coordinates;
   return {
     coordinates,
-    label: `Quest ${quest.id} - ${coordinates.join(',')}. Rewards: ${quest.rewards.items.map(item => item.name).join(', ')}`,
+    label: i18n.t(`quests.marker.tooltip`, { id: quest.id, coordinates: coordinates.join(', '), rewardsCount: quest.rewards.items.length }),
     icon: {
       // url: '/images/icons/chest.png'
       color: 'yellow',
@@ -42,8 +43,8 @@ export default function QuestMap({
   const coordinates = quest? quest.coordinates : questChestMarkers.find(marker => marker.coordinates[2] === 7).coordinates;
 
   return (
-    <StandardPage title={t('contexts.quests.name')} >
-      <Grid container spacing={2} style={{ height: '74vh'}}>
+    <StandardPage title={t('quests.name')} >
+      <Grid container spacing={2} style={{ height: '100%'}}>
         <Grid item xs={12} md={4}>
           <QuestsTable
             rows={quests}

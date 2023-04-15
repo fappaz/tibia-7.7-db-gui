@@ -10,14 +10,14 @@ import LocationMap from "../../components/LocationMap";
 import Property from "../../components/Property";
 import { getCreaturePage } from "../../utils/TibiaWebsite";
 import { round } from "../../utils/Math";
-import ObjectsTable from "../../components/table/ObjectsTable";
+import ItemsTable, { getCustomColumns, columnModel } from "../../components/items/Table";
 import Image from 'next/image';
 import i18n from "../../api/i18n";
 import flags from "../../api/creatures/flags";
 import { useTranslation } from "react-i18next";
 
-const getColumnHeaderI18n = (field) => i18n.t(`contexts.creatures.table.columns.${field}.header`);
-const getFlagI18n = (flag) => i18n.t(`contexts.creatures.flags.${flag}`);
+const getColumnHeaderI18n = (field) => i18n.t(`creatures.table.columns.${field}.header`);
+const getFlagI18n = (flag) => i18n.t(`creatures.flags.${flag}`);
 
 const tabs = [
   { name: getColumnHeaderI18n('spawns') },
@@ -102,8 +102,8 @@ function Spawns({
 
   const markers = creature.spawns.map(spawn => ({
     coordinates: spawn.coordinates,
-    label: t(`contexts.creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), amount: spawn.amount, name: creature.name, minutes: round(spawn.interval / 60, 1) }),
-    summary: t(`contexts.creatures.marker.quickAccessSummary`, { amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
+    label: t(`creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), amount: spawn.amount, name: creature.name, minutes: round(spawn.interval / 60, 1) }),
+    summary: t(`creatures.marker.quickAccessSummary`, { amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
   }));
 
   const quickAccessMarkers = markers.map(marker => ({ ...marker, label: marker.summary })).sort((a, b) => {
@@ -121,7 +121,7 @@ function Spawns({
       <LocationMap
         markers={markers}
         quickAccess={{
-          title: t('contexts.creatures.table.columns.spawns.value', { amount: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
+          title: t('creatures.table.columns.spawns.value', { amount: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
           items: quickAccessMarkers,
         }}
         coordinates={quickAccessMarkers[0].coordinates}
@@ -223,25 +223,29 @@ function Drops({
   const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
 
   return (
-    <ObjectsTable
-      data={items}
-      typeColumns={[
-        {
-          field: 'dropRate', headerName: t(`contexts.items.table.columns.dropRate.header`),
-          valueGetter: (params) => {
-            const drop = params.row.dropFrom.find(drop => drop.creature.id === creature.id);
-            if (!drop) return 0;
-            return round((drop.rate + 1) / 10, 3);
-          },
-          renderCell: (params) => (
-            <Tooltip title={t(`contexts.items.table.columns.dropRate.tooltip`, { count: round(100 / params.value, 0) })}>
-              <span>
-                {t(`contexts.items.table.columns.dropRate.value`, { rate: params.value })}
-              </span>
-            </Tooltip>
-          ),
-        },
-      ]}
+    // <ObjectsTable
+    //   data={items}
+    //   typeColumns={[
+    //     {
+    //       field: 'dropRate', headerName: t(`items.table.columns.dropRate.header`),
+    //       valueGetter: (params) => {
+    //         const drop = params.row.dropFrom.find(drop => drop.creature.id === creature.id);
+    //         if (!drop) return 0;
+    //         return round((drop.rate + 1) / 10, 3);
+    //       },
+    //       renderCell: (params) => (
+    //         <Tooltip title={t(`items.table.columns.dropRate.tooltip`, { count: round(100 / params.value, 0) })}>
+    //           <span>
+    //             {t(`items.table.columns.dropRate.value`, { rate: params.value })}
+    //           </span>
+    //         </Tooltip>
+    //       ),
+    //     },
+    //   ]}
+    // />
+    <ItemsTable
+      rows={items}
+      columns={getCustomColumns({ columnsToInsert: [columnModel.dropRate(creature.id)] })}
     />
   );
 }

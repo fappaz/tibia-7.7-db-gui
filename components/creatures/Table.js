@@ -9,7 +9,7 @@ import i18n from "../../api/i18n";
 
 /** specific */
 const context = 'creatures';
-const getColumnHeaderI18n = (field) => i18n.t(`contexts.${context}.table.columns.${field}.header`);
+const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}.header`);
 
 /**
  * @typedef {Object.<string, import("@mui/x-data-grid").ColDef>} ColumnModel
@@ -72,7 +72,7 @@ export const columnModel = {
           target='_blank'
           rel='noopener noreferrer'
         >
-          {i18n.t('contexts.creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
+          {i18n.t('creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
         </Link>
       )
     )

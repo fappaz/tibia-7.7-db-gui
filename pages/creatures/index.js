@@ -18,7 +18,7 @@ export default function Creatures({
   const { t } = useTranslation();
 
   return (
-    <StandardPage title={t('contexts.creatures.name')} contentProps={{ style: { height: '72vh' } }}>
+    <StandardPage title={t('creatures.name')}>
       <CreaturesTable rows={creatures} />
     </StandardPage>
   );

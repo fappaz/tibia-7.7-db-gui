@@ -1,7 +1,9 @@
-import { npcs } from "../../database/database.json";
+import database from "../../database/database.json";
 import StandardPage from '../../components/StandardPage';
 import NpcsTable from "../../components/npcs/Table";
 import { useTranslation } from "react-i18next";
+
+const npcs = database.npcs;
 
 /**
  * @param {Object} props The props.
@@ -15,7 +17,7 @@ export default function Npcs({
 
   return (
     
-    <StandardPage title={t('contexts.npcs.name')} contentProps={{ style: { height: '72vh' } }}>
+    <StandardPage title={t('npcs.name')}>
       <NpcsTable rows={npcs} />
     </StandardPage>
   );

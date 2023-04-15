@@ -2,6 +2,8 @@ import { Box, Grid } from "@mui/material";
 import React from "react";
 import Title from "./text/Title";
 
+const topBarHeight = 64;
+
 /**
  * @TODO jsdoc
  * @param {Object} props The props.
@@ -14,7 +16,15 @@ export default function StandardPage({
 } = {}) {
 
   return (
-    <div id='page-root' style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box
+      id='page-root'
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: `calc(100% - ${topBarHeight}px)`,
+        p: 3,
+      }}
+    >
       <Box mb={2}>
         <Title>{title}</Title>
       </Box>
@@ -22,6 +32,6 @@ export default function StandardPage({
       <div id='page-content' style={{ flexGrow: 1 }} {...contentProps}>
         {children}
       </div>
-    </div>
+    </Box>
   )
 }

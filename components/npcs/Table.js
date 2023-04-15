@@ -10,7 +10,7 @@ import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 
 /** specific */
 const context = 'npcs';
-const getColumnHeaderI18n = (field) => i18n.t(`contexts.${context}.table.columns.${field}.header`);
+const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}.header`);
 
 /**
  * @typedef {Object.<string, import("@mui/x-data-grid").ColDef>} ColumnModel
