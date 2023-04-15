@@ -222,6 +222,7 @@ function Drops({
   const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
   const tableProps = {...defaultTableProps};
   tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
+  tableProps.initialState.columns.columnVisibilityModel.dropFrom = false;
 
   return (
     <ItemsTable
