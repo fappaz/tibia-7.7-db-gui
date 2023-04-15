@@ -259,6 +259,7 @@ export const defaultLanguages = {
             sellOffers: { header: 'Sell offers', },
             teachSpells: { header: 'Teach spells', },
             questRewards: { header: 'Quest rewards', },
+            price: { header: 'price', },
           }
         }
       },

@@ -1,21 +1,18 @@
 import { useRouter } from "next/router";
 import database from "../../database/database.json";
 import { useState, useEffect } from "react";
-import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
-import { Box, Card, Divider, Grid, Link, List, ListItem, Tab, Tabs, TextField, Typography } from "@mui/material";
-import PageLink from "next/link";
-import Image from "next/image";
+import { Box, Grid, Tab, Tabs, TextField } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
-import CreaturesTable, { columnModel, defaultTableProps, getCustomColumns } from "../../components/creatures/Table";
-import { round } from "../../utils/Math";
+import CreaturesTable, { columnModel as itemsColumnModel, defaultTableProps as itemsDefaultTableProps, getCustomColumns as itemsGetCustomColumns } from "../../components/creatures/Table";
+import NpcsTable, { columnModel as npcsColumnModel, defaultTableProps as npcsDefaultTableProps, getCustomColumns as npcsGetCustomColumns } from "../../components/npcs/Table";
 import TabContent, { useTabContent } from "../../components/TabContent";
-import Property from "../../components/Property";
 import { useTranslation } from "react-i18next";
 import i18n from "../../api/i18n";
 import DetailsCard from "../../components/items/DetailsCard";
 
 const objects = database.objects;
 const creatures = database.creatures;
+const npcs = database.npcs;
 
 const getColumnHeaderI18n = (field) => i18n.t(`items.table.columns.${field}.header`);
 const tabs = [
@@ -71,11 +68,11 @@ export default function Item({
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={1}>
-            @TODO
+            <NpcOffers item={item} offerType={offerTypes.buyFrom.itemProp} />
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={2}>
-            @TODO
+            <NpcOffers item={item} offerType={offerTypes.sellTo.itemProp} />
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={3}>
@@ -99,14 +96,52 @@ function Drops({
 
   const creatureIds = item.dropFrom.map(drop => drop.creature.id);
   const filteredCreatures = creatures.filter(creature => creatureIds.includes(creature.id));
-  const tableProps = {...defaultTableProps};
+  const tableProps = {...itemsDefaultTableProps};
   tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
   tableProps.initialState.columns.columnVisibilityModel.drops = false;
 
   return (
     <CreaturesTable
       rows={filteredCreatures}
-      columns={getCustomColumns({ columnsToInsert: [columnModel.dropRate(item.id)] })}
+      columns={itemsGetCustomColumns({ columnsToInsert: [itemsColumnModel.dropRate(item.id)] })}
+      tableProps={tableProps}
+    />
+  );
+}
+
+const offerTypes = {
+  buyFrom: {
+    itemProp: 'buyFrom',
+    npcProp: 'sellOffers',
+  },
+  sellTo: {
+    itemProp: 'sellTo',
+    npcProp: 'buyOffers',
+  },
+};
+
+/**
+ * @TODO jsdoc
+ * @param {Object} props The props.
+ * @returns {import("react").ReactNode}
+ */
+function NpcOffers({
+  item,
+  offerType = offerTypes.buyFrom,
+} = {}) {
+
+  const npcIds = item[offerTypes[offerType].itemProp].map(offer => offer.npc.id);
+  const filteredNpcs = npcs.filter(npc => npcIds.includes(npc.id));
+  const tableProps = {...npcsDefaultTableProps};
+  tableProps.initialState.sorting.sortModel = [{ field: 'price', sort: 'asc' }];
+  ['buyOffers', 'sellOffers', 'teachSpells', 'questRewards'].forEach(column => {
+    tableProps.initialState.columns.columnVisibilityModel[column] = false;
+  });
+
+  return (
+    <NpcsTable
+      rows={filteredNpcs}
+      columns={npcsGetCustomColumns({ columnsToInsert: [npcsColumnModel.price(item.id, offerTypes[offerType].npcProp)] })}
       tableProps={tableProps}
     />
   );

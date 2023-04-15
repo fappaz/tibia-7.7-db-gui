@@ -6,6 +6,7 @@ import CellItems from "../table/CellItems";
 import { Link } from "@mui/material";
 import i18n from "../../api/i18n";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
+import { insertArrayAt } from "../../utils/Array";
 
 
 /** specific */
@@ -103,7 +104,32 @@ export const columnModel = {
       return <CellItems items={offers} />;
     }
   },
+
+  /** Columns that depend on variables outside the table, therefore are functions that return columns */
+  price: (itemId, offerType = 'buyOffers') => ({
+    field: 'price', headerName: getColumnHeaderI18n('price'),
+    valueGetter: (params) => {
+      const offer = params.row[offerType].find(offer => offer.item.id === itemId);
+      return offer ? offer.price : '';
+    },
+  }),
 };
+
+/**
+ * Insert an array into another array at a given index. 
+ * Useful for when inserting columns into the table after other important default columns.
+ * @param {Object[]} [originalColumns] The original columns. Default is the defaultColumns.
+ * @param {Object[]} columnsToInsert The columns to be inserted at the given index.
+ * @param {Number} index The index to insert the columns at. Default is 2.
+ * @returns {Object[]} The new array.
+ */
+export function getCustomColumns({
+  originalColumns = defaultColumns,
+  columnsToInsert = [],
+  index = 2,
+} = {}) {
+  return insertArrayAt(originalColumns, index, columnsToInsert);
+}
 
 /**
  * @type {import("@mui/x-data-grid").ColDef[]} The default columns.
@@ -128,6 +154,9 @@ export const defaultTableProps = {
     sorting: {
       sortModel: [{ field: 'name', sort: 'asc' }],
     },
+    columns: {
+      columnVisibilityModel: {}
+    }
   },
   getRowHeight: () => 'auto',
   slots: {
