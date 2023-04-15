@@ -68,7 +68,7 @@ describe('description', () => {
           Weight: 3050,
         },
         flags: [],
-        description: 'It unleashes the very fires of hell.',
+        description: 'It unleashes the very fires of hell',
       },
     },
     {

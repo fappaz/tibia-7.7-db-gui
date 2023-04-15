@@ -39,11 +39,14 @@ export function getItemDescription(item) {
   const weight = (item.attributes.Weight / 100).toFixed(2);
   const weightText = weight ? `It weighs ${weight} oz.` : '';
 
+  const itemDescription = item.description || '';
+  const itemDescriptionText = itemDescription ? `${itemDescription}.` : '';
+
   const lines = [
     `You see ${item.article} ${item.name}${bonusText}${expireDescription}.${runeDescription}`,
     requirementText, // It can only be wielded by ${vocation} of level ${minLevel} or higher.
     weightText,
-    item.description,
+    itemDescriptionText,
   ].filter(Boolean);
   
   return lines.join('\n');

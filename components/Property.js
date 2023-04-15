@@ -17,7 +17,7 @@ export default function Property({
       <Typography color='textSecondary'>
         {label}
       </Typography>
-      <Box display='flex' flexGrow={vertical ? 0 : 1} justifyContent={vertical ? 'start' : 'end'}>
+      <Box display='flex' flexGrow={vertical ? 0 : 1} justifyContent={vertical ? 'center' : 'flex-end'} textAlign={ vertical ? 'start' : 'end' } >
         {value}
       </Box>
     </Box>
