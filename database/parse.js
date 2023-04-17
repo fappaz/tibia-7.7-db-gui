@@ -49,13 +49,24 @@ const database = {
   ],
 };
 
-database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.ground && !o.flags.blocksMissile).map((datObject) => {
-  const objectGmud = objectsGmud.find((objectGmud) => objectGmud.TypeID === datObject.id);
-  if (!objectGmud) return null;
-  if ((objectGmud.Flags || []).includes('Unmove')) return null;
+console.log(`Analysing ${objectsGmud.length} objects...`);
+for (const objectGmud of objectsGmud) {
+  const datObjectMatches = datObjectsGmud
+    .filter((datGmud) => datGmud.id === objectGmud.TypeID 
+      && !datGmud.flags.ground
+      && !datGmud.flags.blocksMissile
+      && datGmud.type !== 'outfit'
+      && !datGmud.flags.clip
+      && !datGmud.flags.blocking
+      && !datGmud.flags.immovable
+      && datGmud.sprite.spriteIds.reduce((sum, id) => sum + id, 0) > 0
+    )
+  ;
+  if (datObjectMatches.length === 0) continue;
+  const datObjectGmud = datObjectMatches[0];
 
-  return {
-    id: datObject.id,
+  const object = {
+    id: objectGmud.TypeID,
     name: objectGmud.Name,
     article: objectGmud.Article,
     description: objectGmud.Description,
@@ -65,10 +76,13 @@ database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.grou
     sellTo: [],
     dropFrom: [],
     questRewards: [],
-  }
-}).filter((object) => object);
+    dat: datObjectGmud,
+  };
+  database.objects.push(object);
+}
 
-const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
+console.log(`Analysing ${npcsGmud.length} NPCs...`);
+const parseBehaviourToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
   const itemIndex = database.objects.findIndex(o => o.id === itemId);
   if (itemIndex < 0) return null;
   const item = database.objects[itemIndex];
@@ -84,17 +98,20 @@ const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectPr
   };
   return offer;
 };
-database.npcs = npcsGmud.map((npcGmud) => {
+for (const npcGmud of npcsGmud) {
+  const datObjectMatches = datObjectsGmud.filter((datGmud) => datGmud.id === npcGmud.Outfit.id).sort((a, b) => a.type === 'outfit' ? -1 : 1);
+  if (datObjectMatches.length === 0) continue;
+  const datObjectGmud = datObjectMatches[0];
+
   const { Home, Behaviours } = npcGmud;
   const location = { coordinates: Home };
-  const buyOffers = Behaviours.buyOffers.map(offer => behaviourOfferToOffer(offer, npcGmud, 'sellTo')).filter(o => o);
-  const sellOffers = Behaviours.sellOffers.map(offer => behaviourOfferToOffer(offer, npcGmud, 'buyFrom')).filter(o => o);
+  const buyOffers = Behaviours.buyOffers.map(offer => parseBehaviourToOffer(offer, npcGmud, 'sellTo')).filter(o => o);
+  const sellOffers = Behaviours.sellOffers.map(offer => parseBehaviourToOffer(offer, npcGmud, 'buyFrom')).filter(o => o);
   const teachSpells = Behaviours.teachSpells.map(teachSpell => {
     const spellIndex = database.spells.findIndex(o => o.name === teachSpell.name);
     if (spellIndex < 0) return null;
     const spell = database.spells[spellIndex];
-    /** @TODO this is not being pushed to the database correctly */
-    database.spells[spellIndex].taughtBy.push[{ id: npcGmud.id, name: npcGmud.Name, price: teachSpell.price }];
+    database.spells[spellIndex].taughtBy.push({ id: npcGmud.id, name: npcGmud.Name, price: teachSpell.price });
     if (!spell.vocations.includes(teachSpell.vocation)) database.spells[spellIndex].vocations.push(teachSpell.vocation);
     return {
       name: teachSpell.name,
@@ -128,13 +145,20 @@ database.npcs = npcsGmud.map((npcGmud) => {
     questRewards,
     teachSpells,
   };
+  npc.dat = datObjectGmud;
 
-  npc.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === npc.outfit.id);
+  database.npcs.push(npc);
+}
 
-  return npc;
-});
+console.log(`Analysing ${creaturesGmud.length} creatures...`);
+for (const creatureGmud of creaturesGmud) {
+  let datObjectGmud = datObjectsGmud.find((datGmud) => datGmud.id === creatureGmud.Outfit.id && datGmud.type === 'outfit');
+  if (!datObjectGmud) {
+    const datObjectMatches = datObjectsGmud.filter((datGmud) => datGmud.id === creatureGmud.id).sort((a, b) => a.type === 'outfit' ? -1 : 1);
+    if (datObjectMatches.length <= 0) continue;
+    datObjectGmud = datObjectMatches[0];
+  };
 
-database.creatures = creaturesGmud.map((creatureGmud) => {
   const creature = {
     id: creatureGmud.id,
     name: creatureGmud.Name,
@@ -180,12 +204,12 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
   });
 
   creature.drops = drops;
+  creature.dat = datObjectGmud;
 
-  creature.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === (creature.outfit.id || creature.id));
+  database.creatures.push(creature);
+}
 
-  return creature;
-});
-
+console.log(`Analysing ${mapQuestsGmud.length} map sectors...`);
 mapQuestsGmud.forEach((mapSector) => {
   mapSector.questTiles.forEach((tile) => {
     const { chestQuestNumber: questId } = tile.objects.find(object => object.chestQuestNumber) || {};

@@ -24,7 +24,7 @@ export const columnModel = {
     field: "animatedSprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
       <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
-        <Image src={`/images/sprites/creatures/${params.row.id}.gif`} alt={params.row.name} width={32 * params.row.outfit.dat.sprite.width} height={32 * params.row.outfit.dat.sprite.height} />
+        <Image src={`/images/sprites/creatures/${params.row.id}.gif`} alt={params.row.name} width={32 * params.row.dat.sprite.width} height={32 * params.row.dat.sprite.height} />
       </Box>
     )
   },
@@ -33,7 +33,7 @@ export const columnModel = {
     field: "sprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
       <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
-        <Image src={`/images/sprites/creatures/${params.row.id}-0.png`} alt={params.row.name} width={32 * params.row.outfit.dat.sprite.width} height={32 * params.row.outfit.dat.sprite.height} />
+        <Image src={`/images/sprites/creatures/${params.row.id}-0.png`} alt={params.row.name} width={32 * params.row.dat.sprite.width} height={32 * params.row.dat.sprite.height} />
       </Box>
     )
   },

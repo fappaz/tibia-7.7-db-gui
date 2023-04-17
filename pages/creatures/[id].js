@@ -148,8 +148,8 @@ function Details({
           <Image
             src={`/images/sprites/creatures/${creature.id}.gif`}
             alt={creature.id}
-            width={creature.outfit.dat.sprite.width * 32}
-            height={creature.outfit.dat.sprite.height * 32}
+            width={creature.dat.sprite.width * 32}
+            height={creature.dat.sprite.height * 32}
             style={{ objectPosition: 'center' }}
           />
         </ListItem>
