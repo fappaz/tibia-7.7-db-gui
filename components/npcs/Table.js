@@ -3,7 +3,7 @@ import Image from "next/image";
 import PageLink from "next/link";
 import React from "react";
 import CellItems from "../table/CellItems";
-import { Link } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import i18n from "../../api/i18n";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { insertArrayAt } from "../../utils/Array";
@@ -18,10 +18,21 @@ const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}
  */
 export const columnModel = {
   /** specific */
+  animatedSprite: {
+    field: "animatedSprite", headerName: getColumnHeaderI18n("sprite"),
+    renderCell: (params) => (
+      <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
+        <Image src={`/images/sprites/npcs/${params.row.id}.gif`} alt={params.row.name} width={32} height={32} />
+      </Box>
+    )
+  },
+
   sprite: {
     field: "sprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/npcs/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
+      <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
+        <Image src={`/images/sprites/npcs/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
+      </Box>
     )
   },
 
@@ -60,7 +71,7 @@ export const columnModel = {
     renderCell: (params) => {
       const offers = params.row.buyOffers.map(offer => ({
         label: offer.item.name,
-        link: { path: `/item/${offer.item.id}` },
+        link: { path: `/items/${offer.item.id}` },
         value: offer.price,
       }));
       return <CellItems items={offers} />;
@@ -73,7 +84,7 @@ export const columnModel = {
     renderCell: (params) => {
       const offers = params.row.sellOffers.map(offer => ({
         label: offer.item.name,
-        link: { path: `/item/${offer.item.id}` },
+        link: { path: `/items/${offer.item.id}` },
         value: offer.price,
       }));
       return <CellItems items={offers} />;
@@ -99,7 +110,7 @@ export const columnModel = {
     renderCell: (params) => {
       const offers = params.row.questRewards.map(offer => ({
         label: offer.item.name,
-        link: { path: `/item/${offer.item.id}` },
+        link: { path: `/items/${offer.item.id}` },
       }));
       return <CellItems items={offers} />;
     }

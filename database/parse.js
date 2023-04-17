@@ -116,7 +116,7 @@ database.npcs = npcsGmud.map((npcGmud) => {
     }
   }).filter(o => o);
 
-  return {
+  const npc = {
     id: npcGmud.id,
     name: npcGmud.Name,
     sex: npcGmud.Sex,
@@ -128,6 +128,10 @@ database.npcs = npcsGmud.map((npcGmud) => {
     questRewards,
     teachSpells,
   };
+
+  npc.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === npc.outfit.id);
+
+  return npc;
 });
 
 database.creatures = creaturesGmud.map((creatureGmud) => {

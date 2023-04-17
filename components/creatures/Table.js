@@ -62,7 +62,7 @@ export const columnModel = {
     renderCell: (params) => {
       const drops = params.row.drops.map(drop => ({
         label: drop ? `${(drop.amount > 1) ? `${drop.amount} ` : ''}${drop.item.name}` : '',
-        link: { path: `/item/${drop.item.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%`
+        link: { path: `/items/${drop.item.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%`
       }));
       return <CellItems items={drops} />;
     }

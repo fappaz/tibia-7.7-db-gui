@@ -36,7 +36,7 @@ export const columnModel = {
     renderCell: (params) => (
       <Link
         component={PageLink}
-        href={`/item/${params.row.id}`}
+        href={`/items/${params.row.id}`}
       >
         {params.row.name}
       </Link>
@@ -191,7 +191,7 @@ export const columnModel = {
   /** Columns for food (flag === Food) */
   nutrition: { field: "nutrition", headerName: getColumnHeaderI18n('nutrition'), valueGetter: (params) => params.row.attributes.Nutrition },
   weightNutritionRatio: { field: "weightNutritionRatio", headerName: getColumnHeaderI18n('weightNutritionRatio'), valueGetter: (params) => round(params.row.attributes.Nutrition / params.row.attributes.Weight, 2) },
-  cumulative: { field: "cumulative", headerName: getColumnHeaderI18n('cumulative'), valueGetter: (params) => params.row.flags.Cumulative ? t('yes') : t('no') },
+  cumulative: { field: "cumulative", headerName: getColumnHeaderI18n('cumulative'), valueGetter: (params) => params.row.flags.Cumulative ? i18n.t('yes') : i18n.t('no') },
 
   /** @TODO add columns for runes (flag === rune || meaning === 40) */
 

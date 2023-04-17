@@ -59,45 +59,45 @@ const sidebarItems = [
   {
     label: getSidebarOptionLabel('weapons'),
     icon: <><Image src={`/images/icons/warlord-sword.png`} alt={getSidebarOptionLabel('weapons')} width={24} height={24} /></>,
-    link: `/items/weapons`,
+    link: `/items?type=weapons`,
   },
   {
     label: getSidebarOptionLabel('wandsAndRods'),
     icon: <><Image src={`/images/icons/wand-of-inferno.png`} alt={getSidebarOptionLabel('wandsAndRods')} width={24} height={24} /></>,
-    link: `/items/wands`,
+    link: `/items?type=wands`,
   },
   {
     label: getSidebarOptionLabel('distanceWeapons'),
     icon: <><Image src={`/images/icons/bow.png`} alt={getSidebarOptionLabel('distanceWeapons')} width={24} height={24} /></>,
-    link: `/items/distance`,
+    link: `/items?type=distance`,
   },
   {}, // divider
   {
     label: getSidebarOptionLabel('shields'),
     icon: <><Image src={`/images/icons/blessed-shield.png`} alt={getSidebarOptionLabel('shields')} width={24} height={24} /></>,
-    link: `/items/shields`,
+    link: `/items?type=shields`,
   },
   {
     label: getSidebarOptionLabel('armorItems'),
     icon: <><Image src={`/images/icons/golden-armor.png`} alt={getSidebarOptionLabel('armorItems')} width={24} height={24} /></>,
-    link: `/items/armors`,
+    link: `/items?type=armors`,
   },
   {
     label: getSidebarOptionLabel('amulets'),
     icon: <><Image src={`/images/icons/ruby-amulet.png`} alt={getSidebarOptionLabel('amulets')} width={24} height={24} /></>,
-    link: `/items/amulets`,
+    link: `/items?type=amulets`,
   },
   {
     label: getSidebarOptionLabel('rings'),
     icon: <><Image src={`/images/icons/ring-of-the-sky.png`} alt={getSidebarOptionLabel('rings')} width={24} height={24} /></>,
-    link: `/items/rings`,
+    link: `/items?type=rings`,
   },
   {}, // divider
   {
     /** @TODO implement */
     label: getSidebarOptionLabel('runes'),
     icon: <><Image src={`/images/icons/ultimate-healing-rune.png`} alt={getSidebarOptionLabel('runes')} width={24} height={24} /></>,
-    link: `/items/runes`,
+    link: `/items?type=runes`,
   },
   {
     label: getSidebarOptionLabel('spells'),

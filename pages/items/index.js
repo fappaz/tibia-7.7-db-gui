@@ -11,7 +11,6 @@ import { types as itemTypes, subtypes as itemSubtypes } from "../../api/objects/
 
 const objects = database.objects;
 
-/** @TODO change the type based on the url query (e.g.: items?type='armors') instead of the param (.e.g.: items/armors) */
 /** @TODO (future) move each to their own file? */
 const tables = {
   ammo: {
@@ -218,7 +217,6 @@ export default function Items({
   );
 }
 
-/** @TODO (future) fix issue where changing from an item page (e.g.: weapons) to another (e.g.: wands) will keep the active tab index */
 function ItemsTabs({
   tabs,
   defaultTabIndex = 0,

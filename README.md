@@ -27,4 +27,4 @@ Also, my first project with [Next.js](https://nextjs.org/) + [Material-UI 5](htt
 - Go to each of the target folders above and run `node parse.js`. This will parse the original files to a friendly format that this project will understand
 - Go to `./database` then run `node parse.js`. This will generate gifs from all sprites into the `./public/images` folder, as well as create a simple JSON database in `./database/database.json`
 - Go to the root folder of this project and run `npm run dev`
-- Open the link provided in the terminal log then navigate to one of the pages in the routes (e.g.: http://localhost:3000/items/shields)
+- Open the link provided in the terminal log then navigate to one of the pages in the routes (e.g.: http://localhost:3000/map)
