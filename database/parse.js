@@ -4,7 +4,7 @@ const npcsGmud = require('../api/npcs/npcs.gmud.json');
 const objectsGmud = require('../api/objects/objects.gmud.json');
 const datObjectsGmud = require('../api/dat/dat.gmud.json');
 const mapQuestsGmud = require('../api/map/mapQuests.gmud.json');
-const { saveGif, exportGifFramesToPng } = require('../utils/Sprite');
+const { saveGif, exportGifFramesToPng, SPRITE_TYPES, buildFilterFramesByDirections } = require('../utils/Sprite');
 
 const database = {
   creatures: [],
@@ -14,7 +14,7 @@ const database = {
 
   /**
    * Retrieved from NPC 'Loria'
-   * @TODO add minimumLevel
+   * @TODO add minimumLevel and description
    * */
   spells: [
     { name: "find person", words: "exiva 'name'", vocations:[], taughtBy: [] }, 
@@ -52,7 +52,7 @@ const database = {
 
 const spritesDirPath = '../api/sprites/images';
 const spritesOutputDirPath = '../public/images/sprites';
-database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.flags.immovable).map((datObject) => {
+database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.immovable).map((datObject) => {
   const objectGmud = objectsGmud.find((objectGmud) => objectGmud.TypeID === datObject.id);
   if (!objectGmud ) return null;
   if ((objectGmud.Flags||[]).includes('Unmove')) return null;
@@ -74,13 +74,21 @@ database.objects = datObjectsGmud.filter(o => ['item'].includes(o.type) && !o.fl
 }).filter((object) => object);
 
 /** Save one gif frame to jpg so it can be used as non-animated icons (e.g.: map markers) */
-datObjectsGmud.filter(o => ['outfit'].includes(o.type)).forEach(async (datOutfit) => {
-  const creatureGmud = creaturesGmud.find((creatureGmud) => `${creatureGmud.Outfit.id}` === `${datOutfit.id}`);
-  if (!creatureGmud ) return null;
+datObjectsGmud.filter(o => o.type === 'outfit').forEach(async (datOutfit) => {
+  const creatureGmuds = creaturesGmud.filter(creatureGmud => creatureGmud.Outfit.id === datOutfit.id);
+  for (const creatureGmud of creatureGmuds) {
+    const gifPath = `${spritesOutputDirPath}/${creatureGmud.id}.gif`;
+    await saveGif(datOutfit, spritesDirPath, gifPath, { outfit: creatureGmud.Outfit, filterFrames: buildFilterFramesByDirections(['down']) });
+    await exportGifFramesToPng(gifPath, spritesOutputDirPath, creatureGmud.id, [0]);
+  }
   
-  const gifPath = `${spritesOutputDirPath}/${datOutfit.id}.gif`;
-  await saveGif(datOutfit, spritesDirPath, gifPath);
-  await exportGifFramesToPng(gifPath, spritesOutputDirPath, datOutfit.id, [0]);
+  const npcGmuds = npcsGmud.filter(npcGmud => npcGmud.Outfit.id === datOutfit.id);
+  for (const npcGmud of npcGmuds) {
+    const gifPath = `${spritesOutputDirPath}/${npcGmud.id}.gif`;
+    await saveGif(datOutfit, spritesDirPath, gifPath, { outfit: npcGmud.Outfit, filterFrames: buildFilterFramesByDirections(['down']) });
+    console.log(`@TODO ### saving to png: `, npcGmud.id);
+    await exportGifFramesToPng(gifPath, spritesOutputDirPath, npcGmud.id, [0]);
+  }
 });
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
@@ -192,7 +200,7 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
 
   creature.drops = drops;
 
-  creature.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === creature.id);
+  creature.outfit.dat = datObjectsGmud.find(o => ['outfit'].includes(o.type) && o.id === (creature.outfit.id || creature.id));
 
   return creature;
 });

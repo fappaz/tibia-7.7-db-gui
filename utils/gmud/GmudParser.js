@@ -323,7 +323,7 @@ module.exports.parseGmudMapObjectsToModelObjects = (playerObjects) => {
 module.exports.parseOutfitFunction = (rawValue) => {
   const [outfitId, partsRaw] = rawValue.replace(/[()]/g, '').split(',');
   const outfit = {
-    id: outfitId,
+    id: parseInt(outfitId),
   };
   const outfitParts = `${partsRaw}`.split('-');
   if (outfitParts.length === 4) {

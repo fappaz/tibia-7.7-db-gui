@@ -64,7 +64,7 @@ export default function Creature({
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
               {
-                tabs.map(({ name }, index) => <Tab id={`tab-${index}`} label={name} />)
+                tabs.map(({ name }, index) => <Tab key={`tab-${index}`} id={`tab-${index}`} label={name} />)
               }
             </Tabs>
           </Box>
@@ -124,7 +124,7 @@ function Spawns({
           title: t('creatures.table.columns.spawns.value', { amount: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
           items: quickAccessMarkers,
         }}
-        coordinates={quickAccessMarkers[0].coordinates}
+        coordinates={quickAccessMarkers.length ? quickAccessMarkers[0].coordinates : undefined}
       />
     </Box>
   );

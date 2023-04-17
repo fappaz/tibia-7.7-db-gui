@@ -23,14 +23,14 @@ export const columnModel = {
   animatedSprite: {
     field: "animatedSprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/${params.row.outfit.id}.gif`} alt={params.row.name} width={32} height={32} />
+      <Image src={`/images/sprites/${params.row.id}.gif`} alt={params.row.name} width={32} height={32} />
     )
   },
 
   sprite: {
     field: "sprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/${params.row.outfit.id}-0.png`} alt={params.row.name} width={32} height={32} />
+      <Image src={`/images/sprites/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
     )
   },
   
