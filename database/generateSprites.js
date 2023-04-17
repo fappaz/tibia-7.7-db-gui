@@ -1,7 +1,9 @@
 const { saveGif, exportGifFramesToPng, buildFilterFramesByDirections } = require('../utils/Sprite');
 const path = require('path');
 
-const database = require('../database/database.json');
+const creatures = require('../database/creatures.json');
+const npcs = require('../database/npcs.json');
+const objects = require('../database/objects.json');
 const originalSpritesDir = '../api/sprites/images';
 const targetSpritesDir = '../public/images/sprites';
 const objectSpritesDir = path.join(targetSpritesDir, 'objects');
@@ -13,8 +15,8 @@ const npcSpritesDir = path.join(targetSpritesDir, 'npcs');
  * and exports the first frame to a png file.
  * */
 async function run() {
-  console.log(`Generating sprites for ${database.objects.length} objects...`);
-  for (const object of database.objects) {
+  console.log(`Generating sprites for ${objects.length} objects...`);
+  for (const object of objects) {
     try {
       const gifPath = path.join(objectSpritesDir, `${object.id}.gif`);
       await saveGif(object.dat, originalSpritesDir, gifPath);
@@ -24,9 +26,9 @@ async function run() {
     }
   }
 
-  console.log(`Generating sprites for ${database.creatures.length} creatures...`);
+  console.log(`Generating sprites for ${creatures.length} creatures...`);
   const throwerCreatureIds = [93, 96, 97, 98];
-  for (const creature of database.creatures) {
+  for (const creature of creatures) {
     try {
       /**
        * Manually fixing the outfit of "thrower" creatures
@@ -47,17 +49,17 @@ async function run() {
     }
   }
 
-  console.log(`Generating sprites for ${database.npcs.length} NPCs...`);
-  for (const npc of database.npcs) {
+  console.log(`Generating sprites for ${npcs.length} NPCs...`);
+  for (const npc of npcs) {
     try {
       /**
        * Manually fixing the outfit of NPCs below.
        * @TODO (future) fix this when parsing the GMUD, so the database will have the correct data too.
        */
-      if (npc.id === 'cobra') npc.dat = database.creatures.find(creature => creature.id === 81).dat;
-      if (npc.id === 'frans') npc.dat = database.objects.find(object => object.id === 3207).dat;
-      if (npc.id === 'oracle') npc.dat = database.objects.find(object => object.id === 2031).dat;
-      if (npc.id === 'gatekeeper') npc.dat = database.objects.find(object => object.id === 2031).dat;
+      if (npc.id === 'cobra') npc.dat = creatures.find(creature => creature.id === 81).dat;
+      if (npc.id === 'frans') npc.dat = objects.find(object => object.id === 3207).dat;
+      if (npc.id === 'oracle') npc.dat = objects.find(object => object.id === 2031).dat;
+      if (npc.id === 'gatekeeper') npc.dat = objects.find(object => object.id === 2031).dat;
   
       const gifPath = path.join(npcSpritesDir, `${npc.id}.gif`);
       await saveGif(npc.dat, originalSpritesDir, gifPath, { outfit: npc.outfit, filterFrames: buildFilterFramesByDirections(['down']) });
@@ -69,7 +71,7 @@ async function run() {
 }
 
 try {
-  console.log(`Generating sprites based on the current "database.json"...`);
+  console.log(`Generating sprites based on the databases in "database/*.json"...`);
   run();
 } catch (error) {
   console.error(error);

@@ -238,6 +238,7 @@ mapQuestsGmud.forEach((mapSector) => {
   });
 });
 
-const databaseOutputPath = 'database.json';
-fs.writeFileSync(databaseOutputPath, JSON.stringify(database, null, 2));
-console.log(`Database generated at "${databaseOutputPath}". Make sure to also generate the sprites.`);
+Object.entries(database).forEach(([key, entries]) => {
+  fs.writeFileSync(`${key}.json`, JSON.stringify(entries, null, 2));
+});
+console.log(`Database generated at "/database". Make sure to also generate the sprites.`);

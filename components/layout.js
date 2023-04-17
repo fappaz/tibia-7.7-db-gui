@@ -20,6 +20,22 @@ import PageLink from "next/link";
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import i18n from '../api/i18n';
+import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+import parse from 'autosuggest-highlight/parse';
+import match from 'autosuggest-highlight/match';
+
+import creatures from '../database/creatures.json';
+import objects from '../database/objects.json';
+import npcs from '../database/npcs.json';
+import spells from '../database/spells.json';
+import { useRouter } from 'next/router';
+
+const searchOptions = [];
+creatures.forEach((creature, index) => searchOptions.push({ type: 'creatures', name: creature.name, id: creature.id, link: `/creatures/${creature.id}`, icon: `/images/sprites/creatures/${creature.id}-0.png`, key: searchOptions.length + index }));
+objects.forEach((object, index) => searchOptions.push({ type: 'objects', name: object.name, id: object.id, link: `/items/${object.id}`, icon: `/images/sprites/objects/${object.id}-0.png`, key: searchOptions.length + index }));
+npcs.forEach((npc, index) => searchOptions.push({ type: 'npcs', name: npc.name, id: npc.id, link: `/npcs`, icon: `/images/sprites/npcs/${npc.id}-0.png`, key: searchOptions.length + index }));
+spells.forEach((spell, index) => searchOptions.push({ type: 'spells', name: spell.name, id: spell.words, link: `/spells`, icon: `/images/icons/spellbook.png`, key: searchOptions.length + index }));
+searchOptions.sort((a, b) => a.name.localeCompare(b.name));
 
 const getSidebarOptionLabel = id => i18n.t([`pages.${id}.title`, `${id}.name`, id]);
 
@@ -189,7 +205,7 @@ export default function Layout({ children }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} color='inherit'>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -206,9 +222,15 @@ export default function Layout({ children }) {
           <Typography variant="h6" noWrap component="div">
             {t('appTitle')}
           </Typography>
+
+          <Box flexGrow={1} display='flex' justifyContent='flex-end'>
+            <SearchBox options={searchOptions} fullWidth />
+          </Box>
+
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+
+      <Drawer variant="permanent" open={open} >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -253,10 +275,79 @@ export default function Layout({ children }) {
           ))}
         </List>
       </Drawer>
+
       <Box component="main" sx={{ flexGrow: 1 }}>
         <DrawerHeader />
         {children}
       </Box>
     </Box>
   );
+}
+
+/**
+ * @TODO move to its own component?
+ * @TODO jsdoc
+ * @param {Object} props The props.
+ * @returns {import("react").ReactNode}
+ */
+function SearchBox({
+  options = [],
+  optionsLimit = 40,
+  ...props
+} = {}) {
+
+  const filterOptions = createFilterOptions({
+    limit: optionsLimit,
+  });
+
+  const { t } = useTranslation();
+  const router = useRouter();
+
+  return (
+    <Autocomplete
+      freeSolo
+      sx={{ width: 300, marginLeft: 5 }}
+      options={options}
+      getOptionLabel={option => option.name || ''}
+      filterOptions={filterOptions}
+      renderInput={(params) => (
+        <TextField {...params} variant='outlined' label={t('components.searchBox.label')} margin="normal" />
+      )}
+      renderOption={(props, option, { inputValue }) => {
+        const matches = match(option.name, inputValue, { insideWords: true });
+        const parts = parse(option.name, matches);
+        return (
+          <li {...props} key={`${option.id}-${option.key}`}>
+            <Box pr={2}>
+              <Image src={option.icon} alt={option.name} width={32} height={32} />
+            </Box>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div>
+                {parts.map((part, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      fontWeight: part.highlight ? 700 : 400,
+                    }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+              </div>
+              <Typography variant='caption' color='textSecondary'>{t('components.searchBox.options.secondaryText', { type: option.type, id: option.id })}</Typography>
+            </div>
+          </li>
+        );
+      }}
+
+      onChange={(event, option) => {
+        if (option?.link) {
+          router.push(option.link);
+        }
+      }}
+
+      {...props}
+    />
+  );
+
 }

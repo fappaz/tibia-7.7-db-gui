@@ -1,9 +1,7 @@
-import database from "../../database/database.json";
+import spells from "../../database/spells.json";
 import StandardPage from '../../components/StandardPage';
 import SpellsTable from "../../components/spells/Table";
 import { useTranslation } from "react-i18next";
-
-const spells = database.spells;
 
 /**
  * @param {Object} props The props.

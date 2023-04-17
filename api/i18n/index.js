@@ -9,6 +9,12 @@ export const defaultLanguages = {
         dataGrid: {
           search: 'Search',
           /** @TODO add other i18n, see: https://mui.com/x/react-data-grid/localization/ */
+        },
+        searchBox: {
+          label: 'Search',
+          options: {
+            secondaryText: '/{{- type}}/{{- id}}',
+          }
         }
       },
       creatures: {

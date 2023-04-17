@@ -49,7 +49,7 @@ yarn-error.log*
 /api/objects/*gmud.json
 /api/sprites/Tibia.spr
 /api/sprites/images
-/database/database.json
+/database/*.json
 
 public/images/sprites/creatures/*
 public/images/sprites/npcs/*

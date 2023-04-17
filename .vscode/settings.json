@@ -1,5 +1,5 @@
 {
   "files.associations": {
-    "database/database.json": "plaintext"
+    "database/*.json": "plaintext"
   }
 }

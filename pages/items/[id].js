@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import database from "../../database/database.json";
+import objects from "../../database/objects.json";
+import creatures from "../../database/creatures.json";
+import npcs from "../../database/npcs.json";
 import { useState, useEffect } from "react";
 import { Box, Grid, Tab, Tabs, TextField } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
@@ -9,10 +11,6 @@ import TabContent, { useTabContent } from "../../components/TabContent";
 import { useTranslation } from "react-i18next";
 import i18n from "../../api/i18n";
 import DetailsCard from "../../components/items/DetailsCard";
-
-const objects = database.objects;
-const creatures = database.creatures;
-const npcs = database.npcs;
 
 const getColumnHeaderI18n = (field) => i18n.t(`items.table.columns.${field}.header`);
 const tabs = [

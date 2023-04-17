@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import ClearIcon from '@mui/icons-material/Clear';
-import database from '../../database/database.json';
+import creatures from '../../database/creatures.json';
+import npcs from '../../database/npcs.json';
+import quests from '../../database/quests.json';
 import { columnModel as landmarksColumns } from "../../components/landmarks/Table";
 import { columnModel as creaturesColumns } from "../../components/creatures/Table";
 import { columnModel as npcsColumns } from "../../components/npcs/Table";
@@ -62,7 +64,7 @@ const markerTypes = {
   creatures: {
     id: 'creatures',
     iconSrc: '/images/icons/fire-devil.png',
-    data: database.creatures.filter(creature => creature.spawns.length > 0 && creature.outfit.id > 0),
+    data: creatures.filter(creature => creature.spawns.length > 0 && creature.outfit.id > 0),
     getColumns: ({ onLocationClick, } = {}) => [
       creaturesColumns.sprite,
       creaturesColumns.name,
@@ -96,7 +98,7 @@ const markerTypes = {
   npcs: {
     id: 'npcs',
     iconSrc: '/images/icons/citizen.png',
-    data: database.npcs,
+    data: npcs,
     getColumns: ({ onLocationClick, } = {}) => [
       npcsColumns.sprite,
       npcsColumns.name,
@@ -117,7 +119,7 @@ const markerTypes = {
   quests: {
     id: 'quests',
     iconSrc: '/images/icons/chest.png',
-    data: database.quests,
+    data: quests,
     getColumns: ({ onLocationClick, } = {}) => [
       questsColumns.id,
       questsColumns.rewards,

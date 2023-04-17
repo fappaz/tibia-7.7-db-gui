@@ -1,4 +1,4 @@
-import database from "../../database/database.json";
+import objects from "../../database/objects.json";
 import flags from "../../api/objects/flags";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
@@ -8,8 +8,6 @@ import { useTranslation } from "react-i18next";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import { Box, Tabs, Tab } from "@mui/material";
 import { types as itemTypes, subtypes as itemSubtypes } from "../../api/objects/types";
-
-const objects = database.objects;
 
 /** @TODO (future) move each to their own file? */
 const tables = {

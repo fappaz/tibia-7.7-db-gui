@@ -13,6 +13,7 @@
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.15",
     "@mui/x-data-grid": "^6.0.4",
+    "autosuggest-highlight": "^3.3.4",
     "i18next": "^22.4.14",
     "leaflet": "^1.9.3",
     "leaflet-pixi-overlay": "^1.9.4",

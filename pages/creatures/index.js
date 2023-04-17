@@ -1,10 +1,8 @@
 import { Box } from "@mui/material";
-import database from "../../database/database.json";
+import creatures from "../../database/creatures.json";
 import StandardPage from "../../components/StandardPage";
 import CreaturesTable from "../../components/creatures/Table";
 import { useTranslation } from "react-i18next";
-
-const creatures = database.creatures;
 
 /**
  * 

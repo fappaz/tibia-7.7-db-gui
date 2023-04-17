@@ -1,9 +1,7 @@
-import database from "../../database/database.json";
+import npcs from "../../database/npcs.json";
 import StandardPage from '../../components/StandardPage';
 import NpcsTable from "../../components/npcs/Table";
 import { useTranslation } from "react-i18next";
-
-const npcs = database.npcs;
 
 /**
  * @param {Object} props The props.

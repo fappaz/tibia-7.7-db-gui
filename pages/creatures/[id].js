@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import database from "../../database/database.json";
+import creatures from "../../database/creatures.json";
+import objects from "../../database/objects.json";
 import { useState, useEffect } from "react";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { Box, Card, Divider, Grid, Link, List, ListItem, ListItemText, TextField, Tab, Tabs, Typography, Tooltip } from "@mui/material";
@@ -42,8 +43,8 @@ export default function Creature({
 
   useEffect(function onQueryChanged() {
     if (!id) return;
-    let creature = database.creatures.find(creature => `${creature.id}` === `${id}`);
-    if (!creature) creature = database.creatures.find(creature => creature.name.toLowerCase() === `${id}`.toLowerCase());
+    let creature = creatures.find(creature => `${creature.id}` === `${id}`);
+    if (!creature) creature = creatures.find(creature => creature.name.toLowerCase() === `${id}`.toLowerCase());
     setCreature(creature);
 
     if (!tab) return;
@@ -219,7 +220,7 @@ function Drops({
   creature,
 } = {}) {
 
-  const items = creature.drops.map(drop => database.objects.find(object => object.id === drop.item.id)).filter(item => item);
+  const items = creature.drops.map(drop => objects.find(object => object.id === drop.item.id)).filter(item => item);
   const tableProps = {...defaultTableProps};
   tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
   tableProps.initialState.columns.columnVisibilityModel.dropFrom = false;
