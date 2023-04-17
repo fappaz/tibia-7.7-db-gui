@@ -4,7 +4,6 @@ const npcsGmud = require('../api/npcs/npcs.gmud.json');
 const objectsGmud = require('../api/objects/objects.gmud.json');
 const datObjectsGmud = require('../api/dat/dat.gmud.json');
 const mapQuestsGmud = require('../api/map/mapQuests.gmud.json');
-const { saveGif, exportGifFramesToPng, SPRITE_TYPES, buildFilterFramesByDirections } = require('../utils/Sprite');
 
 const database = {
   creatures: [],
@@ -17,47 +16,43 @@ const database = {
    * @TODO add minimumLevel and description
    * */
   spells: [
-    { name: "find person", words: "exiva 'name'", vocations:[], taughtBy: [] }, 
-    { name: "light", words: "utevo lux", vocations:[], taughtBy: [] }, 
-    { name: "light healing", words: "exura", vocations:[], taughtBy: [] }, 
-    { name: "light magic missile", words: "adori", vocations:[], taughtBy: [] }, 
-    { name: "antidote", words: "exana pox", vocations:[], taughtBy: [] }, 
-    { name: "intense healing", words: "exura gran", vocations:[], taughtBy: [] }, 
-    { name: "poison field", words: "adevo grav pox", vocations:[], taughtBy: [] }, 
-    { name: "great light", words: "utevo gran lux", vocations:[], taughtBy: [] }, 
-    { name: "fire field", words: "adevo grav flam", vocations:[], taughtBy: [] }, 
-    { name: "heavy magic missile", words: "adori gran", vocations:[], taughtBy: [] }, 
-    { name: "magic shield", words: "utamo vita", vocations:[], taughtBy: [] }, 
-    { name: "fireball", words: "adori flam", vocations:[], taughtBy: [] }, 
-    { name: "energy field", words: "adevo grav vis", vocations:[], taughtBy: [] }, 
-    { name: "destroy field", words: "adito grav", vocations:[], taughtBy: [] }, 
-    { name: "fire wave", words: "exevo flam hur", vocations:[], taughtBy: [] }, 
-    { name: "ultimate healing", words: "exura vita", vocations:[], taughtBy: [] }, 
-    { name: "great fireball", words: "adori gran flam", vocations:[], taughtBy: [] }, 
-    { name: "fire bomb", words: "adevo mas flam", vocations:[], taughtBy: [] }, 
-    { name: "firebomb", words: "adevo mas flam", vocations:[], taughtBy: [] }, 
-    { name: "energy beam", words: "exevo vis lux", vocations:[], taughtBy: [] }, 
-    { name: "creature illusion", words: "utevo res ina 'creature'", vocations:[], taughtBy: [] }, 
-    { name: "poison wall", words: "adevo mas grav pox", vocations:[], taughtBy: [] }, 
-    { name: "explosion", words: "adevo mas hur", vocations:[], taughtBy: [] }, 
-    { name: "fire wall", words: "adevo mas grav flam", vocations:[], taughtBy: [] }, 
-    { name: "great energy beam", words: "exevo gran vis lux", vocations:[], taughtBy: [] }, 
-    { name: "invisible", words: "utana vid", vocations:[], taughtBy: [] }, 
-    { name: "summon creature", words: "utevo res 'creature'", vocations:[], taughtBy: [] }, 
-    { name: "energy wall", words: "adevo mas grav vis", vocations:[], taughtBy: [] }, 
-    { name: "energy wave", words: "exevo mort hur", vocations:[], taughtBy: [] }, 
-    { name: "sudden death", words: "adori vita vis", vocations:[], taughtBy: [] }, 
+    { name: "find person", words: "exiva 'name'", vocations: [], taughtBy: [] },
+    { name: "light", words: "utevo lux", vocations: [], taughtBy: [] },
+    { name: "light healing", words: "exura", vocations: [], taughtBy: [] },
+    { name: "light magic missile", words: "adori", vocations: [], taughtBy: [] },
+    { name: "antidote", words: "exana pox", vocations: [], taughtBy: [] },
+    { name: "intense healing", words: "exura gran", vocations: [], taughtBy: [] },
+    { name: "poison field", words: "adevo grav pox", vocations: [], taughtBy: [] },
+    { name: "great light", words: "utevo gran lux", vocations: [], taughtBy: [] },
+    { name: "fire field", words: "adevo grav flam", vocations: [], taughtBy: [] },
+    { name: "heavy magic missile", words: "adori gran", vocations: [], taughtBy: [] },
+    { name: "magic shield", words: "utamo vita", vocations: [], taughtBy: [] },
+    { name: "fireball", words: "adori flam", vocations: [], taughtBy: [] },
+    { name: "energy field", words: "adevo grav vis", vocations: [], taughtBy: [] },
+    { name: "destroy field", words: "adito grav", vocations: [], taughtBy: [] },
+    { name: "fire wave", words: "exevo flam hur", vocations: [], taughtBy: [] },
+    { name: "ultimate healing", words: "exura vita", vocations: [], taughtBy: [] },
+    { name: "great fireball", words: "adori gran flam", vocations: [], taughtBy: [] },
+    { name: "fire bomb", words: "adevo mas flam", vocations: [], taughtBy: [] },
+    { name: "firebomb", words: "adevo mas flam", vocations: [], taughtBy: [] },
+    { name: "energy beam", words: "exevo vis lux", vocations: [], taughtBy: [] },
+    { name: "creature illusion", words: "utevo res ina 'creature'", vocations: [], taughtBy: [] },
+    { name: "poison wall", words: "adevo mas grav pox", vocations: [], taughtBy: [] },
+    { name: "explosion", words: "adevo mas hur", vocations: [], taughtBy: [] },
+    { name: "fire wall", words: "adevo mas grav flam", vocations: [], taughtBy: [] },
+    { name: "great energy beam", words: "exevo gran vis lux", vocations: [], taughtBy: [] },
+    { name: "invisible", words: "utana vid", vocations: [], taughtBy: [] },
+    { name: "summon creature", words: "utevo res 'creature'", vocations: [], taughtBy: [] },
+    { name: "energy wall", words: "adevo mas grav vis", vocations: [], taughtBy: [] },
+    { name: "energy wave", words: "exevo mort hur", vocations: [], taughtBy: [] },
+    { name: "sudden death", words: "adori vita vis", vocations: [], taughtBy: [] },
   ],
 };
 
-const spritesDirPath = '../api/sprites/images';
-const spritesOutputDirPath = '../public/images/sprites';
-database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.immovable).map((datObject) => {
+database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.ground && !o.flags.blocksMissile).map((datObject) => {
   const objectGmud = objectsGmud.find((objectGmud) => objectGmud.TypeID === datObject.id);
-  if (!objectGmud ) return null;
-  if ((objectGmud.Flags||[]).includes('Unmove')) return null;
-  
-  saveGif(datObject, spritesDirPath, `${spritesOutputDirPath}/${datObject.id}.gif`);
+  if (!objectGmud) return null;
+  if ((objectGmud.Flags || []).includes('Unmove')) return null;
 
   return {
     id: datObject.id,
@@ -72,24 +67,6 @@ database.objects = datObjectsGmud.filter(o => o.type === 'item' && !o.flags.immo
     questRewards: [],
   }
 }).filter((object) => object);
-
-/** Save one gif frame to jpg so it can be used as non-animated icons (e.g.: map markers) */
-datObjectsGmud.filter(o => o.type === 'outfit').forEach(async (datOutfit) => {
-  const creatureGmuds = creaturesGmud.filter(creatureGmud => creatureGmud.Outfit.id === datOutfit.id);
-  for (const creatureGmud of creatureGmuds) {
-    const gifPath = `${spritesOutputDirPath}/${creatureGmud.id}.gif`;
-    await saveGif(datOutfit, spritesDirPath, gifPath, { outfit: creatureGmud.Outfit, filterFrames: buildFilterFramesByDirections(['down']) });
-    await exportGifFramesToPng(gifPath, spritesOutputDirPath, creatureGmud.id, [0]);
-  }
-  
-  const npcGmuds = npcsGmud.filter(npcGmud => npcGmud.Outfit.id === datOutfit.id);
-  for (const npcGmud of npcGmuds) {
-    const gifPath = `${spritesOutputDirPath}/${npcGmud.id}.gif`;
-    await saveGif(datOutfit, spritesDirPath, gifPath, { outfit: npcGmud.Outfit, filterFrames: buildFilterFramesByDirections(['down']) });
-    console.log(`@TODO ### saving to png: `, npcGmud.id);
-    await exportGifFramesToPng(gifPath, spritesOutputDirPath, npcGmud.id, [0]);
-  }
-});
 
 const behaviourOfferToOffer = ({ itemId, amount, price }, { id, Name }, objectProp) => {
   const itemIndex = database.objects.findIndex(o => o.id === itemId);
@@ -170,7 +147,7 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
     flags: creatureGmud.Flags,
     spawns: creatureGmud.spawns,
   };
-  
+
   const hitpointsSkill = creatureGmud.Skills.find(skill => skill.id === 'HitPoints');
   const hitpoints = hitpointsSkill ? hitpointsSkill.params[0] : 0;
   creature.attributes.hitpoints = hitpoints;
@@ -208,7 +185,7 @@ database.creatures = creaturesGmud.map((creatureGmud) => {
 mapQuestsGmud.forEach((mapSector) => {
   mapSector.questTiles.forEach((tile) => {
     const { chestQuestNumber: questId } = tile.objects.find(object => object.chestQuestNumber) || {};
-    const rewardItems = tile.objects.filter(o=>o.itemId).map((object) => {
+    const rewardItems = tile.objects.filter(o => o.itemId).map((object) => {
       const { itemId } = object;
       const itemIndex = database.objects.findIndex(q => q.id === itemId);
       if (itemIndex < 0) return;
@@ -219,9 +196,9 @@ mapQuestsGmud.forEach((mapSector) => {
         }
       });
       return database.objects[itemIndex];
-    }).filter(o=>o).map(item => ({ id: item.id, name: item.name }));
+    }).filter(o => o).map(item => ({ id: item.id, name: item.name }));
 
-    if (database.quests.findIndex(quest=>`${quest.id}` === `${questId}`) >= 0) return;
+    if (database.quests.findIndex(quest => `${quest.id}` === `${questId}`) >= 0) return;
     database.quests.push({
       id: questId,
       coordinates: tile.coordinates,
@@ -233,4 +210,6 @@ mapQuestsGmud.forEach((mapSector) => {
   });
 });
 
-fs.writeFileSync('database.json', JSON.stringify(database, null, 2));
+const databaseOutputPath = 'database.json';
+fs.writeFileSync(databaseOutputPath, JSON.stringify(database, null, 2));
+console.log(`Database generated at "${databaseOutputPath}". Make sure to also generate the sprites.`);

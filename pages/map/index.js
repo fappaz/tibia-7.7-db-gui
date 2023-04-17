@@ -84,7 +84,7 @@ const markerTypes = {
             coordinates: spawn.coordinates,
             label: i18n.t(`creatures.marker.tooltip`, { coordinates: spawn.coordinates.join(','), name: row.name, amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
             icon: {
-              url: `/images/sprites/${row.id}-0.png`,
+              url: `/images/sprites/creatures/${row.id}-0.png`,
             },
             ...(router ? { onClick: () => router.push(`/creatures/${row.id}`) } : null),
           })

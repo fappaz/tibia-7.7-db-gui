@@ -11,6 +11,7 @@ import { types as itemTypes, subtypes as itemSubtypes } from "../../api/objects/
 
 const objects = database.objects;
 
+/** @TODO change the type based on the url query (e.g.: items?type='armors') instead of the param (.e.g.: items/armors) */
 /** @TODO (future) move each to their own file? */
 const tables = {
   ammo: {

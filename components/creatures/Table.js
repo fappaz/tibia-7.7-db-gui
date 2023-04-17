@@ -4,7 +4,7 @@ import PageLink from "next/link";
 import React from "react";
 import CellItems from "../table/CellItems";
 import { round } from "../../utils/Math";
-import { Link, Tooltip } from "@mui/material";
+import { Box, Link, Tooltip } from "@mui/material";
 import i18n from "../../api/i18n";
 import { insertArrayAt } from "../../utils/Array";
 
@@ -23,14 +23,18 @@ export const columnModel = {
   animatedSprite: {
     field: "animatedSprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/${params.row.id}.gif`} alt={params.row.name} width={32} height={32} />
+      <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
+        <Image src={`/images/sprites/creatures/${params.row.id}.gif`} alt={params.row.name} width={32 * params.row.outfit.dat.sprite.width} height={32 * params.row.outfit.dat.sprite.height} />
+      </Box>
     )
   },
 
   sprite: {
     field: "sprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
+      <Box pr={2} display='flex' justifyContent='center' alignItems='end' sx={{ width: '100%' }}>
+        <Image src={`/images/sprites/creatures/${params.row.id}-0.png`} alt={params.row.name} width={32 * params.row.outfit.dat.sprite.width} height={32 * params.row.outfit.dat.sprite.height} />
+      </Box>
     )
   },
   

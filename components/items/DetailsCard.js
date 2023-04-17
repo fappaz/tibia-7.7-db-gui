@@ -42,7 +42,7 @@ export default function DetailsCard({
       <List>
         <ListItem>
           <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' textAlign='center' py={1} sx={{ width: '100%' }}>
-            <Image src={`/images/sprites/${item.id}.gif`} alt={item.name} width={32} height={32} />
+            <Image src={`/images/sprites/objects/${item.id}.gif`} alt={item.name} width={32} height={32} />
             <Typography sx={{pt: 2}} variant='caption'>
               {
                 getItemDescription(item).split('\n').map((line, index) => (

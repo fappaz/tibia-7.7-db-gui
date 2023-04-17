@@ -146,7 +146,7 @@ function Details({
       <List dense>
         <ListItem disableGutters sx={{ py: 2 }}>
           <Image
-            src={`/images/sprites/${creature.outfit.id}.gif`}
+            src={`/images/sprites/creatures/${creature.id}.gif`}
             alt={creature.id}
             width={creature.outfit.dat.sprite.width * 32}
             height={creature.outfit.dat.sprite.height * 32}

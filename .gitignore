@@ -51,7 +51,9 @@ yarn-error.log*
 /api/sprites/images
 /database/database.json
 
-public/images/sprites/*
+public/images/sprites/creatures/*
+public/images/sprites/npcs/*
+public/images/sprites/objects/*
 
 # playground
 /playground

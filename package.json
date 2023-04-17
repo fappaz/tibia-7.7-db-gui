@@ -13,8 +13,6 @@
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.15",
     "@mui/x-data-grid": "^6.0.4",
-    "gif-frames": "^1.0.1",
-    "gifwrap": "^0.10.1",
     "i18next": "^22.4.14",
     "leaflet": "^1.9.3",
     "leaflet-pixi-overlay": "^1.9.4",
@@ -29,8 +27,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
-    "canvas": "^2.11.2",
-    "gifencoder": "^2.0.1",
+    "gif-frames": "^1.0.1",
+    "gifwrap": "^0.10.1",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "jimp": "^0.22.7"

@@ -21,7 +21,7 @@ export const columnModel = {
   sprite: {
     field: "sprite", headerName: getColumnHeaderI18n("sprite"),
     renderCell: (params) => (
-      <Image src={`/images/sprites/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
+      <Image src={`/images/sprites/npcs/${params.row.id}-0.png`} alt={params.row.name} width={32} height={32} />
     )
   },
 
