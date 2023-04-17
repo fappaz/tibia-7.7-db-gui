@@ -1,5 +1,5 @@
 import React from "react";
-import { defaultColumns, getCustomColumns, columnsByType, columnModel } from "./Table";
+import { getCustomColumns, columnsByType, columnModel } from "./Table";
 import { getItemTypeId } from "../../api/objects/types";
 import { Box, Card, Divider, Link, List, ListItem, Typography } from "@mui/material";
 import Property from "../Property";
