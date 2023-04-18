@@ -13,7 +13,6 @@ import { round } from "../../utils/Math";
 import { get } from "lodash";
 import { insertArrayAt } from "../../utils/Array";
 
-
 /** specific */
 const context = 'items';
 const getColumnHeaderI18n = (field) => i18n.t(`${context}.table.columns.${field}.header`);

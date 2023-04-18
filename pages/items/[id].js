@@ -108,6 +108,7 @@ function Drops({
           },
           columns: {
             columnVisibilityModel: {
+              ...itemsDefaultTableProps.initialState.columns.columnVisibilityModel,
               drops: false,
             }
           }

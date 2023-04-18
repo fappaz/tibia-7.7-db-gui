@@ -16,6 +16,7 @@ import Image from 'next/image';
 import i18n from "../../api/i18n";
 import flags from "../../api/creatures/flags";
 import { useTranslation } from "react-i18next";
+import DetailsCard from "../../components/creatures/DetailsCard";
 
 const getColumnHeaderI18n = (field) => i18n.t(`creatures.table.columns.${field}.header`);
 const getFlagI18n = (flag) => i18n.t(`creatures.flags.${flag}`);
@@ -58,7 +59,7 @@ export default function Creature({
     <StandardPage title={`${creature.name.charAt(0).toUpperCase()}${creature.name.slice(1)}`}>
       <Grid container spacing={2} sx={{ height: '100%'}}>
         <Grid item xs={12} md={3} lg={2}>
-          <Details creature={creature} />
+          <DetailsCard creature={creature} showExternalLinks />
         </Grid>
 
         <Grid item xs={12} md={9} lg={10}>

@@ -9,6 +9,7 @@ import i18n from "../../api/i18n";
 import { insertArrayAt } from "../../utils/Array";
 import DetailsCard from "../items/DetailsCard";
 import objects from "../../database/objects.json";
+import flags from "../../api/creatures/flags";
 
 /** specific */
 const context = 'creatures';
@@ -86,7 +87,18 @@ export const columnModel = {
   },
   
   summonCost: { field: "summonCost", headerName: getColumnHeaderI18n('summonCost'), valueGetter: (params) => params.row.summonCost || '' },
+
+  seeInvisible: { field: "seeInvisible", headerName: i18n.t('creatures.flags.SeeInvisible'), valueGetter: (params) => params.row.flags.includes(flags.SeeInvisible) ? i18n.t('yes') : i18n.t('no') },
+  distanceFighting: { field: "distanceFighting", headerName: i18n.t('creatures.flags.DistanceFighting'), valueGetter: (params) => params.row.flags.includes(flags.DistanceFighting) ? i18n.t('yes') : i18n.t('no') },
+  unpushable: { field: "unpushable", headerName: i18n.t('creatures.flags.Unpushable'), valueGetter: (params) => params.row.flags.includes(flags.Unpushable) ? i18n.t('yes') : i18n.t('no') },
+  kickBoxes: { field: "kickBoxes", headerName: i18n.t('creatures.flags.KickBoxes'), valueGetter: (params) => params.row.flags.includes(flags.KickBoxes) ? i18n.t('yes') : i18n.t('no') },
+  kickCreatures: { field: "kickCreatures", headerName: i18n.t('creatures.flags.KickCreatures'), valueGetter: (params) => params.row.flags.includes(flags.KickCreatures) ? i18n.t('yes') : i18n.t('no') },
   
+  immunities: {
+    field: "immunities", headerName: getColumnHeaderI18n('immunities'),
+    valueGetter: (params) => params.row.flags.filter(flag => [flags.NoBurning, flags.NoPoison, flags.NoEnergy, flags.NoLifeDrain, flags.NoParalyze].includes(flag)).map(flag => i18n.t(`creatures.flags.${flag}`)).join(', ') || i18n.t('none'),
+  },
+
   flags: { field: "flags", headerName: getColumnHeaderI18n('flags'), flex: 1, valueGetter: (params) => params.row.flags.join(', ') },
 
   /** Columns that depend on variables outside the table, therefore are functions that return columns */
