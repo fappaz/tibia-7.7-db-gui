@@ -4,7 +4,8 @@ import { Link } from "@mui/material";
 import i18n from "../../api/i18n";
 import CellItems from "../table/CellItems";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-
+import DetailsCard from "../items/DetailsCard";
+import objects from "../../database/objects.json";
 
 /** specific */
 const context = 'quests';
@@ -25,8 +26,9 @@ export const columnModel = {
       const rewards = params.row.rewards.items.map(item => ({
         label: item.name,
         link: { path: `/items/${item.id}` },
+        data: objects.find(object => object.id === item.id),
       }));
-      return <CellItems items={rewards} />;
+      return <CellItems items={rewards} renderTooltipContent={({ cellItem }) => <DetailsCard item={cellItem.data} />} />;
     }
   },
 

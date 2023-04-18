@@ -7,6 +7,8 @@ import { Box, Link } from "@mui/material";
 import i18n from "../../api/i18n";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
 import { insertArrayAt } from "../../utils/Array";
+import DetailsCard from "../items/DetailsCard";
+import objects from "../../database/objects.json";
 
 
 /** specific */
@@ -71,8 +73,9 @@ export const columnModel = {
         label: offer.item.name,
         link: { path: `/items/${offer.item.id}` },
         value: offer.price,
+        data: objects.find(object => object.id === offer.item.id),
       }));
-      return <CellItems items={offers} />;
+      return <CellItems items={offers} renderTooltipContent={({ cellItem }) => <DetailsCard item={cellItem.data} />} />;
     }
   },
 
@@ -84,8 +87,9 @@ export const columnModel = {
         label: offer.item.name,
         link: { path: `/items/${offer.item.id}` },
         value: offer.price,
+        data: objects.find(object => object.id === offer.item.id),
       }));
-      return <CellItems items={offers} />;
+      return <CellItems items={offers} renderTooltipContent={({ cellItem }) => <DetailsCard item={cellItem.data} />} />;
     }
   },
 
@@ -106,11 +110,12 @@ export const columnModel = {
     /** @TODO (future) replace with a horizontal with the item image, name and amount */
     field: "questRewards", headerName: getColumnHeaderI18n('questRewards'), flex: 1, valueGetter: (params) => params.row.questRewards.sort((a, b) => a.item.name.localeCompare(b.item.name)),
     renderCell: (params) => {
-      const offers = params.row.questRewards.map(offer => ({
-        label: offer.item.name,
-        link: { path: `/items/${offer.item.id}` },
+      const offers = params.row.questRewards.map(reward => ({
+        label: reward.item.name,
+        link: { path: `/items/${reward.item.id}` },
+        data: objects.find(object => object.id === reward.item.id),
       }));
-      return <CellItems items={offers} />;
+      return <CellItems items={offers} renderTooltipContent={({ cellItem }) => <DetailsCard item={cellItem.data} />} />;
     }
   },
 

@@ -1,5 +1,6 @@
-import { Box, Link } from "@mui/material";
+import { Box, Card, Link } from "@mui/material";
 import PageLink from "next/link";
+import TooltipPopover from "../TooltipPopover";
 
 /**
  * @typedef ItemLink
@@ -22,33 +23,35 @@ import PageLink from "next/link";
  */
 export default function CellItems({
   items = [],
+  renderTooltipContent,
 } = {}) {
 
   return (
     <Box display='block'>
       {
-        items.map((item, index) => {
-          const { link, label, value } = item;
-          if (!item) return <></>;
+        items.map((cellItem, index) => {
+          const { link, label, value } = cellItem;
+          if (!cellItem) return <></>;
+          const TooltipContent = typeof renderTooltipContent === 'function' ? renderTooltipContent : null;
           return (
             <span key={`item-${index}`}>
-              {
-                link ? (
-                  <Link
-                    component={PageLink}
-                    href={link.path}
-                    {...(link.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  label
-                )
-              }
+              <TooltipPopover title={TooltipContent ? <TooltipContent cellItem={cellItem} /> : undefined}>
+                {
+                  link ? (
+                    <Link
+                      component={PageLink}
+                      href={link.path}
+                      {...(link.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    <span>label</span>
+                  )
+                }
+              </TooltipPopover>
 
-              {
-                value ? ` (${value})` : ''
-              }
+              {value ? ` (${value})` : ''}
 
               {index < items.length - 1 ? ', ' : ''}
             </span>

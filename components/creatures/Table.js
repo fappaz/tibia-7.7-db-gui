@@ -7,6 +7,8 @@ import { round } from "../../utils/Math";
 import { Box, Link, Tooltip } from "@mui/material";
 import i18n from "../../api/i18n";
 import { insertArrayAt } from "../../utils/Array";
+import DetailsCard from "../items/DetailsCard";
+import objects from "../../database/objects.json";
 
 /** specific */
 const context = 'creatures';
@@ -62,9 +64,10 @@ export const columnModel = {
     renderCell: (params) => {
       const drops = params.row.drops.map(drop => ({
         label: drop ? `${(drop.amount > 1) ? `${drop.amount} ` : ''}${drop.item.name}` : '',
-        link: { path: `/items/${drop.item.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%`
+        link: { path: `/items/${drop.item.id}` }, value: `${round((drop.rate + 1) / 10, 3)}%`,
+        data: objects.find(object => object.id === drop.item.id),
       }));
-      return <CellItems items={drops} />;
+      return <CellItems items={drops} renderTooltipContent={({ cellItem }) => <DetailsCard item={cellItem.data} />} />;
     }
   },
   

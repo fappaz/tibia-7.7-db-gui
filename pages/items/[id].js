@@ -49,7 +49,7 @@ export default function Item({
     <StandardPage title={`${item.name.charAt(0).toUpperCase()}${item.name.slice(1)}`}>
       <Grid container spacing={2} sx={{ height: '100%'}} >
         <Grid item xs={12} md={3} lg={2}>
-          <DetailsCard item={item} />
+          <DetailsCard item={item} showExternalLinks showEmptyValues />
         </Grid>
 
         <Grid item xs={12} md={9} lg={10}>

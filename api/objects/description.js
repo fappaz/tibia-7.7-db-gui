@@ -1,6 +1,8 @@
 import i18n from "../i18n";
 
 export function getItemDescription(item) {
+  const articleText = `${item.article || ''} `;
+
   const supportedBonusAttributes = {
     WeaponAttackValue: { getText: (value) => `Atk:${value}` },
     WeaponDefendValue: { getText: (value) => `Def:${value}` },
@@ -43,7 +45,7 @@ export function getItemDescription(item) {
   const itemDescriptionText = itemDescription ? `${itemDescription}.` : '';
 
   const lines = [
-    `You see ${item.article} ${item.name}${bonusText}${expireDescription}.${runeDescription}`,
+    `You see ${articleText}${item.name}${bonusText}${expireDescription}.${runeDescription}`,
     requirementText, // It can only be wielded by ${vocation} of level ${minLevel} or higher.
     weightText,
     itemDescriptionText,

@@ -14,11 +14,22 @@ export default function Property({
 
   return (
     <Box display='flex' flexDirection={vertical ? 'column' : 'row'} sx={{ width: '100%' }} >
-      <Typography color='textSecondary'>
+      <Typography color='textSecondary' variant='body2'>
         {label}
       </Typography>
-      <Box display='flex' flexGrow={vertical ? 0 : 1} justifyContent={vertical ? 'center' : 'flex-end'} textAlign={ vertical ? 'start' : 'end' } >
-        {value}
+      {
+        !vertical && <Box p={1}/>
+      }
+      <Box
+        display='flex'
+        flexGrow={vertical ? 0 : 1}
+        justifyContent={vertical ? 'center' : 'flex-end'}
+        textAlign={ vertical ? 'start' : 'end' }
+
+      >
+        <Typography variant='body2'>
+          {value}
+        </Typography>
       </Box>
     </Box>
   );

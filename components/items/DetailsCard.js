@@ -28,6 +28,8 @@ const hiddenColumns = [
  */
 export default function DetailsCard({
   item,
+  showExternalLinks,
+  showEmptyValues,
 } = {}) {
 
   const type = getItemTypeId(item);
@@ -65,26 +67,34 @@ export default function DetailsCard({
             if (valueGetter) params.value = valueGetter(params);
             if (valueFormatter) params.value = valueFormatter(params);
             if (renderCell) params.value = renderCell(params);
+            const isValueEmpty = value => [null, undefined, ''].includes(value);
+            if (!showEmptyValues && isValueEmpty(params.value)) return (<></>);
             return (
               <div key={`item-${field}`}>
                 <ListItem disableGutters key={`item-${field}`} sx={{ px: 2 }} >
-                  <Property label={headerName} value={params.value || '-'} />
+                  <Property label={headerName} value={isValueEmpty(params.value) ? '-' : params.value} />
                 </ListItem>
               </div>
             )
           })
         }
-        <Divider />
-        <ListItem disableGutters sx={{ px: 2 }} >
-          <Link
-            component={PageLink}
-            href={getTibiaWikiUrl(item.name)}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Typography variant='caption'>{t('externalPages.tibiaWiki')}</Typography>
-          </Link>
-        </ListItem>
+        {
+          !!showExternalLinks && (
+            <>
+              <Divider />
+              <ListItem disableGutters sx={{ px: 2 }} >
+                <Link
+                  component={PageLink}
+                  href={getTibiaWikiUrl(item.name)}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <Typography variant='caption'>{t('externalPages.tibiaWiki')}</Typography>
+                </Link>
+              </ListItem>
+            </>
+          )
+        }
       </List>
     </Card>
   );

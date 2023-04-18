@@ -97,6 +97,17 @@ describe('description', () => {
         flags: [],
       },
     },
+    {
+      description: 'should return description for an item with no article',
+      expected: 'You see meat.\nIt weighs 13.00 oz.',
+      item: {
+        name: 'meat',
+        attributes: {
+          Weight: 1300,
+        },
+        flags: [],
+      },
+    },
     // {
     //   /** Not implemented because it's not necessary for now */
     //   description: 'should return description for an expirable item',
