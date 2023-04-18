@@ -57,8 +57,6 @@ export const columnModel = {
       <Link
         component={PageLink}
         href={`/map?at=${params.value}`}
-        target='_blank'
-        rel='noopener noreferrer'
       >
         {params.value.join(',')}
       </Link>

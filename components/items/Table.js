@@ -50,8 +50,8 @@ export const columnModel = {
   flags: { field: "flags", headerName: getColumnHeaderI18n('flags'), flex: 1, valueGetter: (params) => (params.row.flags || []).join(', ') },
   
   weight: { 
-    field: "weight", headerName: getColumnHeaderI18n('weight'), valueGetter: (params) => (params.row.attributes || { Weight: 0 }).Weight / 100,
-    renderCell: (params) => getValueI18n('weight', { value: params.value }),
+    field: "weight", headerName: getColumnHeaderI18n('weight'), valueGetter: (params) => get(params, 'row.attributes.Weight', 0) / 100,
+    renderCell: (params) => params.value ? getValueI18n('weight', { value: params.value }) : '',
   },
   
   dropFrom: {

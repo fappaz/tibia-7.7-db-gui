@@ -21,8 +21,8 @@ const getColumnHeaderI18n = (field) => i18n.t(`creatures.table.columns.${field}.
 const getFlagI18n = (flag) => i18n.t(`creatures.flags.${flag}`);
 
 const tabs = [
-  { name: getColumnHeaderI18n('spawns') },
   { name: getColumnHeaderI18n('drops') },
+  { name: getColumnHeaderI18n('spawns') },
   { name: i18n.t('rawData') },
 ];
 
@@ -56,7 +56,7 @@ export default function Creature({
 
   return (
     <StandardPage title={`${creature.name.charAt(0).toUpperCase()}${creature.name.slice(1)}`}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ height: '100%'}}>
         <Grid item xs={12} md={3} lg={2}>
           <Details creature={creature} />
         </Grid>
@@ -71,13 +71,11 @@ export default function Creature({
           </Box>
 
           <TabContent activeTabIndex={activeTabIndex} index={0}>
-            <Spawns
-              creature={creature}
-            />
+            <Drops creature={creature} />
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <Drops creature={creature} />
+            <Spawns creature={creature}/>
           </TabContent>
 
           <TabContent activeTabIndex={activeTabIndex} index={2}>
@@ -118,7 +116,7 @@ function Spawns({
   });
 
   return (
-    <Box style={{ height: '30rem' }}>
+    <Box style={{ height: '68vh' }}>
       <LocationMap
         markers={markers}
         quickAccess={{

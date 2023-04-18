@@ -130,17 +130,20 @@ function NpcOffers({
 
   const npcIds = item[offerTypes[offerType].itemProp].map(offer => offer.npc.id);
   const filteredNpcs = npcs.filter(npc => npcIds.includes(npc.id));
-  const tableProps = {...npcsDefaultTableProps};
-  tableProps.initialState.sorting.sortModel = [{ field: 'price', sort: 'asc' }];
+  const tableInitialState = { sorting: { sortModel: [] }, columns: { columnVisibilityModel: {}}};
+  tableInitialState.sorting.sortModel = [{ field: 'price', sort: 'asc' }];
   ['buyOffers', 'sellOffers', 'teachSpells', 'questRewards'].forEach(column => {
-    tableProps.initialState.columns.columnVisibilityModel[column] = false;
+    tableInitialState.columns.columnVisibilityModel[column] = false;
   });
 
   return (
     <NpcsTable
       rows={filteredNpcs}
       columns={npcsGetCustomColumns({ columnsToInsert: [npcsColumnModel.price(item.id, offerTypes[offerType].npcProp)] })}
-      tableProps={tableProps}
+      tableProps={{
+        ...npcsDefaultTableProps,
+        initialState: tableInitialState,
+      }}
     />
   );
 }

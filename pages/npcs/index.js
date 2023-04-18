@@ -14,7 +14,6 @@ export default function Npcs({
   const { t } = useTranslation();
 
   return (
-    
     <StandardPage title={t('npcs.name')}>
       <NpcsTable rows={npcs} />
     </StandardPage>

@@ -11,7 +11,7 @@ export const defaultLanguages = {
           /** @TODO add other i18n, see: https://mui.com/x/react-data-grid/localization/ */
         },
         searchBox: {
-          label: 'Search',
+          label: 'Search (Ctrl + K)',
           options: {
             secondaryText: '/{{- type}}/{{- id}}',
           }
@@ -190,7 +190,7 @@ export const defaultLanguages = {
             isTwoHanded: { header: 'Two handed?', },
             expireOrUses: { header: 'Expire', },
             armor: { header: 'Armor', },
-            bodyPosition: { header: 'Body position', },
+            bodyPosition: { header: 'Equip Slot', },
             minimumLevel: { header: 'Min. level', },
             vocation: { header: 'Vocation', },
             wandRange: { header: 'Range', value: '{{value}} squares' },
@@ -218,7 +218,7 @@ export const defaultLanguages = {
           },
         },
         types: {
-          all: 'All',
+          all: 'All items',
           ammo: 'Ammo',
           amulets: 'Amulets',
           amuletsAndRings: 'Amulets and rings',
@@ -253,6 +253,9 @@ export const defaultLanguages = {
           }
         }
       },
+      map: {
+        name: 'Map',
+      },
       npcs: {
         name: 'NPCs',
         marker: { tooltip: '[{{coordinates}}] NPC {{- name}}' },
@@ -279,6 +282,9 @@ export const defaultLanguages = {
             coordinates: { header: 'Coordinates', },
           }
         }
+      },
+      runes: {
+        name: 'Runes',
       },
       spells: {
         name: 'Spells',
@@ -358,7 +364,7 @@ export const defaultLanguages = {
           search: 'Buscar',
         },
         searchBox: {
-          label: 'Buscar',
+          label: 'Buscar (Ctrl + K)',
           options: {
             secondaryText: '/{{- type}}/{{- id}}',
           }

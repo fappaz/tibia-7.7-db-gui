@@ -226,7 +226,7 @@ export default function Map({
         }
       </Popover>
 
-      <Box style={{ height: '32rem' }}>
+      <Box style={{ height: '90%' }}>
         <Grid container spacing={2} mb={1}>
           {
             Object.entries(markerTypes).map(([id, markerType]) => {

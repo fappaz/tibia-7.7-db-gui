@@ -75,8 +75,6 @@ export const columnModel = {
         <Link
           component={PageLink}
           href={`/creatures/${params.row.id}?tab=spawns`}
-          target='_blank'
-          rel='noopener noreferrer'
         >
           {i18n.t('creatures.table.columns.spawns.value', { amount: params.value, placesCount: params.row.spawns.length })}
         </Link>

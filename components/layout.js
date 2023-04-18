@@ -37,6 +37,13 @@ npcs.forEach((npc, index) => searchOptions.push({ type: 'npcs', name: npc.name, 
 spells.forEach((spell, index) => searchOptions.push({ type: 'spells', name: spell.name, id: spell.words, link: `/spells`, icon: `/images/icons/spellbook.png`, key: searchOptions.length + index }));
 searchOptions.sort((a, b) => a.name.localeCompare(b.name));
 
+searchOptions.unshift({ name: i18n.t('creatures.name'), id: '', link: `/creatures`, icon: `/images/icons/fire-devil.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('items.name'), id: '', link: `/items?type=all`, icon: `/images/icons/warlord-sword.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('map.name'), id: '', link: `/map`, icon: `/images/icons/map.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('npcs.name'), id: '', link: `/npcs`, icon: `/images/icons/citizen.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('runes.name'), id: '', link: `/items?type=runes`, icon: `/images/icons/ultimate-healing-rune.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('spells.name'), id: '', link: `/spells`, icon: `/images/icons/spellbook.png`, key: searchOptions.length + 1 });
+
 const getSidebarOptionLabel = id => i18n.t([`pages.${id}.title`, `${id}.name`, id]);
 
 const sidebarItems = [
@@ -285,14 +292,14 @@ export default function Layout({ children }) {
 }
 
 /**
- * @TODO move to its own component?
+ * @TODO move to its own component
  * @TODO jsdoc
  * @param {Object} props The props.
  * @returns {import("react").ReactNode}
  */
 function SearchBox({
   options = [],
-  optionsLimit = 40,
+  optionsLimit = 100,
   ...props
 } = {}) {
 
@@ -302,6 +309,20 @@ function SearchBox({
 
   const { t } = useTranslation();
   const router = useRouter();
+  const searchBoxRef = React.useRef(null);
+
+  React.useEffect(function setUpKeyboardShortcuts() {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === 'k') {
+        event.preventDefault();
+        searchBoxRef.current.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Autocomplete
@@ -311,7 +332,7 @@ function SearchBox({
       getOptionLabel={option => option.name || ''}
       filterOptions={filterOptions}
       renderInput={(params) => (
-        <TextField {...params} variant='outlined' label={t('components.searchBox.label')} margin="normal" />
+        <TextField {...params} inputRef={searchBoxRef} variant='outlined' label={t('components.searchBox.label')} margin="normal" />
       )}
       renderOption={(props, option, { inputValue }) => {
         const matches = match(option.name, inputValue, { insideWords: true });
@@ -334,7 +355,9 @@ function SearchBox({
                   </span>
                 ))}
               </div>
-              <Typography variant='caption' color='textSecondary'>{t('components.searchBox.options.secondaryText', { type: option.type, id: option.id })}</Typography>
+              <Typography variant='caption' color='textSecondary'>
+                { !!option.type && t('components.searchBox.options.secondaryText', { type: option.type, id: option.id })}
+              </Typography>
             </div>
           </li>
         );

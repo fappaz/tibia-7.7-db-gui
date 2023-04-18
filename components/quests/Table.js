@@ -24,7 +24,7 @@ export const columnModel = {
     renderCell: (params) => {
       const rewards = params.row.rewards.items.map(item => ({
         label: item.name,
-        link: { path: `/items/${item.id}`, newTab: true },
+        link: { path: `/items/${item.id}` },
       }));
       return <CellItems items={rewards} />;
     }
