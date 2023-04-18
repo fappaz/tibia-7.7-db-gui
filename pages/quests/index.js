@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import quests from "../../database/quests.json";
 import TibiaMap from '../../components/tibiamap';
 import { useState, useEffect } from "react";
-import QuestsTable from "../../components/quests/Table";
+import QuestsTable, { defaultTableProps } from "../../components/quests/Table";
 import { useTranslation } from "react-i18next";
 import i18n from "../../api/i18n";
 
@@ -48,6 +48,7 @@ export default function QuestMap({
           <QuestsTable
             rows={quests}
             tableProps={{
+              ...defaultTableProps,
               onRowClick: (params) => setQuest(params.row),
             }}
           />

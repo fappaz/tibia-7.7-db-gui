@@ -266,14 +266,21 @@ function ItemTable({
   sortModel,
 } = {}) {
 
-  const tableProps = {...defaultTableProps};
-  if (sortModel) tableProps.initialState.sorting.sortModel = sortModel;
-
   return (
     <Table
       rows={rows}
       columns={columns}
-      tableProps={tableProps}
+      /** @TODO (future) Find a better way to merge this */
+      tableProps={{
+        ...defaultTableProps,
+        initialState: {
+          ...defaultTableProps.initialState,
+          sorting: {
+            ...defaultTableProps.initialState.sorting,
+            sortModel,
+          }
+        }
+      }}
     />
   );
 }

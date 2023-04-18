@@ -26,8 +26,13 @@ import { random } from "../../utils/Math";
  *   - creature: link on name, amount, interval, coordinates
  *   - npc: link on name, coordinates
  *   - chest: link on ID, rewards (with links), coordinates
- * - show landmark names on the map
+ * - show landmark names on the map (how to handle overlapping or too many nearby?)
  * - move components to separate files
+ * - support query params to show one or all markers for each category
+ * - add button to show markers for the locked doors and their required keys
+ * - add button to show markers for holes (up and down)
+ * - toggle to street view mode
+ * - responsive for mobile
  * 
  */
 
@@ -88,7 +93,8 @@ const markerTypes = {
             icon: {
               url: `/images/sprites/creatures/${row.id}-0.png`,
             },
-            ...(router ? { onClick: () => router.push(`/creatures/${row.id}`) } : null),
+            // ...(router ? { onClick: () => router.push(`/creatures/${row.id}`) } : null),
+            onClick: () => window.open(`/creatures/${row.id}`, '_blank', 'noopener,noreferrer'),
           })
         });
       });
@@ -193,12 +199,25 @@ export default function Map({
   };
 
   const selectAllFromMarkerTypes = (markerTypes = {}) => {
-    const newMarkerTypeSelection = Object.entries(markerTypes).map(([markerTypeId, markerType]) => ({
-      id: markerTypeId,
-      markers: markerType.getMarkers(markerType.data, { router }),
-      selectedIds: markerType.data.map(row => row.id),
-    }));
-    setMarkerTypeSelection(newMarkerTypeSelection);
+    setMarkerTypeSelection(markerTypeSelection => {
+
+      let newMarkerTypeSelection = [...markerTypeSelection];
+      Object.entries(markerTypes).forEach(([markerTypeId, markerType]) => {
+        const markers = markerType.getMarkers(markerType.data, { router });
+        const markerIds = markerType.data.map(row => row.id);
+        const currentlySelectedIds = markerTypeSelection.find(selectedMarkerType => selectedMarkerType.id === markerTypeId)?.selectedIds || [];
+
+        if (currentlySelectedIds.length === markerIds.length) {
+          newMarkerTypeSelection = newMarkerTypeSelection.filter(selectedMarkerType => selectedMarkerType.id !== markerTypeId);
+        } else {
+          newMarkerTypeSelection = newMarkerTypeSelection.filter(selectedMarkerType => selectedMarkerType.id !== markerTypeId);
+          newMarkerTypeSelection.push({ id: markerTypeId, markers, selectedIds: markerIds });
+        }
+
+      });
+
+      return newMarkerTypeSelection;
+    });
   };
 
   return (
@@ -241,6 +260,12 @@ export default function Map({
                       setActiveMarkerType(markerType);
                       setPopoverAnchorElement(e.currentTarget);
                     }}
+                    onAuxClick={(e) => {
+                      console.log(`@TODO ##### e.button:`, e.button);
+                      // e.preventDefault();
+                      if (e.button !== 1) return; // middle click
+                      selectAllFromMarkerTypes({ [id]: markerType });
+                    }}
                   />
                 </Grid>
               )
@@ -281,12 +306,13 @@ function MarkerButton({
   count,
   iconSrc,
   onClick,
+  ...buttonProps
 } = {}) {
 
   return (
     <Tooltip title={tooltip}>
       <Badge badgeContent={count} color='primary' max={999}>
-        <Button variant="outlined" onClick={onClick}>
+        <Button variant="outlined" onClick={onClick} {...buttonProps}>
           <Image src={iconSrc} width={32} height={32} alt={tooltip} />
         </Button>
       </Badge>

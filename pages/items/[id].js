@@ -94,15 +94,25 @@ function Drops({
 
   const creatureIds = item.dropFrom.map(drop => drop.creature.id);
   const filteredCreatures = creatures.filter(creature => creatureIds.includes(creature.id));
-  const tableProps = {...itemsDefaultTableProps};
-  tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
-  tableProps.initialState.columns.columnVisibilityModel.drops = false;
 
   return (
     <CreaturesTable
       rows={filteredCreatures}
       columns={itemsGetCustomColumns({ columnsToInsert: [itemsColumnModel.dropRate(item.id)] })}
-      tableProps={tableProps}
+      /** @TODO (future) Find a better way to merge this */
+      tableProps={{
+        ...itemsDefaultTableProps,
+        initialState: {
+          sorting: {
+            sortModel: [{ field: 'dropRate', sort: 'desc' }]
+          },
+          columns: {
+            columnVisibilityModel: {
+              drops: false,
+            }
+          }
+        },
+      }}
     />
   );
 }
@@ -130,11 +140,6 @@ function NpcOffers({
 
   const npcIds = item[offerTypes[offerType].itemProp].map(offer => offer.npc.id);
   const filteredNpcs = npcs.filter(npc => npcIds.includes(npc.id));
-  const tableInitialState = { sorting: { sortModel: [] }, columns: { columnVisibilityModel: {}}};
-  tableInitialState.sorting.sortModel = [{ field: 'price', sort: 'asc' }];
-  ['buyOffers', 'sellOffers', 'teachSpells', 'questRewards'].forEach(column => {
-    tableInitialState.columns.columnVisibilityModel[column] = false;
-  });
 
   return (
     <NpcsTable
@@ -142,7 +147,19 @@ function NpcOffers({
       columns={npcsGetCustomColumns({ columnsToInsert: [npcsColumnModel.price(item.id, offerTypes[offerType].npcProp)] })}
       tableProps={{
         ...npcsDefaultTableProps,
-        initialState: tableInitialState,
+        initialState: {
+          sorting: {
+            sortModel: [{ field: 'price', sort: 'asc' }]
+          },
+          columns: {
+            columnVisibilityModel: {
+              buyOffers: false,
+              sellOffers: false,
+              teachSpells: false,
+              questRewards: false,
+            }
+          }
+        },
       }}
     />
   );

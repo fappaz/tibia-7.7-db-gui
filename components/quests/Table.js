@@ -20,7 +20,7 @@ export const columnModel = {
   },
 
   rewards: {
-    field: "rewards", headerName: getColumnHeaderI18n("rewards"), flex: 1,
+    field: "rewards", headerName: getColumnHeaderI18n("rewards"), flex: 1, valueGetter: params => params.row.rewards.items.map(item => item.name).join(', '),
     renderCell: (params) => {
       const rewards = params.row.rewards.items.map(item => ({
         label: item.name,

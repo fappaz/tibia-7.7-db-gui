@@ -219,15 +219,29 @@ function Drops({
 } = {}) {
 
   const items = creature.drops.map(drop => objects.find(object => object.id === drop.item.id)).filter(item => item);
-  const tableProps = {...defaultTableProps};
-  tableProps.initialState.sorting.sortModel = [{ field: 'dropRate', sort: 'desc' }];
-  tableProps.initialState.columns.columnVisibilityModel.dropFrom = false;
 
   return (
     <ItemsTable
       rows={items}
       columns={getCustomColumns({ columnsToInsert: [columnModel.dropRate(creature.id)] })}
-      tableProps={tableProps}
+      /** @TODO (future) Find a better way to merge this */
+      tableProps={{
+        ...defaultTableProps,
+        initialState: {
+          ...defaultTableProps.initialState,
+          sorting: {
+            ...defaultTableProps.initialState.sorting,
+            sortModel: [{ field: 'dropRate', sort: 'desc' }],
+          },
+          columns: {
+            ...defaultTableProps.initialState.columns,
+            columnVisibilityModel: {
+              ...defaultTableProps.initialState.columns.columnVisibilityModel,
+              dropFrom: false,
+            },
+          },
+        },
+      }}
     />
   );
 }

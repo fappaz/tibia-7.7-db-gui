@@ -41,6 +41,7 @@ searchOptions.unshift({ name: i18n.t('creatures.name'), id: '', link: `/creature
 searchOptions.unshift({ name: i18n.t('items.name'), id: '', link: `/items?type=all`, icon: `/images/icons/warlord-sword.png`, key: searchOptions.length + 1 });
 searchOptions.unshift({ name: i18n.t('map.name'), id: '', link: `/map`, icon: `/images/icons/map.png`, key: searchOptions.length + 1 });
 searchOptions.unshift({ name: i18n.t('npcs.name'), id: '', link: `/npcs`, icon: `/images/icons/citizen.png`, key: searchOptions.length + 1 });
+searchOptions.unshift({ name: i18n.t('quests.name'), id: '', link: `/quests`, icon: `/images/icons/chest.png`, key: searchOptions.length + 1 });
 searchOptions.unshift({ name: i18n.t('runes.name'), id: '', link: `/items?type=runes`, icon: `/images/icons/ultimate-healing-rune.png`, key: searchOptions.length + 1 });
 searchOptions.unshift({ name: i18n.t('spells.name'), id: '', link: `/spells`, icon: `/images/icons/spellbook.png`, key: searchOptions.length + 1 });
 
