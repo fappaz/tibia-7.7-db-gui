@@ -13,7 +13,7 @@ const database = {
 
   /**
    * Retrieved from NPC 'Loria'
-   * @TODO add minimumLevel and description
+   * @TODO add minimumLevel and description - might want to use https://tibiawiki.dev/swagger-ui/index.html#/Spells/getSpells
    * */
   spells: [
     { name: "find person", words: "exiva 'name'", vocations: [], taughtBy: [] },

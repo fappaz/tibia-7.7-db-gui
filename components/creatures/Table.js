@@ -9,7 +9,11 @@ import i18n from "../../api/i18n";
 import { insertArrayAt } from "../../utils/Array";
 import DetailsCard from "../items/DetailsCard";
 import objects from "../../database/objects.json";
+import creatures from "../../database/creatures.json";
 import flags from "../../api/creatures/flags";
+import { getRankingSurroundings } from "../../utils/ranking";
+import TooltipPopover from "../TooltipPopover";
+import AttributeRanking from "../AttributeRanking";
 
 /** specific */
 const context = 'creatures';
@@ -53,7 +57,30 @@ export const columnModel = {
     )
   },
   
-  experience: { field: "experience", headerName: getColumnHeaderI18n('experience'), valueGetter: (params) => params.row.experience },
+  experience: { 
+    field: "experience", headerName: getColumnHeaderI18n('experience'), valueGetter: (params) => params.row.experience,
+    renderCell: (params) => {
+      /** @TODO (future) create a component so this can easily be applied to the other relevant fields */
+      const listAlreadyOrdered = [...creatures].sort((a, b) => a.experience - b.experience);
+      const indexOfInterest = listAlreadyOrdered.findIndex(object => object.id === params.row.id);
+      const ranking = getRankingSurroundings(listAlreadyOrdered, indexOfInterest, { addGap: true, maxSurroundingItems: 1 }).map(item => ({
+        ... item,
+        ...( item.data ? {
+          data: {
+            label: `${item.data.name} (ID: ${item.data.id})`,
+            value: item.data.experience,
+          }
+        } : null)
+      }));
+      return (
+        <TooltipPopover
+          title={<AttributeRanking ranking={ranking} header={i18n.t('components.attributeRanking.name')} />}
+        >
+          <span>{params.value}</span>
+        </TooltipPopover>
+      )
+    },
+  },
   hitpoints: { field: "hitpoints", headerName: getColumnHeaderI18n('hitpoints'), valueGetter: (params) => params.row.attributes.hitpoints },
   attack: { field: "attack", headerName: getColumnHeaderI18n('attack'), valueGetter: (params) => params.row.attributes.attack || '' },
   defense: { field: "defense", headerName: getColumnHeaderI18n('defense'), valueGetter: (params) => params.row.attributes.defense || '' },

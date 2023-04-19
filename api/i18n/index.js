@@ -6,6 +6,14 @@ export const defaultLanguages = {
     translation: {
       appTitle: 'Tibia 7.70 database',
       components: {
+        attributeRanking: {
+          name: 'Ranking',
+          header: '{{- name}} ranking',
+          list: {
+            gap: '...',
+            position: '#{{position}} ',
+          }
+        },
         dataGrid: {
           search: 'Search',
           /** @TODO add other i18n, see: https://mui.com/x/react-data-grid/localization/ */

@@ -5,7 +5,6 @@ import React from "react";
 import CellItems from "../table/CellItems";
 import { Link, Tooltip } from "@mui/material";
 import i18n from "../../api/i18n";
-import attributes from "../../api/objects/attributes";
 import flags from "../../api/objects/flags";
 import { types, subtypes } from "../../api/objects/types";
 import { getTibiaWikiUrl } from "../../utils/TibiaWiki";
