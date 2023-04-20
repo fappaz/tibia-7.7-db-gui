@@ -1,10 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Button, ButtonGroup } from "@mui/material";
+import { Button, ButtonGroup, Grid, ThemeProvider, createTheme } from "@mui/material";
 import { ImageOverlay, MapContainer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MIN_X, MIN_Y, MAX_X, MAX_Y, pixelsToLatLng, latLngToPixels, landmarks } from '../../utils/TibiaMaps';
 import PixiOverlay from './PixiOverlay';
+import Control from 'react-leaflet-custom-control';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const imageBounds = [
   [MIN_Y, MIN_X], // Top-left coordinates
@@ -20,6 +25,16 @@ const floors = new Array(16).fill(0).map((value, index) => {
 
 const defaultCenter = landmarks[landmarks.length - 1].coordinates;
 
+/** Theme for the controls inside the map */
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#ffffff',
+    },
+  },
+});
+
 /**
  * @TODO (future)
  * - improve UI of multiple floors
@@ -34,6 +49,8 @@ export default function Map({
   center = defaultCenter,
   markers = [],
   zoom = 0,
+  minZoom= -2,
+  maxZoom= 4,
 } = {}) {
 
   const [map, setMap] = useState();
@@ -74,6 +91,13 @@ export default function Map({
     setPosition(position => [position[0], position[1], newFloor]);
   };
 
+  const handleZoomChange = (increment) => {
+    const newZoom = map.getZoom() + increment;
+    if (newZoom < minZoom) return;
+    if (newZoom > maxZoom) return;
+    map.setZoom(newZoom);
+  };
+
   return (
     <>
       <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
@@ -82,8 +106,8 @@ export default function Map({
           <MapContainer
             center={center.slice(0, 2)}
             zoom={zoom}
-            minZoom={-2}
-            maxZoom={4}
+            minZoom={minZoom}
+            maxZoom={maxZoom}
             crs={L.CRS.Simple}
             style={{
               height: "100%",
@@ -94,6 +118,7 @@ export default function Map({
             }}
             ref={setMap}
             preferCanvas
+            zoomControl={false}
           >
 
             <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
@@ -133,16 +158,50 @@ export default function Map({
               <div style={{ position: `absolute`, top: `50%`, left: 0, right: 0, height: `1px`, borderTop: `1px dashed yellow`, zIndex: 400 }} ></div>
             </div>
 
+            <Control position='topright'>
+              <div
+                ref={(ref) => {
+                  if (!ref) return;
+                  L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <Grid container direction='column' spacing={2}>
+                    <Grid item>
+                      <ButtonGroup
+                        variant='contained'
+                        orientation='vertical'
+                        size='small'
+                      >
+                        <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}><ArrowDropUpIcon /></Button>
+                        <Button onClick={(e) => {
+                          /** onDoubleClick is not working inside the Map, this workaround fixes it */
+                          if (e.detail !== 2) return;
+                          setPosition(pixelsToLatLng(defaultCenter));
+                        }}>{floors[activeFloor].label}</Button>
+                        <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}><ArrowDropDownIcon /></Button>
+                      </ButtonGroup>
+                    </Grid>
+
+                    <Grid item>
+                      <ButtonGroup
+                        variant='contained'
+                        orientation='vertical'
+                        size='small'
+                      >
+                        <Button onClick={() => handleZoomChange(1)} disabled={map && map.getZoom() >= maxZoom}><ZoomInIcon /></Button>
+                        <Button onClick={() => handleZoomChange(-1)} disabled={map && map.getZoom() <= minZoom}><ZoomOutIcon /></Button>
+                      </ButtonGroup>
+                    </Grid>
+                  </Grid>
+                </ThemeProvider>
+              </div>
+            </Control>
+
             <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
               {latLngToPixels(position).join(', ')}
             </div>
           </MapContainer>
-
-          <ButtonGroup variant='outlined' orientation='vertical'>
-            <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}>+</Button>
-            <Button onDoubleClick={() => setPosition(pixelsToLatLng(defaultCenter))}>{floors[activeFloor].label}</Button>
-            <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}>-</Button>
-          </ButtonGroup>
 
         </div>
 

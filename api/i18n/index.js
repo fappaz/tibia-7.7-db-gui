@@ -223,6 +223,9 @@ export const defaultLanguages = {
             weightNutritionRatio: { header: 'Weight x nutrition ratio' },
             cumulative: { header: 'Cumulative' },
             notes: { header: 'Notes' },
+            price: { header: 'Price' },
+            sellOfferPrice: { header: 'Sells for' },
+            buyOfferPrice: { header: 'Buys for' },
           },
         },
         types: {
@@ -267,6 +270,7 @@ export const defaultLanguages = {
       npcs: {
         name: 'NPCs',
         marker: { tooltip: '[{{coordinates}}] NPC {{- name}}' },
+        offers: 'Offers',
         table: {
           columns: {
             sprite: { header: 'Sprite', },

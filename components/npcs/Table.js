@@ -43,7 +43,7 @@ export const columnModel = {
     renderCell: (params) => (
       <Link
         component={PageLink}
-        href={getTibiaWikiUrl(params.row.name)}
+        href={`/npcs/${params.row.id}`}
         target='_blank'
         rel='noopener noreferrer'
       >

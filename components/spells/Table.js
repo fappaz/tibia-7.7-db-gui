@@ -38,9 +38,7 @@ export const columnModel = {
   taughtBy: {
     field: "taughtBy", headerName: getColumnHeaderI18n("taughtBy"), flex: 1, valueGetter: (params) => params.row.taughtBy.sort((a, b) => a.price - b.price),
     renderCell: (params) => {
-      /** @TODO (future) use this line instead once the NPCs page is implemented */
-      // const npcs = params.row.taughtBy.map(npc => ({ label: npc.name, link: { path: `/npcs/${npc.id}` }, value: npc.price }));
-      const npcs = params.row.taughtBy.map(npc => ({ label: npc.name, link: { path: getTibiaWikiUrl(npc.name), newTab: true }, value: npc.price }));
+      const npcs = params.row.taughtBy.map(npc => ({ label: npc.name, link: { path: `/npcs/${npc.id}` }, value: npc.price }));
       return <CellItems items={npcs} />;
     }
   },

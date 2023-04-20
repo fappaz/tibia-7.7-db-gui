@@ -69,9 +69,7 @@ export const columnModel = {
   buyFrom: {
     field: "buyFrom", headerName: getColumnHeaderI18n('buyFrom'), flex: 1, valueGetter: (params) => params.row.buyFrom.sort((a, b) => a.price - b.price),
     renderCell: (params) => {
-      /** @TODO (future) use this line instead once the NPCs page is implemented */
-      // const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
-      const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: getTibiaWikiUrl(offer.npc.name), newTab: true }, value: offer.price }));
+      const offers = params.row.buyFrom.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
       return <CellItems items={offers} />;
     }
   },
@@ -79,9 +77,7 @@ export const columnModel = {
   sellTo: {
     field: "sellTo", headerName: getColumnHeaderI18n('sellTo'), flex: 1, valueGetter: (params) => params.row.sellTo.sort((a, b) => a.price - b.price),
     renderCell: (params) => {
-      /** @TODO (future) use this line instead once the NPCs page is implemented */
-      // const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
-      const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: getTibiaWikiUrl(offer.npc.name), newTab: true }, value: offer.price }));
+      const offers = params.row.sellTo.map(offer => ({ label: offer.npc.name, link: { path: `/npcs/${offer.npc.id}` }, value: offer.price }));
       return <CellItems items={offers} />;
     }
   },
@@ -90,9 +86,7 @@ export const columnModel = {
     field: "quests", headerName: getColumnHeaderI18n('quests'), flex: 1, valueGetter: (params) => params.row.questRewards,
     renderCell: (params) => {
       const quests = params.row.questRewards.map(questReward => {
-        /** @TODO (future) use this line instead once the NPCs page is implemented */
-        // if (questReward.npc) return { label: questReward.npc.name, link: { path: `/npcs/${questReward.npc.id}` } };
-        if (questReward.npc) return { label: questReward.npc.name, link: { path: getTibiaWikiUrl(questReward.npc.name), newTab: true } };
+        if (questReward.npc) return { label: questReward.npc.name, link: { path: `/npcs/${questReward.npc.id}` } };
         if (questReward.chest) return { label: `map`, link: { path: `/map?at=${questReward.chest.coordinates}` } };
         return null;
       });
@@ -208,6 +202,15 @@ export const columnModel = {
         </span>
       </Tooltip>
     ),
+  }),
+
+  price: (npcId, offerType = 'sellOffer') => ({
+    field: `${offerType}Price`, headerName: getColumnHeaderI18n(`${offerType}Price`),
+    valueGetter: (params) => {
+      const offer = params.row[offerType === 'sellOffer' ? 'buyFrom' : 'sellTo'].find(offer => offer.npc.id === npcId);
+      if (!offer) return '';
+      return offer.price;
+    },
   }),
 };
 
