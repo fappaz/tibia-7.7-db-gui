@@ -3,7 +3,7 @@ import objects from "../../database/objects.json";
 import creatures from "../../database/creatures.json";
 import npcs from "../../database/npcs.json";
 import { useState, useEffect } from "react";
-import { Box, Grid, Tab, Tabs, TextField } from "@mui/material";
+import { Box, Card, Grid, Tab, Tabs, TextField } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
 import CreaturesTable, { columnModel as itemsColumnModel, defaultTableProps as itemsDefaultTableProps, getCustomColumns as itemsGetCustomColumns } from "../../components/creatures/Table";
 import NpcsTable, { columnModel as npcsColumnModel, defaultTableProps as npcsDefaultTableProps, getCustomColumns as npcsGetCustomColumns } from "../../components/npcs/Table";
@@ -53,29 +53,31 @@ export default function Item({
         </Grid>
 
         <Grid item xs={12} md={9} lg={10}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
-              {
-                tabs.map(({ name }, index) => <Tab id={`tab-${index}`} label={name} />)
-              }
-            </Tabs>
-          </Box>
+          <Card sx={{ height: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
+                {
+                  tabs.map(({ name }, index) => <Tab id={`tab-${index}`} label={name} />)
+                }
+              </Tabs>
+            </Box>
 
-          <TabContent activeTabIndex={activeTabIndex} index={0}>
-            <Drops item={item} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={0} pb={2}>
+              <Drops item={item} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <NpcOffers item={item} offerType={offerTypes.buyFrom.itemProp} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={1} pb={2}>
+              <NpcOffers item={item} offerType={offerTypes.buyFrom.itemProp} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={2}>
-            <NpcOffers item={item} offerType={offerTypes.sellTo.itemProp} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={2} pb={2}>
+              <NpcOffers item={item} offerType={offerTypes.sellTo.itemProp} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={3}>
-            <RawData object={item} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={3} px={2} pt={2}>
+              <RawData object={item} />
+            </TabContent>
+          </Card>
         </Grid>
       </Grid>
     </StandardPage>

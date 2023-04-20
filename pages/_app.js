@@ -5,12 +5,16 @@ import '@fontsource/roboto/700.css';
 import Layout from '../components/layout';
 import '../api/i18n';
 import '../styles/globals.css';
+import ThemeConfig from '../theme';
+
 
 export default function App({ Component, pageProps }) {
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <ThemeConfig>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ThemeConfig>
   );
 }

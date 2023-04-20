@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import creatures from "../../database/creatures.json";
 import objects from "../../database/objects.json";
 import { useState, useEffect } from "react";
-import { Box, Card, Divider, Grid, Link, List, ListItem, ListItemText, TextField, Tab, Tabs, Typography, Tooltip } from "@mui/material";
+import { Box, Card, Grid, TextField, Tab, Tabs } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import LocationMap from "../../components/LocationMap";
@@ -11,6 +11,7 @@ import ItemsTable, { getCustomColumns, columnModel, defaultTableProps } from "..
 import i18n from "../../api/i18n";
 import { useTranslation } from "react-i18next";
 import DetailsCard from "../../components/creatures/DetailsCard";
+import { mapMiddle } from "../../utils/TibiaMaps";
 
 const getColumnHeaderI18n = (field) => i18n.t(`creatures.table.columns.${field}.header`);
 const getFlagI18n = (flag) => i18n.t(`creatures.flags.${flag}`);
@@ -57,25 +58,27 @@ export default function Creature({
         </Grid>
 
         <Grid item xs={12} md={9} lg={10}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
-              {
-                tabs.map(({ name }, index) => <Tab key={`tab-${index}`} id={`tab-${index}`} label={name} />)
-              }
-            </Tabs>
-          </Box>
+          <Card sx={{ height: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
+                {
+                  tabs.map(({ name }, index) => <Tab key={`tab-${index}`} id={`tab-${index}`} label={name} />)
+                }
+              </Tabs>
+            </Box>
 
-          <TabContent activeTabIndex={activeTabIndex} index={0}>
-            <Drops creature={creature} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={0} pb={2}>
+              <Drops creature={creature} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <Spawns creature={creature}/>
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={1} px={2} pt={2}>
+              <Spawns creature={creature}/>
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={2}>
-            <RawData object={creature} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={2} px={2} pt={2}>
+              <RawData object={creature} />
+            </TabContent>
+          </Card>
         </Grid>
       </Grid>
     </StandardPage>
@@ -100,6 +103,9 @@ function Spawns({
     summary: t(`creatures.marker.quickAccessSummary`, { amount: spawn.amount, minutes: round(spawn.interval / 60, 1) }),
   }));
 
+  // finds the first marker on the ground level, or the first marker
+  const defaultCoordinates = (markers.find(marker => marker.coordinates[2] === 7) || markers.find(Boolean) || {}).coordinates;
+
   const quickAccessMarkers = markers.map(marker => ({ ...marker, label: marker.summary })).sort((a, b) => {
     /** Sort by 'z,x,y' asc */
     const format = c => c.toString().padStart(5, '0');
@@ -118,7 +124,10 @@ function Spawns({
           title: t('creatures.table.columns.spawns.value', { amount: creature.spawns.reduce((total, spawn) => total + spawn.amount, 0), placesCount: creature.spawns.length }),
           items: quickAccessMarkers,
         }}
-        coordinates={quickAccessMarkers.length ? quickAccessMarkers[0].coordinates : undefined}
+        coordinates={defaultCoordinates || mapMiddle}
+        mapProps={{
+          zoom: 0,
+        }}
       />
     </Box>
   );

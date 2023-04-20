@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Card, Grid } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
 import { useRouter } from "next/router";
 import quests from "../../database/quests.json";
@@ -45,13 +45,15 @@ export default function QuestMap({
     <StandardPage title={t('quests.name')} >
       <Grid container spacing={2} style={{ height: '100%'}}>
         <Grid item xs={12} md={4}>
-          <QuestsTable
-            rows={quests}
-            tableProps={{
-              ...defaultTableProps,
-              onRowClick: (params) => setQuest(params.row),
-            }}
-          />
+          <Card sx={{ height: '100%' }}>
+            <QuestsTable
+              rows={quests}
+              tableProps={{
+                ...defaultTableProps,
+                onRowClick: (params) => setQuest(params.row),
+              }}
+            />
+          </Card>
         </Grid>
 
         <Grid item xs={12} md={8}>

@@ -1,3 +1,4 @@
+import { Card } from "@mui/material";
 import npcs from "../../database/npcs.json";
 import StandardPage from '../../components/StandardPage';
 import NpcsTable from "../../components/npcs/Table";
@@ -15,7 +16,9 @@ export default function Npcs({
 
   return (
     <StandardPage title={t('npcs.name')}>
-      <NpcsTable rows={npcs} />
+      <Card sx={{ height: '100%' }}>
+        <NpcsTable rows={npcs} />
+      </Card>
     </StandardPage>
   );
 

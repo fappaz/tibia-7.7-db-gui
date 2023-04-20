@@ -30,7 +30,7 @@ export default function TabContent({
       {...other}
     >
       {activeTabIndex === index && (
-        <Box sx={{ py: 2, height: '100%' }}>
+        <Box sx={{ height: '100%' }}>
           {children}
         </Box>
       )}

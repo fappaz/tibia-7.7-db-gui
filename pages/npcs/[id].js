@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import npcs from "../../database/npcs.json";
 import { useState, useEffect } from "react";
-import { Box, Grid, TextField, Tab, Tabs } from "@mui/material";
+import { Box, Card, Grid, TextField, Tab, Tabs } from "@mui/material";
 import StandardPage from "../../components/StandardPage";
 import TabContent, { useTabContent } from "../../components/TabContent";
 import i18n from "../../api/i18n";
@@ -63,25 +63,27 @@ export default function Npc({
         </Grid>
 
         <Grid item xs={12} md={9}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
-              {
-                tabs.map(({ name }, index) => <Tab key={`tab-${index}`} id={`tab-${index}`} label={name} />)
-              }
-            </Tabs>
-          </Box>
+          <Card sx={{ height: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={activeTabIndex} onChange={(event, tabIndex) => setActiveTabIndex(tabIndex)}>
+                {
+                  tabs.map(({ name }, index) => <Tab key={`tab-${index}`} id={`tab-${index}`} label={name} />)
+                }
+              </Tabs>
+            </Box>
 
-          <TabContent activeTabIndex={activeTabIndex} index={0}>
-            <BuyOffers npc={npc} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={0} pb={2}>
+              <BuyOffers npc={npc} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={1}>
-            <SellOffers npc={npc} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={1} pb={2}>
+              <SellOffers npc={npc} />
+            </TabContent>
 
-          <TabContent activeTabIndex={activeTabIndex} index={2}>
-            <RawData object={npc} />
-          </TabContent>
+            <TabContent activeTabIndex={activeTabIndex} index={2} px={2} pt={2}>
+              <RawData object={npc} />
+            </TabContent>
+          </Card>
         </Grid>
       </Grid>
     </StandardPage>

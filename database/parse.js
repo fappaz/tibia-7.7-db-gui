@@ -5,6 +5,8 @@ const objectsGmud = require('../api/objects/objects.gmud.json');
 const datObjectsGmud = require('../api/dat/dat.gmud.json');
 const mapQuestsGmud = require('../api/map/mapQuests.gmud.json');
 
+/** @TODO (future) turn this into a script in the package.json */
+
 const database = {
   creatures: [],
   npcs: [],

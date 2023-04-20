@@ -1,6 +1,8 @@
 const { saveGif, exportGifFramesToPng, buildFilterFramesByDirections } = require('../utils/Sprite');
 const path = require('path');
 
+/** @TODO (future) turn this into a script in the package.json */
+
 const creatures = require('../database/creatures.json');
 const npcs = require('../database/npcs.json');
 const objects = require('../database/objects.json');

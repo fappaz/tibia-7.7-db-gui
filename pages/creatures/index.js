@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Card } from "@mui/material";
 import creatures from "../../database/creatures.json";
 import StandardPage from "../../components/StandardPage";
 import CreaturesTable from "../../components/creatures/Table";
@@ -17,7 +17,9 @@ export default function Creatures({
 
   return (
     <StandardPage title={t('creatures.name')}>
-      <CreaturesTable rows={creatures} />
+      <Card sx={{ height: '100%' }}>
+        <CreaturesTable rows={creatures} />
+      </Card>
     </StandardPage>
   );
 

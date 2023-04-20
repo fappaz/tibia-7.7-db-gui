@@ -6,7 +6,7 @@ import StandardPage from "../../components/StandardPage";
 import Table, { getCustomColumns, columnModel, defaultColumns, defaultTableProps, columnsByType, weaponColumns, shieldsColumns, foodColumns, runesColumns, throwablesColumns, armorItemsColumns, amuletsAndRingsColumns, weaponsColumns, distanceWeaponsColumns, ammoColumns, wandsColumns } from "../../components/items/Table";
 import { useTranslation } from "react-i18next";
 import TabContent, { useTabContent } from "../../components/TabContent";
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Card, Tabs, Tab } from "@mui/material";
 import { types as itemTypes, subtypes as itemSubtypes } from "../../api/objects/types";
 
 /** @TODO (future) move each to their own file? */
@@ -199,18 +199,19 @@ export default function Items({
 
   return (
     <StandardPage title={t(`items.types.${type.id}`)}>
-      {
-        type.tabs.length > 1 ? (
-          <ItemsTabs tabs={type.tabs} />
-        ) : (
-          <ItemTable
-            rows={objects.filter(type.tabs[0].table.filter)}
-            columns={type.tabs[0].table.columns}
-            sortModel={type.tabs[0].table.sortModel}
-          />
-        )
-      }
-
+      <Card sx={{ height: '100%', pb: 2 }}>
+        {
+          type.tabs.length > 1 ? (
+            <ItemsTabs tabs={type.tabs} />
+          ) : (
+            <ItemTable
+              rows={objects.filter(type.tabs[0].table.filter)}
+              columns={type.tabs[0].table.columns}
+              sortModel={type.tabs[0].table.sortModel}
+            />
+          )
+        }
+      </Card>
     </StandardPage>
   );
 }

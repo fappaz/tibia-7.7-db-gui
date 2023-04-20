@@ -44,8 +44,6 @@ export const columnModel = {
       <Link
         component={PageLink}
         href={`/npcs/${params.row.id}`}
-        target='_blank'
-        rel='noopener noreferrer'
       >
         {params.row.name}
       </Link>

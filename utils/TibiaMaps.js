@@ -35,6 +35,8 @@ export const AUTOMAP_HEIGHT = 2048;
 export const MAX_X = MIN_X + AUTOMAP_WIDTH;
 export const MAX_Y = MIN_Y + AUTOMAP_HEIGHT;
 
+export const mapMiddle = [(MIN_X + MAX_X) / 2, (MIN_Y + MAX_Y) / 2, 7];
+
 /**
  * @deprecated TibiaMaps used to use coordinates like `124.76,121.76,7`, but now it uses like `32437,31729,7`
  * @param {number[]} coordinates The coordinates

@@ -1,0 +1,151 @@
+{
+	"ES6 import": {
+		"prefix": "rimp",
+		"body": [
+			"import $1 from '$0';"
+		],
+		"description": "React import."
+	},
+	"Function": {
+		"prefix": "jfun",
+		"body": [
+			"/**",
+			" * ",
+			" * @param {Object} paramName",
+			" * @return {Object}",
+			" */",
+			"export const $1 = ($2) => {",
+			"\t$0",
+			"};"
+		],
+		"description": "Function snippet."
+	},
+	"Jest unit test suite": {
+		"prefix": "jestd",
+		"body": [
+			"describe(`test $1`, () => {",
+			"",
+			"\tit(`should $2`, async () => {",
+			"\t\t/** Setup */",
+			"\t\tconst expected = 0;",
+			"\t\t",
+			"\t\t/** Call */",
+			"\t\tconst response = $1();",
+			"\t\t",
+			"\t\t/** Assertions */",
+			"\t\texpect(response).toStrictEqual(expected);",
+			"\t});",
+			"",
+			"});"
+		],
+		"description": "Jest describe snippet."
+	},
+	"React function component": {
+		"prefix": "rcomp",
+		"body": [
+			"import React from \"react\";",
+			"",
+			"/**",
+			" * @TODO jsdoc",
+			" * @param {Object} props The props.",
+			" * @param {import(\"react\").ReactNode} props.children The children.",
+			" * @returns {import(\"react\").ReactNode}",
+			" */",
+			"export default function $TM_FILENAME_BASE({",
+			"\tchildren,",
+			"} = {}) {",
+			"",
+			"\treturn (",
+			"\t\t<>",
+			"\t\t\t$0$TM_FILENAME_BASE",
+			"\t\t</>",
+			"\t);",
+			"",
+			"};",
+			""
+		],
+		"description": "React function component"
+	},
+	"React use state": {
+		"prefix": "rstate",
+		"body": [
+			"const [$1, $2] = React.useState($0);"
+		],
+		"description": "React use state"
+	},
+	"React use effect": {
+		"prefix": "reffect",
+		"body": [
+			"React.useEffect(function $1() {",
+			"\t$0",
+			"}, [$2]); // eslint-disable-line react-hooks/exhaustive-deps"
+		],
+		"description": "React use effect"
+	},
+	"react-hook-form Controlled input": {
+		"prefix": "formc",
+		"body": [
+			"<Controller",
+			"\tname=\"$1\"",
+			"\tcontrol={control}",
+			"\trender={props => (",
+			"\t\t$2",
+			"\t)}",
+			"/>"
+		],
+		"description": "Works for react-hook-form 6 and later"
+	},
+	"React Material-UI styled component": {
+		"prefix": "styledSnippet",
+		"body": [
+			"/** A `${2}` component with a special style. */",
+			"const ${1}Style = styled$0(\"${2}\")(({theme, ...props}) => ({",
+			"\t// backgroundColor: props.bg",
+			"\t// padding: theme.spacing(2)",
+			"}));"
+		]
+	},
+	"React Material-UI makeStyles hook": {
+		"prefix": "useStylesSnippet",
+		"body": [
+			"const useStyles = makeStyles$0(theme => ({",
+			"\t$2: {",
+			"\t}",
+			"}));",
+			"const classes = useStyles();",
+			"const ${1}Style = ({className, ...props}) => (<$1 className={clsx(classes.$2, className)} {...props} />);",
+		]
+	},
+	"React dynamic classes": {
+		"prefix": "cname",
+		"body": [
+			"className={classes.$0}"
+		]
+	},
+	"Jest unit test file": {
+		"prefix": "testjs",
+		"body": [
+			"import { $1 } from \"./$TM_FILENAME_BASE\";",
+			"",
+			"// Example of mocking functions of a dependency",
+			"// jest.mock(\"./MyDependency\", () => {",
+			"// \treturn {",
+			"// \t\tdependencyFunction: jest.fn(),",
+			"// \t};",
+			"// });",
+			"",
+			"beforeEach(() => {",
+			"\tjest.clearAllMocks();",
+			"});",
+			"",
+			"describe('test $2', () => {",
+			"",
+			"\tit('should $3', async () => {",
+			"\t\texpect().toStrictEqual();",
+			"\t});",
+			"",
+			"});"
+		],
+		"description": "Jest describe snippet."
+	}
+}

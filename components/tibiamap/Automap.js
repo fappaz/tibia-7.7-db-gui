@@ -23,7 +23,7 @@ const floors = new Array(16).fill(0).map((value, index) => {
   return { value: index, label: `${sign}${delta}` };
 });
 
-const defaultCenter = landmarks[landmarks.length - 1].coordinates;
+export const defaultCenter = landmarks[landmarks.length - 1].coordinates;
 
 /** Theme for the controls inside the map */
 const theme = createTheme({
