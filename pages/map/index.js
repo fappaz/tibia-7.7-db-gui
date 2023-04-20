@@ -261,8 +261,6 @@ export default function Map({
                       setPopoverAnchorElement(e.currentTarget);
                     }}
                     onAuxClick={(e) => {
-                      console.log(`@TODO ##### e.button:`, e.button);
-                      // e.preventDefault();
                       if (e.button !== 1) return; // middle click
                       selectAllFromMarkerTypes({ [id]: markerType });
                     }}

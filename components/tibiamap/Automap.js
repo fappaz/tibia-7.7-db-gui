@@ -119,6 +119,7 @@ export default function Map({
             ref={setMap}
             preferCanvas
             zoomControl={false}
+            attributionControl={false} /** Sorry */
           >
 
             <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
@@ -174,11 +175,17 @@ export default function Map({
                         size='small'
                       >
                         <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}><ArrowDropUpIcon /></Button>
-                        <Button onClick={(e) => {
-                          /** onDoubleClick is not working inside the Map, this workaround fixes it */
-                          if (e.detail !== 2) return;
-                          setPosition(pixelsToLatLng(defaultCenter));
-                        }}>{floors[activeFloor].label}</Button>
+                        <Button
+                          onClick={(e) => {
+                            setPosition(pixelsToLatLng(center));
+                          }}
+                          onAuxClick={(e) => {
+                            if (e.button !== 1) return; // middle click
+                            setPosition(pixelsToLatLng(defaultCenter));
+                          }}
+                        >
+                          {floors[activeFloor].label}
+                        </Button>
                         <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}><ArrowDropDownIcon /></Button>
                       </ButtonGroup>
                     </Grid>
@@ -198,7 +205,7 @@ export default function Map({
               </div>
             </Control>
 
-            <div className='leaflet-bottom leaflet-left' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
+            <div className='leaflet-bottom leaflet-right' style={{ padding: '2px 4px 0px 4px', backgroundColor: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
               {latLngToPixels(position).join(', ')}
             </div>
           </MapContainer>
