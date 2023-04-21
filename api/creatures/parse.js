@@ -10,7 +10,7 @@ const GmudParser = require('../../utils/gmud/GmudParser.js');
 /** @TODO (future) use from utils/TibiaMaps instead */
 /** 
  * These are values for version 13.x because that's what the maps in this app are based of at the moment.
- * Once the maps for version 7.70 are generated, use these values instead:
+ * Once the maps for version 7.7 are generated, use these values instead:
 const MIN_X = 31872;
 const MIN_Y = 31488;
  */

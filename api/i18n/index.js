@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 export const defaultLanguages = {
   "en": {
     translation: {
-      appTitle: 'Tibia 7.70 database',
+      appTitle: 'Tibia 7.7 database',
       components: {
         attributeRanking: {
           name: 'Ranking',
@@ -370,7 +370,7 @@ export const defaultLanguages = {
   },
   "pt-BR": {
     translation: {
-      appTitle: 'Banco de dados - Tibia 7.70',
+      appTitle: 'Banco de dados - Tibia 7.7',
       components: {
         dataGrid: {
           search: 'Buscar',

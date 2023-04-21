@@ -17,11 +17,11 @@ const SECTOR_Z_MIN = 0;
 const SECTOR_Z_MAX = 15;
 const SECTOR_LENGTH = 32;
 
-/** i.e.: how much smaller the map in version 7.70 was compared to current version 13.x */
+/** i.e.: how much smaller the map in version 7.7 was compared to current version 13.x */
 const VERSION_7_70_WIDTH_DELTA = 128;
 const VERSION_7_70_HEIGHT_DELTA = 512;
 
-// v 7.70:
+// v 7.7:
 // export const MIN_X = 31872; // 128 more than today
 // export const MIN_Y = 31488; // 512 more than today
 
