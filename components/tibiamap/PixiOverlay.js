@@ -329,6 +329,11 @@ const iconTypes = {
         shadowOffsetY: 4,
         shadowColor: 'rgba(0,0,0,0.6)',
         shadowBlur: 2,
+
+        // shadowOffsetX: 2,
+        // shadowOffsetY: 2,
+        // shadowColor: 'rgba(255,255,255,0.6)',
+        // shadowBlur: 1,
       }
     } = {}) => {
 

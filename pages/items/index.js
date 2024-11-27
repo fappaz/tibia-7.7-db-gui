@@ -267,6 +267,24 @@ function ItemTable({
   sortModel,
 } = {}) {
 
+    // remove before PR
+  // useEffect(() => {
+  //   const offers = rows.map(r => {
+  //     const offers = {
+  //       id: r.id,
+  //       name: r.name,
+  //       cheapestBuyOffer: r.buyFrom.sort((a, b) => a.price - b.price)[0]?.price || '',
+  //       moreExpensiveSellOffer: r.sellTo.sort((a, b) => b.price - a.price)[0]?.price || '',
+  //     };
+  //     // const csvRow = Object.values(offers).map(v => JSON.stringify(v)).join(',');
+  //     // return csvRow;
+  //     return offers;
+  //   })
+  //   const csvHeader = `id,name,cheapestBuyOffer,moreExpensiveSellOffer`;
+  //   const csv = [csvHeader, ...offers.map(o => Object.values(o).map(v => v ? JSON.stringify(v) : '').join(','))].join('\n');
+  //   console.log(csv);
+  // }, [rows]);
+
   return (
     <Table
       rows={rows}

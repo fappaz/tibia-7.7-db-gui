@@ -141,6 +141,7 @@ export const defaultLanguages = {
               '9': 'Club fighting',
               '10': 'Axe fighting',
               '11': 'Fist fighting',
+              '13': 'Fishing',
               '14': 'Regeneration',
               '16': 'Stealth', // maybe Illusion is the proper term
               '20': 'Anti-drunk',

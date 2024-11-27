@@ -127,7 +127,7 @@ export default function Map({
                 url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
                 bounds={imageBounds}
                 zIndex={-1} // z index is negative so PixiOverlay can be rendered on top
-                opacity={0.8}
+                opacity={activeFloor === defaultFloorIndex ? 0.85 : 0.65}
               />
               <PixiOverlay
                 markers={

@@ -201,6 +201,10 @@ export default function Map({
   const selectAllFromMarkerTypes = (markerTypes = {}) => {
     setMarkerTypeSelection(markerTypeSelection => {
 
+      if (Object.keys(markerTypes).length === 0) return [];
+
+      // @TODO (medium) show all markers should show all instead of toggling them
+
       let newMarkerTypeSelection = [...markerTypeSelection];
       Object.entries(markerTypes).forEach(([markerTypeId, markerType]) => {
         const markers = markerType.getMarkers(markerType.data, { router });
