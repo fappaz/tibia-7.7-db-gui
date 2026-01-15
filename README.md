@@ -27,6 +27,8 @@ Also, my first test project with [Next.js](https://nextjs.org/) + [Material-UI 5
 - Quest guides
 - Houses
 - Other map layers
+  - See https://tibiantis.info/
+    - Images for the entire minimap and for each sector can be found in network requests
   
 # How to run
 
@@ -45,7 +47,7 @@ For legal reasons, the original files cannot be provided in this repository, so 
     - `C:\Program Files (x86)\Tibia\Tibia.spr` to `api/sprites`
     - The `leaked-server/mon` directory to `api/creatures`
     - The `leaked-server/dat/monster.db` directory to `api/creatures`
-    - The `leaked-server/origmap` directory to `api/origmap`
+    - The `leaked-server/origmap` directory to `api/map`
     - The `leaked-server/npc` directory to `api/npcs`
     - `leaked-server/dat/objects.srv` to `api/objects`
 - Go to each of the target folders above and run `node parse.js`. This will parse the original files to a friendly format that this project will understand

@@ -46,6 +46,11 @@ async function run() {
       const gifPath = path.join(creatureSpritesDir, `${creature.id}.gif`);
       await saveGif(creature.dat, originalSpritesDir, gifPath, { outfit: creature.outfit, filterFrames: buildFilterFramesByDirections(['down']) });
       await exportGifFramesToPng(gifPath, creatureSpritesDir, creature.id, [0]);
+      
+      // const fluxKontextSpritesPath = path.join(targetSpritesDir, 'creatures-flux-kontext');
+      // const gifPath = path.join(fluxKontextSpritesPath, `${creature.id}.gif`);
+      // await saveGif(creature.dat, originalSpritesDir, gifPath, { outfit: creature.outfit, filterFrames: buildFilterFramesByDirections(['down', 'up']) });
+      // await exportGifFramesToPng(gifPath, fluxKontextSpritesPath, creature.id, [0, 1, 2, 3, 4, 5]);
     } catch (error) {
       console.error(`Failed to generate sprite for creature ${creature.id} (${creature.name}). Reason:`, error);      
     }

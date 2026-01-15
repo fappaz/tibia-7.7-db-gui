@@ -24,8 +24,10 @@ const VERSION_7_70_HEIGHT_DELTA = 512;
 // v 7.7:
 // export const MIN_X = 31872; // 128 more than today
 // export const MIN_Y = 31488; // 512 more than today
+// export const AUTOMAP_WIDTH = 1536;
+// export const AUTOMAP_HEIGHT = 1536;
 
-// v 13.x:
+// v 13.10:
 export const MIN_X = 31744;
 export const MIN_Y = 30976;
 // export const MIN_X = 0;

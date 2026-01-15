@@ -17,7 +17,9 @@ const imageBounds = [
 ];
 
 const defaultFloorIndex = 7;
-const floors = new Array(16).fill(0).map((value, index) => {
+const minFloorIndex = 0;
+const maxFloorIndex = 15;
+const floors = new Array(maxFloorIndex + 1).fill(0).map((value, index) => {
   const delta = defaultFloorIndex - index;
   const sign = delta > 0 ? '+' : '';
   return { value: index, label: `${sign}${delta}` };
@@ -124,6 +126,12 @@ export default function Map({
 
             <div style={{ position: `relative`, width: `100%`, height: `100%`, }}>
               <ImageOverlay
+                /**
+                 * Download images from one of these:
+                 * https://tibiantis.info/ (see network requests)
+                 * https://github.com/tibiamaps/tibia-map-data/tree/main/data
+                 * https://github.com/Mytherin/Tibialyzer/tree/master/Pathfinder%20Database/Tibia%20Path%20Finder/MapImages
+                 */
                 url={`/images/map/13.10/floor-${activeFloor.toString().padStart(2, '0')}-map.png`}
                 bounds={imageBounds}
                 zIndex={-1} // z index is negative so PixiOverlay can be rendered on top
@@ -174,7 +182,7 @@ export default function Map({
                         orientation='vertical'
                         size='small'
                       >
-                        <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= 0}><ArrowDropUpIcon /></Button>
+                        <Button onClick={() => handleFloorChange(-1)} disabled={activeFloor <= minFloorIndex}><ArrowDropUpIcon /></Button>
                         <Button
                           onClick={(e) => {
                             setPosition(pixelsToLatLng(center));
@@ -186,7 +194,7 @@ export default function Map({
                         >
                           {floors[activeFloor].label}
                         </Button>
-                        <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= floors.length - 1}><ArrowDropDownIcon /></Button>
+                        <Button onClick={() => handleFloorChange(1)} disabled={activeFloor >= maxFloorIndex}><ArrowDropDownIcon /></Button>
                       </ButtonGroup>
                     </Grid>
 
